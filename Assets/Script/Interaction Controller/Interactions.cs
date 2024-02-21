@@ -261,10 +261,10 @@ public class Interactions : MonoBehaviour
         try
         {
             oldPosition = gc.mainCharacter.transform.position;
-            oldRotation = gc.mainCharacter.transform.localEulerAngles;
+            oldRotation = new Vector3(0f, gc.mainCharacter.transform.eulerAngles.y, 0f);
 
             gc.mainCharacter.transform.position = newPosition;
-            gc.mainCharacter.transform.rotation = Quaternion.Euler(newRotation.normalized);
+            gc.mainCharacter.transform.rotation = Quaternion.Euler(newRotation);
 
             gc.mainCamera.gameObject.SetActive(false);
             gc.camera2.gameObject.SetActive(true);
@@ -286,7 +286,7 @@ public class Interactions : MonoBehaviour
         try
         {
             gc.mainCharacter.transform.position = oldPosition;
-            gc.mainCharacter.transform.localRotation = Quaternion.Euler(oldPosition.normalized);
+            gc.mainCharacter.transform.localRotation = Quaternion.Euler(oldRotation);
             gc.mainCamera.gameObject.SetActive(true);
             gc.camera2.gameObject.SetActive(false);
             oldPosition = Vector3.zero;

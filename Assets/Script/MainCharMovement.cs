@@ -8,12 +8,13 @@ using UnityEngine.UI;
 public class MainCharMovement : MonoBehaviour
 {
     [Header("Character Utils")]
-    public Rigidbody rb;
+    CharacterController controller;
     public float speed, rotationSpeed;
     public Transform playerCamera;
     public CinemachineFreeLook camFreeLook;
     public float rotationSpeedX = 2f;
     public float rotationSpeedY = 0.5f;
+    public float gravityValue = -9.8f;
 
     [Header("Interaction Utils")]
     public float interactRadius = 2f;
@@ -40,11 +41,8 @@ public class MainCharMovement : MonoBehaviour
     {
         GameObject gameController = GameObject.Find("GameController");
 
-        rb = GetComponent<Rigidbody>();
+        controller = GetComponent<CharacterController>();
         gc = gameController.GetComponent<GameController>();
-
-        rb.interpolation = RigidbodyInterpolation.Interpolate;
-        rb.constraints = RigidbodyConstraints.FreezeRotation;
 
         notificationPanel.gameObject.SetActive(false);
         loadingPanel.SetActive(false);
@@ -54,11 +52,6 @@ public class MainCharMovement : MonoBehaviour
     }
 
     private void Update()
-    {
-        
-    }
-
-    private void FixedUpdate()
     {
         if (enableMobileInput)
         {
@@ -72,8 +65,8 @@ public class MainCharMovement : MonoBehaviour
 
     private void analogInput()
     {
-        float rotationX = touchField.TouchDist.x * rotationSpeedX * Time.deltaTime;
-        float rotationY = touchField.TouchDist.y * rotationSpeedY * Time.deltaTime;
+        float rotationX = touchField.TouchDist.x * rotationSpeedX * Time.fixedDeltaTime;
+        float rotationY = touchField.TouchDist.y * rotationSpeedY * Time.fixedDeltaTime;
 
         camFreeLook.m_XAxis.Value += rotationX;
         camFreeLook.m_YAxis.Value -= rotationY;
@@ -82,18 +75,14 @@ public class MainCharMovement : MonoBehaviour
         float x = joystick.Horizontal;
         float z = joystick.Vertical;
 
-        // Calculate movement direction relative to the camera
         Vector3 cameraForward = playerCamera.forward;
         Vector3 cameraRight = playerCamera.right;
-
-        // Flatten the vectors so the character doesn't move up and down
         cameraForward.y = 0f;
         cameraRight.y = 0f;
-
         Vector3 desiredMoveDirection = (cameraForward.normalized * z + cameraRight.normalized * x).normalized;
 
-        // Move and rotate the character
         MoveCharacter(desiredMoveDirection);
+        ApplyGravity();
         RotateCharacter(desiredMoveDirection);
     }
 
@@ -105,30 +94,25 @@ public class MainCharMovement : MonoBehaviour
         camFreeLook.m_XAxis.Value += rotationX;
         camFreeLook.m_YAxis.Value -= rotationY;
 
-        // Get input from arrow keys or WASD
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
-        // Calculate movement direction relative to the camera
         Vector3 cameraForward = playerCamera.forward;
         Vector3 cameraRight = playerCamera.right;
-
-        // Flatten the vectors so the character doesn't move up and down
         cameraForward.y = 0f;
         cameraRight.y = 0f;
-
         Vector3 desiredMoveDirection = (cameraForward.normalized * verticalInput + cameraRight.normalized * horizontalInput).normalized;
 
-        // Move and rotate the character
         MoveCharacter(desiredMoveDirection);
+        ApplyGravity();
         RotateCharacter(desiredMoveDirection);
     }
 
     private void MoveCharacter(Vector3 direction)
     {
         direction.Normalize();
-        Vector3 targetPosition = transform.position + direction * speed * Time.deltaTime;
-        rb.MovePosition(targetPosition);
+        // Use the CharacterController to move the character
+        controller.Move(direction * speed * Time.deltaTime);
     }
 
     private void RotateCharacter(Vector3 direction)
@@ -138,10 +122,25 @@ public class MainCharMovement : MonoBehaviour
         if (direction != Vector3.zero)
         {
             Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
-            Quaternion currentRotation = rb.rotation;
+            Quaternion currentRotation = transform.rotation;
             Quaternion newRotation = Quaternion.Slerp(currentRotation, toRotation, rotationSpeed * Time.deltaTime);
-            rb.MoveRotation(newRotation);
+            // Use transform.rotation to rotate the character
+            transform.rotation = newRotation;
         }
+    }
+
+    private void ApplyGravity()
+    {
+        if (!controller.isGrounded)
+        {
+            gravityValue += Physics.gravity.y * Time.deltaTime;
+        }
+        else
+        {
+            gravityValue = 0f;
+        }
+
+        controller.Move(new Vector3(0f, gravityValue, 0f) * Time.deltaTime);
     }
 
     public void MoveLeft()
@@ -166,9 +165,7 @@ public class MainCharMovement : MonoBehaviour
         Vector3 desiredMoveDirection = (cameraRight.normalized * direction).normalized;
 
         desiredMoveDirection.Normalize();
-        Vector3 velocity = desiredMoveDirection * speed;
-
-        rb.velocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
+        controller.Move(desiredMoveDirection * speed * Time.deltaTime);
     }
 
     public void LoadPlayer()
