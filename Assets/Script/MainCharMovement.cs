@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class MainCharMovement : MonoBehaviour
 {
     [Header("Character Utils")]
-    CharacterController controller;
+    public CharacterController controller;
     public float speed, rotationSpeed;
     public Transform playerCamera;
     public CinemachineFreeLook camFreeLook;
@@ -28,13 +28,15 @@ public class MainCharMovement : MonoBehaviour
     public bool enableMobileInput = false;
     public FixedJoystick joystick;
     public FixedTouchField touchField;
-
-    [Header("Screen Service")]
     GameController gc;
     public GameObject loadingPanel;
     public GameObject shopPanel;
     public GameObject mulaiMisiBtn;
     public GameObject endMisiBtn;
+
+    [Header("Movement Condition")]
+    public bool isMoveLeft = false;
+    public bool isMoveRIght = false;
 
     // Start is called before the first frame update
     void Start()
@@ -60,6 +62,19 @@ public class MainCharMovement : MonoBehaviour
         else
         {
             keyboardInput();
+        }
+
+        if (isMoveLeft)
+        {
+            MoveCharacterRightAndLeft(-1f);
+        }
+        else if (isMoveRIght)
+        {
+            MoveCharacterRightAndLeft(1f);
+        }
+        else
+        {
+            MoveCharacterRightAndLeft(0f);
         }
     }
 
@@ -145,17 +160,18 @@ public class MainCharMovement : MonoBehaviour
 
     public void MoveLeft()
     {
-        MoveCharacterRightAndLeft(-1f);
+        isMoveLeft = true;
     }
 
     public void MoveRight()
     {
-        MoveCharacterRightAndLeft(1f);
+        isMoveRIght = true;
     }
 
     public void StopMoving()
     {
-        MoveCharacterRightAndLeft(0f);
+        isMoveLeft = false;
+        isMoveRIght = false;
     }
 
     private void MoveCharacterRightAndLeft(float direction)
@@ -202,14 +218,26 @@ public class MainCharMovement : MonoBehaviour
         loadingPanel.SetActive(false);
     }
 
-    public void ShowShopPanel()
+    public void ShowShopPanel(Shop shop)
     {
         shopPanel.SetActive(true);
         shopPanel.transform.localPosition = new Vector3(0f, 0f, 0f);
+        shop.LoadShopData();
     }
 
-    public void CloseShopPanel()
+    public void CloseShopPanel(Shop shop)
     {
         shopPanel.SetActive(false);
+        if (shop != null && shop.ShopScrollView != null)
+        {
+            foreach (Transform child in shop.ShopScrollView)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+        else
+        {
+            Debug.LogError("Invalid shop or ShopScrollView reference.");
+        }
     }
 }
