@@ -47,7 +47,7 @@ public class Interactions : MonoBehaviour
         buttonInteract.SetActive(false);
 
         inventory.ItemAdded += InventoryScript_ItemAdded;
-        inventory.ItemRemoved += InventoryScript_ItemRemoved;
+        // inventory.ItemRemoved += InventoryScript_ItemRemoved;
     }
 
     // Update is called once per frame
@@ -131,8 +131,8 @@ public class Interactions : MonoBehaviour
             if (slot.childCount > 0)
             {
                 Transform imageTransform = slot.GetChild(0).GetChild(0);
-                Image image = imageTransform.GetComponent<Image>();
-                ItemDragHandler itemDragHandler = imageTransform.GetComponent<ItemDragHandler>();
+                Image image = imageTransform.GetChild(0).GetComponent<Image>();
+                // ItemDragHandler itemDragHandler = imageTransform.GetComponent<ItemDragHandler>();
                 InventoryVariable inventoryVariable = imageTransform.GetComponent<InventoryVariable>();
 
                 if (!image.enabled)
@@ -142,7 +142,7 @@ public class Interactions : MonoBehaviour
 
                     inventoryVariable.jenisSampah = e.Item.jenisSampah;
 
-                    itemDragHandler.Item = e.Item;
+                    // itemDragHandler.Item = e.Item;
 
                     if (mainChar != null)
                     {
@@ -155,52 +155,52 @@ public class Interactions : MonoBehaviour
         }
     }
 
-    private void InventoryScript_ItemRemoved(object sender, InventoryEventArgs e)
-    {
-        foreach (Transform slot in inventoryPanel)
-        {
-            Transform imageTransform = slot.GetChild(0).GetChild(0);
-            Image image = imageTransform.GetComponent<Image>();
-            ItemDragHandler itemDragHandler = imageTransform.GetComponent<ItemDragHandler>();
-            InventoryVariable inventoryVariable = imageTransform.GetComponent<InventoryVariable>();
+    // private void InventoryScript_ItemRemoved(object sender, InventoryEventArgs e)
+    // {
+    //     foreach (Transform slot in inventoryPanel)
+    //     {
+    //         Transform imageTransform = slot.GetChild(0).GetChild(0);
+    //         Image image = imageTransform.GetChild(0).GetComponent<Image>();
+    //         // ItemDragHandler itemDragHandler = imageTransform.GetComponent<ItemDragHandler>();
+    //         InventoryVariable inventoryVariable = imageTransform.GetComponent<InventoryVariable>();
 
-            Transform propsTransform = transform.Find("Props");
+    //         Transform propsTransform = transform.Find("Props");
 
-            if (propsTransform != null)
-            {
-                Transform trashcanTransform = propsTransform.Find("Trashcan");
-                if (trashcanTransform != null)
-                {
-                    trashcanController = trashcanTransform.GetComponent<TrashcanController>();
-                    if (trashcanController != null)
-                    {
-                        if (trashcanController.jenisTempatSampah == inventoryVariable.jenisSampah)
-                        {
+    //         if (propsTransform != null)
+    //         {
+    //             Transform trashcanTransform = propsTransform.Find("Trashcan");
+    //             if (trashcanTransform != null)
+    //             {
+    //                 trashcanController = trashcanTransform.GetComponent<TrashcanController>();
+    //                 if (trashcanController != null)
+    //                 {
+    //                     if (trashcanController.jenisTempatSampah == inventoryVariable.jenisSampah)
+    //                     {
 
-                        }
-                    }
-                }
-            }
-            else
-            {
-                Debug.LogError("Props GameObject not found");
-            }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //         else
+    //         {
+    //             Debug.LogError("Props GameObject not found");
+    //         }
 
-            if (itemDragHandler.Item.Equals(e.Item))
-            {
-                image.enabled = false;
-                image.sprite = null;
-                itemDragHandler.Item = null;
-                break;
-            }
-        }
-    }
+        //     if (itemDragHandler.Item.Equals(e.Item))
+        //     {
+        //         image.enabled = false;
+        //         image.sprite = null;
+        //         itemDragHandler.Item = null;
+        //         break;
+        //     }
+        // }
+    // }
 
     private void Interact_Trashcan()
     {
         inventory = inventoryPanel.GetComponent<Inventory>();
         Transform imageTransform = inventoryPanel.GetChild(inventory.defaultSelectedItemIndex).GetChild(0);
-        Image image = imageTransform.GetChild(0).GetComponent<Image>();
+        Image image = imageTransform.GetChild(0).GetChild(0).GetComponent<Image>();
         InventoryVariable inventoryVariable = imageTransform.GetChild(0).GetComponent<InventoryVariable>();
 
         trashcanController = _colliders[0].GetComponent<TrashcanController>();
@@ -213,6 +213,7 @@ public class Interactions : MonoBehaviour
                     image.enabled = false;
                     image.sprite = null;
                     inventoryVariable.jenisSampah = "";
+                    mainChar.countCoin(5);
                     Debug.Log("Buang Sampah");
                 }
                 else
@@ -220,6 +221,10 @@ public class Interactions : MonoBehaviour
                     StartCoroutine(time_delay(mainChar.notificationPanel, 2f, "Jenis Sampah Tidak Sesuai"));
                     Debug.Log("Gagal Buang Sampah");
                 }
+            }
+            else 
+            {
+                Debug.Log("Pembuangan Sampah Tidak Berhasil");
             }
         }
     }
@@ -243,7 +248,7 @@ public class Interactions : MonoBehaviour
         if (other.CompareTag("BersihSampah"))
         {
             mainChar.mulaiMisiBtn.SetActive(true);
-            BersihSungai bersihSungaiScript = other.GetComponent<BersihSungai>();
+            BersihSungai bersihSungaiScript = other.transform.parent.GetComponent<BersihSungai>();
             newPosition = bersihSungaiScript.playerPositionChange.transform.position;
             newRotation = bersihSungaiScript.playerPositionChange.transform.rotation.eulerAngles;
         }
@@ -263,8 +268,10 @@ public class Interactions : MonoBehaviour
             oldPosition = gc.mainCharacter.transform.position;
             oldRotation = new Vector3(0f, gc.mainCharacter.transform.eulerAngles.y, 0f);
 
+            mainChar.controller.enabled = false;
             gc.mainCharacter.transform.position = newPosition;
             gc.mainCharacter.transform.rotation = Quaternion.Euler(newRotation);
+            mainChar.controller.enabled = true;
 
             gc.mainCamera.gameObject.SetActive(false);
             gc.camera2.gameObject.SetActive(true);
@@ -285,8 +292,11 @@ public class Interactions : MonoBehaviour
     {
         try
         {
+            mainChar.controller.enabled = false;
             gc.mainCharacter.transform.position = oldPosition;
             gc.mainCharacter.transform.localRotation = Quaternion.Euler(oldRotation);
+            mainChar.controller.enabled = true;
+
             gc.mainCamera.gameObject.SetActive(true);
             gc.camera2.gameObject.SetActive(false);
             oldPosition = Vector3.zero;

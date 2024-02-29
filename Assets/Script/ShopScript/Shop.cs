@@ -80,7 +80,7 @@ public class Shop : MonoBehaviour
             {
                 g = Instantiate(ItemTemplate, ShopScrollView);
                 g.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = shopItemList[i].nameItem;
-                g.transform.GetChild(0).GetComponent<Image>().sprite = shopItemList[i].imageItem;
+                g.transform.GetChild(1).GetComponent<Image>().sprite = shopItemList[i].imageItem;
                 if (shopItemList[i].isPurchased == true)
                 {
                     g.transform.GetChild(2).GetChild(1).GetComponent<TextMeshProUGUI>().gameObject.SetActive(true);

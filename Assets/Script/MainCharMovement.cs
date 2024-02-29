@@ -15,6 +15,8 @@ public class MainCharMovement : MonoBehaviour
     public float rotationSpeedX = 2f;
     public float rotationSpeedY = 0.5f;
     public float gravityValue = -9.8f;
+    public int playerCoin = 0;
+    public TextMeshProUGUI playerCoinTxt;
 
     [Header("Interaction Utils")]
     public float interactRadius = 2f;
@@ -239,5 +241,10 @@ public class MainCharMovement : MonoBehaviour
         {
             Debug.LogError("Invalid shop or ShopScrollView reference.");
         }
+    }
+
+    public void countCoin(int addCoin) {
+        playerCoin += addCoin;
+        playerCoinTxt.text = playerCoin.ToString();
     }
 }
