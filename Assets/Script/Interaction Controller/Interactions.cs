@@ -1,5 +1,5 @@
-using Cinemachine.Utility;
 using System.Collections;
+using Cinemachine.Utility;
 using TMPro;
 using Unity.Burst.CompilerServices;
 using UnityEngine;
@@ -7,14 +7,22 @@ using UnityEngine.UI;
 
 public class Interactions : MonoBehaviour
 {
+    [SerializeField]
+    private Transform _interactPoint;
 
-    [SerializeField] private Transform _interactPoint;
-    [SerializeField] private float _interactPointRadius;
-    [SerializeField] private LayerMask _interactLayerMask;
+    [SerializeField]
+    private float _interactPointRadius;
+
+    [SerializeField]
+    private LayerMask _interactLayerMask;
 
     private readonly Collider[] _colliders = new Collider[1];
-    [SerializeField] private int _numFound;
-    [SerializeField] public GameObject buttonInteract;
+
+    [SerializeField]
+    private int _numFound;
+
+    [SerializeField]
+    public GameObject buttonInteract;
 
     [Header("Get Component")]
     MainCharMovement mainChar;
@@ -27,13 +35,22 @@ public class Interactions : MonoBehaviour
 
     [Header("Ambil Variabel")]
     GameController gc;
+
+    [Header("Main Character Settings")]
     [SerializeField] private Vector3 newPosition;
+
     [SerializeField] private Vector3 newRotation;
-    [SerializeField] private Vector3 oldPosition = Vector3.zero;
-    [SerializeField] private Vector3 oldRotation = Vector3.zero;
+
+    [SerializeField]
+    private Vector3 oldPosition = Vector3.zero;
+
+    [SerializeField]
+    private Vector3 oldRotation = Vector3.zero;
+    [SerializeField] private Vector3 cameraSetPosition = Vector3.zero;
+    [SerializeField] private Vector3 cameraSetRotation = Vector3.zero;
 
     [Header("Quest")]
-    [SerializeField] public bool isQuestStart = false;
+    public bool isQuestStart = false;
 
     // Start is called before the first frame update
     void Start()
@@ -47,14 +64,18 @@ public class Interactions : MonoBehaviour
         buttonInteract.SetActive(false);
 
         inventory.ItemAdded += InventoryScript_ItemAdded;
-        // inventory.ItemRemoved += InventoryScript_ItemRemoved;
     }
 
     // Update is called once per frame
     void Update()
     {
         // Ambil Sampah
-        _numFound = Physics.OverlapSphereNonAlloc(_interactPoint.position, _interactPointRadius, _colliders, _interactLayerMask);
+        _numFound = Physics.OverlapSphereNonAlloc(
+            _interactPoint.position,
+            _interactPointRadius,
+            _colliders,
+            _interactLayerMask
+        );
 
         if (_numFound > 0)
         {
@@ -106,7 +127,6 @@ public class Interactions : MonoBehaviour
         }
     }
 
-
     public void removeItem()
     {
         var interactableItem = _colliders[0].GetComponent<Interactable>();
@@ -133,7 +153,8 @@ public class Interactions : MonoBehaviour
                 Transform imageTransform = slot.GetChild(0).GetChild(0);
                 Image image = imageTransform.GetChild(0).GetComponent<Image>();
                 // ItemDragHandler itemDragHandler = imageTransform.GetComponent<ItemDragHandler>();
-                InventoryVariable inventoryVariable = imageTransform.GetComponent<InventoryVariable>();
+                InventoryVariable inventoryVariable =
+                    imageTransform.GetComponent<InventoryVariable>();
 
                 if (!image.enabled)
                 {
@@ -155,53 +176,16 @@ public class Interactions : MonoBehaviour
         }
     }
 
-    // private void InventoryScript_ItemRemoved(object sender, InventoryEventArgs e)
-    // {
-    //     foreach (Transform slot in inventoryPanel)
-    //     {
-    //         Transform imageTransform = slot.GetChild(0).GetChild(0);
-    //         Image image = imageTransform.GetChild(0).GetComponent<Image>();
-    //         // ItemDragHandler itemDragHandler = imageTransform.GetComponent<ItemDragHandler>();
-    //         InventoryVariable inventoryVariable = imageTransform.GetComponent<InventoryVariable>();
-
-    //         Transform propsTransform = transform.Find("Props");
-
-    //         if (propsTransform != null)
-    //         {
-    //             Transform trashcanTransform = propsTransform.Find("Trashcan");
-    //             if (trashcanTransform != null)
-    //             {
-    //                 trashcanController = trashcanTransform.GetComponent<TrashcanController>();
-    //                 if (trashcanController != null)
-    //                 {
-    //                     if (trashcanController.jenisTempatSampah == inventoryVariable.jenisSampah)
-    //                     {
-
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //         else
-    //         {
-    //             Debug.LogError("Props GameObject not found");
-    //         }
-
-        //     if (itemDragHandler.Item.Equals(e.Item))
-        //     {
-        //         image.enabled = false;
-        //         image.sprite = null;
-        //         itemDragHandler.Item = null;
-        //         break;
-        //     }
-        // }
-    // }
-
     private void Interact_Trashcan()
     {
         inventory = inventoryPanel.GetComponent<Inventory>();
-        Transform imageTransform = inventoryPanel.GetChild(inventory.defaultSelectedItemIndex).GetChild(0);
+        Transform imageTransform = inventoryPanel
+            .GetChild(inventory.defaultSelectedItemIndex)
+            .GetChild(0);
         Image image = imageTransform.GetChild(0).GetChild(0).GetComponent<Image>();
-        InventoryVariable inventoryVariable = imageTransform.GetChild(0).GetComponent<InventoryVariable>();
+        InventoryVariable inventoryVariable = imageTransform
+            .GetChild(0)
+            .GetComponent<InventoryVariable>();
 
         trashcanController = _colliders[0].GetComponent<TrashcanController>();
         if (trashcanController != null)
@@ -218,18 +202,24 @@ public class Interactions : MonoBehaviour
                 }
                 else
                 {
-                    StartCoroutine(time_delay(mainChar.notificationPanel, 2f, "Jenis Sampah Tidak Sesuai"));
+                    StartCoroutine(
+                        time_delay(mainChar.notificationPanel, 2f, "Jenis Sampah Tidak Sesuai")
+                    );
                     Debug.Log("Gagal Buang Sampah");
                 }
             }
-            else 
+            else
             {
                 Debug.Log("Pembuangan Sampah Tidak Berhasil");
             }
         }
     }
 
-    IEnumerator time_delay(TextMeshProUGUI notificationPanel, float delayTime, string notificationText)
+    IEnumerator time_delay(
+        TextMeshProUGUI notificationPanel,
+        float delayTime,
+        string notificationText
+    )
     {
         notificationPanel.gameObject.SetActive(true);
         notificationPanel.text = notificationText;
@@ -251,6 +241,8 @@ public class Interactions : MonoBehaviour
             BersihSungai bersihSungaiScript = other.transform.parent.GetComponent<BersihSungai>();
             newPosition = bersihSungaiScript.playerPositionChange.transform.position;
             newRotation = bersihSungaiScript.playerPositionChange.transform.rotation.eulerAngles;
+            cameraSetPosition = bersihSungaiScript.cameraPositionChange.transform.position;
+            cameraSetRotation = bersihSungaiScript.cameraPositionChange.transform.rotation.eulerAngles;
         }
     }
 
@@ -263,29 +255,24 @@ public class Interactions : MonoBehaviour
 
     public void Mulai_Misi()
     {
-        try
-        {
-            oldPosition = gc.mainCharacter.transform.position;
-            oldRotation = new Vector3(0f, gc.mainCharacter.transform.eulerAngles.y, 0f);
+        oldPosition = gc.mainCharacter.transform.position;
+        oldRotation = new Vector3(0f, gc.mainCharacter.transform.eulerAngles.y, 0f);
 
-            mainChar.controller.enabled = false;
-            gc.mainCharacter.transform.position = newPosition;
-            gc.mainCharacter.transform.rotation = Quaternion.Euler(newRotation);
-            mainChar.controller.enabled = true;
+        mainChar.controller.enabled = false;
+        gc.mainCharacter.transform.position = newPosition;
+        gc.mainCharacter.transform.rotation = Quaternion.Euler(newRotation);
+        gc.camera2.transform.position = cameraSetPosition;
+        gc.camera2.transform.rotation = Quaternion.Euler(cameraSetRotation);
+        mainChar.controller.enabled = true;
 
-            gc.mainCamera.gameObject.SetActive(false);
-            gc.camera2.gameObject.SetActive(true);
+        gc.mainCamera.gameObject.SetActive(false);
+        gc.camera2.gameObject.SetActive(true);
 
-            mainChar.playerCamera = gc.camera2;
-            isQuestStart = true;
+        mainChar.playerCamera = gc.camera2;
+        isQuestStart = true;
 
-            gc.mainUI.SetActive(false);
-            gc.bersihSungaiUI.SetActive(true);
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError("Gagal mengubah posisi karakter: " + e.Message);
-        }
+        gc.mainUI.SetActive(false);
+        gc.bersihSungaiUI.SetActive(true);
     }
 
     public void Selesai_Misi()

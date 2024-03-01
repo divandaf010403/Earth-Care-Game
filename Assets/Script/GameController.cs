@@ -10,5 +10,6 @@ public class GameController : MonoBehaviour
 
     [Header("UI Controller")]
     public GameObject mainUI;
+    public GameObject pilahSampahUI;
     public GameObject bersihSungaiUI;
 }
