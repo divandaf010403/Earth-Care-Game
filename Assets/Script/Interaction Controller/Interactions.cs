@@ -13,8 +13,8 @@ public class Interactions : MonoBehaviour
     [SerializeField]
     private float _interactPointRadius;
 
-    [SerializeField]
-    private LayerMask _interactLayerMask;
+    [SerializeField] private LayerMask _interactLayerMask;
+    [SerializeField] private LayerMask _questLayerMask;
 
     private readonly Collider[] _colliders = new Collider[1];
 
@@ -37,17 +37,17 @@ public class Interactions : MonoBehaviour
     GameController gc;
 
     [Header("Main Character Settings")]
-    [SerializeField] private Vector3 newPosition;
+    [SerializeField] public Vector3 newPosition;
 
-    [SerializeField] private Vector3 newRotation;
-
-    [SerializeField]
-    private Vector3 oldPosition = Vector3.zero;
+    [SerializeField] public Vector3 newRotation;
 
     [SerializeField]
-    private Vector3 oldRotation = Vector3.zero;
-    [SerializeField] private Vector3 cameraSetPosition = Vector3.zero;
-    [SerializeField] private Vector3 cameraSetRotation = Vector3.zero;
+    public Vector3 oldPosition = Vector3.zero;
+
+    [SerializeField]
+    public Vector3 oldRotation = Vector3.zero;
+    [SerializeField] public Vector3 cameraSetPosition = Vector3.zero;
+    [SerializeField] public Vector3 cameraSetRotation = Vector3.zero;
 
     [Header("Quest")]
     public bool isQuestStart = false;
@@ -235,14 +235,14 @@ public class Interactions : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("BersihSampah"))
+        if (other.CompareTag("Quest"))
         {
             mainChar.mulaiMisiBtn.SetActive(true);
-            BersihSungai bersihSungaiScript = other.transform.parent.GetComponent<BersihSungai>();
-            newPosition = bersihSungaiScript.playerPositionChange.transform.position;
-            newRotation = bersihSungaiScript.playerPositionChange.transform.rotation.eulerAngles;
-            cameraSetPosition = bersihSungaiScript.cameraPositionChange.transform.position;
-            cameraSetRotation = bersihSungaiScript.cameraPositionChange.transform.rotation.eulerAngles;
+            IQuestHandler questHandler = other.GetComponentInParent<IQuestHandler>();
+            newPosition = questHandler.QuestPlayerPosition.transform.position;
+            newRotation = questHandler.QuestPlayerPosition.transform.rotation.eulerAngles;
+            cameraSetPosition = questHandler.QuestCameraPosition.transform.position;
+            cameraSetRotation = questHandler.QuestCameraPosition.transform.rotation.eulerAngles;
         }
     }
 
@@ -253,51 +253,17 @@ public class Interactions : MonoBehaviour
         newRotation = Vector3.zero;
     }
 
-    public void Mulai_Misi()
+    public void QuestButtonClick()
     {
-        oldPosition = gc.mainCharacter.transform.position;
-        oldRotation = new Vector3(0f, gc.mainCharacter.transform.eulerAngles.y, 0f);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 5f, _questLayerMask);
 
-        mainChar.controller.enabled = false;
-        gc.mainCharacter.transform.position = newPosition;
-        gc.mainCharacter.transform.rotation = Quaternion.Euler(newRotation);
-        gc.camera2.transform.position = cameraSetPosition;
-        gc.camera2.transform.rotation = Quaternion.Euler(cameraSetRotation);
-        mainChar.controller.enabled = true;
-
-        gc.mainCamera.gameObject.SetActive(false);
-        gc.camera2.gameObject.SetActive(true);
-
-        mainChar.playerCamera = gc.camera2;
-        isQuestStart = true;
-
-        gc.mainUI.SetActive(false);
-        gc.bersihSungaiUI.SetActive(true);
-    }
-
-    public void Selesai_Misi()
-    {
-        try
+        foreach (Collider collider in colliders)
         {
-            mainChar.controller.enabled = false;
-            gc.mainCharacter.transform.position = oldPosition;
-            gc.mainCharacter.transform.localRotation = Quaternion.Euler(oldRotation);
-            mainChar.controller.enabled = true;
-
-            gc.mainCamera.gameObject.SetActive(true);
-            gc.camera2.gameObject.SetActive(false);
-            oldPosition = Vector3.zero;
-            oldRotation = Vector3.zero;
-
-            mainChar.playerCamera = gc.mainCamera;
-            isQuestStart = false;
-
-            gc.mainUI.SetActive(true);
-            gc.bersihSungaiUI.SetActive(false);
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError("Gagal mengubah posisi karakter: " + e.Message);
+            IQuestHandler triggerable = collider.GetComponentInParent<IQuestHandler>();
+            if (triggerable != null)
+            {
+                triggerable.OnQuestStart();
+            }
         }
     }
 }

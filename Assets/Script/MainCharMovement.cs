@@ -28,7 +28,7 @@ public class MainCharMovement : MonoBehaviour
 
     [Header("Joystick Utils")]
     public bool enableMobileInput = false;
-    public FixedJoystick joystick;
+    public FixedJoystick[] joysticks;
     public FixedTouchField touchField;
     GameController gc;
     public GameObject loadingPanel;
@@ -82,25 +82,31 @@ public class MainCharMovement : MonoBehaviour
 
     private void analogInput()
     {
-        float rotationX = touchField.TouchDist.x * rotationSpeedX * Time.fixedDeltaTime;
-        float rotationY = touchField.TouchDist.y * rotationSpeedY * Time.fixedDeltaTime;
+        foreach (FixedJoystick joystick in joysticks)
+        {
+            if (joystick.gameObject.activeSelf)
+            {
+                float rotationX = touchField.TouchDist.x * rotationSpeedX * Time.fixedDeltaTime;
+                float rotationY = touchField.TouchDist.y * rotationSpeedY * Time.fixedDeltaTime;
 
-        camFreeLook.m_XAxis.Value += rotationX;
-        camFreeLook.m_YAxis.Value -= rotationY;
+                camFreeLook.m_XAxis.Value += rotationX;
+                camFreeLook.m_YAxis.Value -= rotationY;
 
-        // IMPLEMENTASI JOYSTICK
-        float x = joystick.Horizontal;
-        float z = joystick.Vertical;
+                // IMPLEMENTASI JOYSTICK
+                float x = joystick.Horizontal;
+                float z = joystick.Vertical;
 
-        Vector3 cameraForward = playerCamera.forward;
-        Vector3 cameraRight = playerCamera.right;
-        cameraForward.y = 0f;
-        cameraRight.y = 0f;
-        Vector3 desiredMoveDirection = (cameraForward.normalized * z + cameraRight.normalized * x).normalized;
+                Vector3 cameraForward = playerCamera.forward;
+                Vector3 cameraRight = playerCamera.right;
+                cameraForward.y = 0f;
+                cameraRight.y = 0f;
+                Vector3 desiredMoveDirection = (cameraForward.normalized * z + cameraRight.normalized * x).normalized;
 
-        MoveCharacter(desiredMoveDirection);
-        ApplyGravity();
-        RotateCharacter(desiredMoveDirection);
+                MoveCharacter(desiredMoveDirection);
+                ApplyGravity();
+                RotateCharacter(desiredMoveDirection);
+            }
+        }
     }
 
     private void keyboardInput()

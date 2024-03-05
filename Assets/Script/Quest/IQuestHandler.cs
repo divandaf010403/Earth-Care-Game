@@ -1,9 +1,14 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public interface IQuestHandler {
+public interface IQuestHandler
+{
+    Camera QuestCamera { get; }
+    Transform QuestPlayerPosition { get; }
+    Transform QuestCameraPosition { get; }
+    Transform TrashSpawner { get; }
+    Transform IsActiveTrigger { get; }
+
     void OnQuestStart();
     void OnQuestFinish();
 }
@@ -12,7 +17,8 @@ public class QuestEventArgs : EventArgs
 {
     public QuestEventArgs(IQuestHandler questHandler)
     {
-        iQuestHandler = questHandler;
+        IQuestHandler = questHandler;
     }
-    public IQuestHandler iQuestHandler;
+
+    public IQuestHandler IQuestHandler { get; }
 }

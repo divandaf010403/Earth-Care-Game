@@ -4,10 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - BersihSampah
   - Item
   - Trashcan
-  - PilahSampah
+  - Quest
   layers:
   - Default
   - TransparentFX
@@ -16,10 +15,10 @@ TagManager:
   - Water
   - UI
   - Interactable
-  - 
-  - 
-  - 
-  - 
+  - Props
+  - MainCharacter
+  - NPC
+  - Quest
   - 
   - 
   - 
