@@ -10,9 +10,9 @@ public static class SaveSystem
     [System.Serializable]
     public class ShopData
     {
-        public List<Shop.ShopItem> shopItemList;
+        public List<ShopController.ShopItem> shopItemList;
 
-        public ShopData(List<Shop.ShopItem> items)
+        public ShopData(List<ShopController.ShopItem> items)
         {
             shopItemList = items;
         }
@@ -41,7 +41,7 @@ public static class SaveSystem
         }
     }
 
-    public static void SaveShop(List<Shop.ShopItem> shopItemList)
+    public static void SaveShop(List<ShopController.ShopItem> shopItemList)
     {
         Debug.Log(shopPath);
         ShopData shopData = new ShopData(shopItemList);
@@ -50,7 +50,7 @@ public static class SaveSystem
     }
 
     // Load shop data
-    public static List<Shop.ShopItem> LoadShop()
+    public static List<ShopController.ShopItem> LoadShop()
     {
         Debug.Log(shopPath);
         if (File.Exists(shopPath))

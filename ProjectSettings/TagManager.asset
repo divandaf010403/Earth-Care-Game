@@ -7,6 +7,8 @@ TagManager:
   - Item
   - Trashcan
   - Quest
+  - BersihSampah
+  - Merchant
   layers:
   - Default
   - TransparentFX

@@ -40,6 +40,9 @@ public class MainCharMovement : MonoBehaviour
     public bool isMoveLeft = false;
     public bool isMoveRIght = false;
 
+    [Header("Shop Controller")]
+    public ShopController shop;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -226,14 +229,14 @@ public class MainCharMovement : MonoBehaviour
         loadingPanel.SetActive(false);
     }
 
-    public void ShowShopPanel(Shop shop)
+    public void ShowShopPanel()
     {
         shopPanel.SetActive(true);
         shopPanel.transform.localPosition = new Vector3(0f, 0f, 0f);
         shop.LoadShopData();
     }
 
-    public void CloseShopPanel(Shop shop)
+    public void CloseShopPanel()
     {
         shopPanel.SetActive(false);
         if (shop != null && shop.ShopScrollView != null)

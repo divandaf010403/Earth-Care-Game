@@ -9,6 +9,7 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     [SerializeField] public Transform questCameraPosition;
     [SerializeField] public Transform trashSpawner;
     public Transform isActiveTrigger;
+    public List<GameObject> colliderQuest;
 
     [Header("Component")]
     public GameController gc;
@@ -64,6 +65,11 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
 
         gc.mainUI.SetActive(false);
         gc.pilahSampahUI.SetActive(true);
+
+        foreach (GameObject obj in colliderQuest)
+        {
+            obj.SetActive(true);
+        }
     }
 
     public void Selesai_Misi()
@@ -83,6 +89,11 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
 
         gc.mainUI.SetActive(true);
         gc.pilahSampahUI.SetActive(false);
+
+        foreach (GameObject obj in colliderQuest)
+        {
+            obj.SetActive(false);
+        }
     }
 
     public void OnQuestStart() {

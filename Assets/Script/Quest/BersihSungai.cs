@@ -9,8 +9,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     [SerializeField] public Transform questCameraPosition;
     [SerializeField] public Transform trashSpawner;
     public Transform isActiveTrigger;
-    public Transform isActiveLeftCollider;
-    public Transform isActiveRightCollider;
+    public List<GameObject> colliderQuest;
 
     [Header("Get Component")]
     public GameController gc;
@@ -34,9 +33,6 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
         {
             Debug.LogError("Interactions component not found on MainCharacter.");
         }
-
-        isActiveLeftCollider.gameObject.SetActive(false);
-        isActiveRightCollider.gameObject.SetActive(false);
     }
 
     IEnumerator ActivateObjectDelayed()
@@ -47,14 +43,10 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
             if (interactions.isQuestStart)
             {
                 isActiveTrigger.gameObject.SetActive(false);
-                isActiveLeftCollider.gameObject.SetActive(true);
-                isActiveRightCollider.gameObject.SetActive(true);
             }
             else
             {
                 isActiveTrigger.gameObject.SetActive(true);
-                isActiveLeftCollider.gameObject.SetActive(false);
-                isActiveRightCollider.gameObject.SetActive(false);
             }
         }
     }
@@ -85,6 +77,11 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
 
         gc.mainUI.SetActive(false);
         gc.bersihSungaiUI.SetActive(true);
+
+        foreach (GameObject obj in colliderQuest)
+        {
+            obj.SetActive(true);
+        }
     }
 
     public void Selesai_Misi()
@@ -104,6 +101,11 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
 
         gc.mainUI.SetActive(true);
         gc.bersihSungaiUI.SetActive(false);
+
+        foreach (GameObject obj in colliderQuest)
+        {
+            obj.SetActive(false);
+        }
     }
 
     public void OnQuestStart()
