@@ -5,16 +5,20 @@ using UnityEngine;
 public class TrashController : MonoBehaviour, Interactable, IInventoryItem
 {
     private List<string> jenisSampahList = new List<string> { "Organik", "Anorganik" };
-    [SerializeField] private string _prompt;
+
+    [SerializeField]
+    private string _prompt;
     public string InteractionPrompt => _prompt;
     public Sprite _image = null;
     public string jenisSampahNama;
+    public string typeSampahTxt;
 
     public bool Interact(Interactions interactions)
     {
         var interactKey = interactions.GetComponent<InteractKey>();
 
-        if (interactKey == null) return false;
+        if (interactKey == null)
+            return false;
 
         if (interactKey.HasKey)
         {
@@ -46,6 +50,11 @@ public class TrashController : MonoBehaviour, Interactable, IInventoryItem
     public string jenisSampah
     {
         get { return jenisSampahNama; }
+    }
+
+    public string typeSampah
+    {
+        get { return typeSampahTxt; }
     }
 
     public void OnPickup()

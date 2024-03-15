@@ -7,6 +7,7 @@ public interface IInventoryItem
 {
     string name { get; }
     Sprite image { get; }
+    string typeSampah { get; }
     string jenisSampah { get; }
     void OnPickup();
     void OnDrop();

@@ -13,8 +13,11 @@ public class Interactions : MonoBehaviour
     [SerializeField]
     private float _interactPointRadius;
 
-    [SerializeField] private LayerMask _interactLayerMask;
-    [SerializeField] private LayerMask _questLayerMask;
+    [SerializeField]
+    private LayerMask _interactLayerMask;
+
+    [SerializeField]
+    private LayerMask _questLayerMask;
 
     private readonly Collider[] _colliders = new Collider[1];
 
@@ -32,22 +35,29 @@ public class Interactions : MonoBehaviour
     [Header("Inventory")]
     Transform otherGameObject;
     Transform inventoryPanel;
+    public Transform inventoryExtPanel;
 
     [Header("Ambil Variabel")]
     GameController gc;
 
     [Header("Main Character Settings")]
-    [SerializeField] public Vector3 newPosition;
+    [SerializeField]
+    public Vector3 newPosition;
 
-    [SerializeField] public Vector3 newRotation;
+    [SerializeField]
+    public Vector3 newRotation;
 
     [SerializeField]
     public Vector3 oldPosition = Vector3.zero;
 
     [SerializeField]
     public Vector3 oldRotation = Vector3.zero;
-    [SerializeField] public Vector3 cameraSetPosition = Vector3.zero;
-    [SerializeField] public Vector3 cameraSetRotation = Vector3.zero;
+
+    [SerializeField]
+    public Vector3 cameraSetPosition = Vector3.zero;
+
+    [SerializeField]
+    public Vector3 cameraSetRotation = Vector3.zero;
 
     [Header("Quest")]
     public bool isQuestStart = false;
@@ -145,32 +155,68 @@ public class Interactions : MonoBehaviour
 
     private void InventoryScript_ItemAdded(object sender, InventoryEventArgs e)
     {
-        foreach (Transform slot in inventoryPanel)
+        if (e.Item.jenisSampah == "Trash")
         {
-            // Check if the slot has any children
-            if (slot.childCount > 0)
+            foreach (Transform slot in inventoryPanel)
             {
-                Transform imageTransform = slot.GetChild(0).GetChild(0);
-                Image image = imageTransform.GetChild(0).GetComponent<Image>();
-                // ItemDragHandler itemDragHandler = imageTransform.GetComponent<ItemDragHandler>();
-                InventoryVariable inventoryVariable =
-                    imageTransform.GetComponent<InventoryVariable>();
-
-                if (!image.enabled)
+                // Check if the slot has any children
+                if (slot.childCount > 0)
                 {
-                    image.enabled = true;
-                    image.sprite = e.Item.image;
+                    Transform imageTransform = slot.GetChild(0).GetChild(0);
+                    Image image = imageTransform.GetChild(0).GetComponent<Image>();
+                    // ItemDragHandler itemDragHandler = imageTransform.GetComponent<ItemDragHandler>();
+                    InventoryVariable inventoryVariable =
+                        imageTransform.GetComponent<InventoryVariable>();
 
-                    inventoryVariable.jenisSampah = e.Item.jenisSampah;
-
-                    // itemDragHandler.Item = e.Item;
-
-                    if (mainChar != null)
+                    if (!image.enabled)
                     {
-                        mainChar.cubeVal++;
-                    }
+                        image.enabled = true;
+                        image.sprite = e.Item.image;
 
-                    break;
+                        inventoryVariable.jenisSampah = e.Item.jenisSampah;
+
+                        // itemDragHandler.Item = e.Item;
+
+                        if (mainChar != null)
+                        {
+                            mainChar.cubeVal++;
+                        }
+
+                        break;
+                    }
+                }
+            }
+        }
+        else if (e.Item.typeSampah == "Collectible")
+        {
+            Debug.Log(inventoryExtPanel.GetChild(0).childCount);
+            foreach (Transform slot in inventoryExtPanel)
+            {
+                if (slot.GetChild(0).childCount > 0)
+                {
+                    Transform imageTransform = slot.GetChild(0).GetChild(0);
+                    Image image = imageTransform.GetComponent<Image>();
+                    ItemDragHandler itemDragHandler =
+                        imageTransform.GetComponent<ItemDragHandler>();
+                    InventoryVariable inventoryVariable =
+                        imageTransform.GetComponent<InventoryVariable>();
+
+                    if (!image.enabled)
+                    {
+                        image.enabled = true;
+                        image.sprite = e.Item.image;
+
+                        inventoryVariable.jenisSampah = e.Item.jenisSampah;
+
+                        //itemDragHandler.Item = e.Item;
+
+                        if (mainChar != null)
+                        {
+                            mainChar.cubeVal++;
+                        }
+
+                        break;
+                    }
                 }
             }
         }
