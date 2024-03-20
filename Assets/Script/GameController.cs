@@ -12,4 +12,17 @@ public class GameController : MonoBehaviour
     public GameObject mainUI;
     public GameObject pilahSampahUI;
     public GameObject bersihSungaiUI;
+
+    [Header("Inventory")]
+    public Transform inventory;
+    public Transform inventoryExt;
+
+    private void Start() {
+        inventoryExt.gameObject.SetActive(false);
+    }
+
+    public void openCloseinventoryExt(bool isActive) {
+        inventoryExt.gameObject.SetActive(isActive);
+        inventoryExt.localPosition = new Vector3(0f, 0f, 0f);
+    }
 }

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Cinemachine.Utility;
 using TMPro;
 using Unity.Burst.CompilerServices;
@@ -26,6 +27,7 @@ public class Interactions : MonoBehaviour
 
     [SerializeField]
     public GameObject buttonInteract;
+    public List<Sprite> imgAction;
 
     [Header("Get Component")]
     MainCharMovement mainChar;
@@ -89,13 +91,17 @@ public class Interactions : MonoBehaviour
 
         if (_numFound > 0)
         {
+            Image setActionImg = buttonInteract.transform.GetChild(0).GetComponent<Image>();
             if (_colliders[0].CompareTag("Item"))
             {
                 buttonInteract.SetActive(true);
+                setActionImg.sprite = imgAction[0];
+                
             }
             else if (_colliders[0].CompareTag("Trashcan"))
             {
                 buttonInteract.SetActive(true);
+                setActionImg.sprite = imgAction[1];
             }
             else
             {
@@ -155,7 +161,7 @@ public class Interactions : MonoBehaviour
 
     private void InventoryScript_ItemAdded(object sender, InventoryEventArgs e)
     {
-        if (e.Item.jenisSampah == "Trash")
+        if (e.Item.typeSampah == "Trash")
         {
             foreach (Transform slot in inventoryPanel)
             {
