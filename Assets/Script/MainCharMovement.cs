@@ -31,6 +31,7 @@ public class MainCharMovement : MonoBehaviour
     public FixedJoystick[] joysticks;
     public FixedTouchField touchField;
     GameController gc;
+    Animator anim;
     public GameObject loadingPanel;
     public GameObject shopPanel;
     public GameObject mulaiMisiBtn;
@@ -50,6 +51,7 @@ public class MainCharMovement : MonoBehaviour
 
         controller = GetComponent<CharacterController>();
         gc = gameController.GetComponent<GameController>();
+        anim = GetComponent<Animator>();
 
         notificationPanel.gameObject.SetActive(false);
         loadingPanel.SetActive(false);
@@ -84,33 +86,53 @@ public class MainCharMovement : MonoBehaviour
     }
 
     private void analogInput()
+{
+    foreach (FixedJoystick joystick in joysticks)
     {
-        foreach (FixedJoystick joystick in joysticks)
+        if (joystick.gameObject.activeSelf)
         {
-            if (joystick.gameObject.activeSelf)
+            float rotationX = touchField.TouchDist.x * rotationSpeedX * Time.deltaTime;
+            float rotationY = touchField.TouchDist.y * rotationSpeedY * Time.deltaTime;
+
+            camFreeLook.m_XAxis.Value += rotationX;
+            camFreeLook.m_YAxis.Value -= rotationY;
+
+            // IMPLEMENTASI JOYSTICK
+            float x = joystick.Horizontal;
+            float z = joystick.Vertical;
+
+            Vector3 cameraForward = playerCamera.forward;
+            Vector3 cameraRight = playerCamera.right;
+            cameraForward.y = 0f;
+            cameraRight.y = 0f;
+            Vector3 desiredMoveDirection = Vector3.zero;
+
+            if (x != 0 || z != 0)
             {
-                float rotationX = touchField.TouchDist.x * rotationSpeedX * Time.fixedDeltaTime;
-                float rotationY = touchField.TouchDist.y * rotationSpeedY * Time.fixedDeltaTime;
+                desiredMoveDirection = (cameraForward.normalized * z + cameraRight.normalized * x).normalized;
+            }
 
-                camFreeLook.m_XAxis.Value += rotationX;
-                camFreeLook.m_YAxis.Value -= rotationY;
+            MoveCharacter(desiredMoveDirection);
+            ApplyGravity();
+            RotateCharacter(desiredMoveDirection);
 
-                // IMPLEMENTASI JOYSTICK
-                float x = joystick.Horizontal;
-                float z = joystick.Vertical;
-
-                Vector3 cameraForward = playerCamera.forward;
-                Vector3 cameraRight = playerCamera.right;
-                cameraForward.y = 0f;
-                cameraRight.y = 0f;
-                Vector3 desiredMoveDirection = (cameraForward.normalized * z + cameraRight.normalized * x).normalized;
-
-                MoveCharacter(desiredMoveDirection);
-                ApplyGravity();
-                RotateCharacter(desiredMoveDirection);
+            if (anim != null)
+            {
+                if (x != 0 || z != 0)
+                {
+                    anim.SetTrigger("run_Trigger");
+                    anim.ResetTrigger("idle_Trigger");
+                }
+                else
+                {
+                    anim.SetTrigger("idle_Trigger");
+                    anim.ResetTrigger("run_Trigger");
+                }
             }
         }
     }
+}
+
 
     private void keyboardInput()
     {
