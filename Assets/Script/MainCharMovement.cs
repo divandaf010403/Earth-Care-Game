@@ -87,51 +87,45 @@ public class MainCharMovement : MonoBehaviour
 
     private void analogInput()
     {
+        // Camera Rotation
+        float rotationX = touchField.TouchDist.x * rotationSpeedX * Time.deltaTime;
+        float rotationY = touchField.TouchDist.y * rotationSpeedY * Time.deltaTime;
+
+        camFreeLook.m_XAxis.Value += rotationX;
+        camFreeLook.m_YAxis.Value -= rotationY;
+
+        // Joystick Input
+        float totalHorizontal = 0f;
+        float totalVertical = 0f;
         foreach (FixedJoystick joystick in joysticks)
         {
-            if (joystick.gameObject.activeSelf)
-            {
-                float rotationX = touchField.TouchDist.x * rotationSpeedX * Time.deltaTime;
-                float rotationY = touchField.TouchDist.y * rotationSpeedY * Time.deltaTime;
+            totalHorizontal += joystick.Horizontal;
+            totalVertical += joystick.Vertical;
+        }
 
-                camFreeLook.m_XAxis.Value += rotationX;
-                camFreeLook.m_YAxis.Value -= rotationY;
+        Vector3 cameraForward = playerCamera.forward;
+        Vector3 cameraRight = playerCamera.right;
+        cameraForward.y = 0f;
+        cameraRight.y = 0f;
+        Vector3 desiredMoveDirection = (cameraForward.normalized * totalVertical + cameraRight.normalized * totalHorizontal).normalized;
 
-                // IMPLEMENTASI JOYSTICK
-                float x = joystick.Horizontal;
-                float z = joystick.Vertical;
+        // Character Movement
+        MoveCharacter(desiredMoveDirection);
+        ApplyGravity();
+        RotateCharacter(desiredMoveDirection);
 
-                Debug.Log("Horizontal: " + joystick.Horizontal + ", Vertical: " + joystick.Vertical);
-
-                Vector3 cameraForward = playerCamera.forward;
-                Vector3 cameraRight = playerCamera.right;
-                cameraForward.y = 0f;
-                cameraRight.y = 0f;
-                Vector3 desiredMoveDirection = Vector3.zero;
-
-                if (x != 0 || z != 0)
-                {
-                    desiredMoveDirection = (cameraForward.normalized * z + cameraRight.normalized * x).normalized;
-                }
-
-                MoveCharacter(desiredMoveDirection);
-                ApplyGravity();
-                RotateCharacter(desiredMoveDirection);
-
-                if (x != 0 || z != 0)
-                {
-                    anim.SetTrigger("running");
-                    anim.ResetTrigger("idle");
-                }
-                else
-                {
-                    anim.SetTrigger("idle");
-                    anim.ResetTrigger("running");
-                }
-            }
+        // Animation
+        if (desiredMoveDirection.magnitude > 0)
+        {
+            anim.SetBool("running", true);
+            anim.SetBool("idle", false);
+        }
+        else
+        {
+            anim.SetBool("running", false);
+            anim.SetBool("idle", true);
         }
     }
-
 
     private void keyboardInput()
     {
