@@ -12,6 +12,7 @@ public class TrashController : MonoBehaviour, Interactable, IInventoryItem
     public Sprite _image = null;
     public string jenisSampahNama;
     public string typeSampahTxt;
+    public int totalSampahTxt = 1;
 
     public bool Interact(Interactions interactions)
     {
@@ -37,7 +38,7 @@ public class TrashController : MonoBehaviour, Interactable, IInventoryItem
         Debug.Log(go.transform.parent.gameObject.name);
     }
 
-    public string name
+    public string itemName
     {
         get { return gameObject.name; }
     }
@@ -55,6 +56,11 @@ public class TrashController : MonoBehaviour, Interactable, IInventoryItem
     public string typeSampah
     {
         get { return typeSampahTxt; }
+    }
+
+    public int jumlahItem
+    {
+        get { return totalSampahTxt; }
     }
 
     public void OnPickup()

@@ -1,9 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using System;
-using UnityEngine.UI;
 using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
@@ -16,9 +16,33 @@ public class Inventory : MonoBehaviour
     public ItemClickHandler[] itemSelected;
     public int defaultSelectedItemIndex = -1;
 
+    [Header("Save/Load")]
+    public List<GameObject> allItemInventory = new List<GameObject>();
+
+    [System.Serializable] public class inventoryData
+    {
+        public Sprite imgInv;
+        public string jenisSampahInv;
+        public int slotIndex;
+
+        public inventoryData(Sprite imgInv, string jenisSampahInv, int totalItem, int slotIndex)
+        {
+            this.imgInv = imgInv;
+            this.jenisSampahInv = jenisSampahInv;
+            this.slotIndex = slotIndex;
+        }
+    }
+
     private void Start()
     {
         ChangedSelectedSlot(0);
+
+        // SaveSystem.loadInventory();
+    }
+
+    public void OnApplicationQuit()
+    {
+        // SaveSystem.SaveInventory();
     }
 
     public void ChangedSelectedSlot(int newValue)

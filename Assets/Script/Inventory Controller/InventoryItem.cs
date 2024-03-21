@@ -5,10 +5,11 @@ using UnityEngine;
 
 public interface IInventoryItem
 {
-    string name { get; }
+    string itemName { get; }
     Sprite image { get; }
     string typeSampah { get; }
     string jenisSampah { get; }
+    int jumlahItem { get; }
     void OnPickup();
     void OnDrop();
 }

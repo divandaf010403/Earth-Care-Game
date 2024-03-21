@@ -135,7 +135,7 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 768
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
@@ -180,3 +180,4 @@ MonoBehaviour:
   _image: {fileID: 21300000, guid: 725d02ac869cfbb4c84d8a4859270e7a, type: 3}
   jenisSampahNama: Organik
   typeSampahTxt: Trash
+  totalSampahTxt: 1

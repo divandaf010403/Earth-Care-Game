@@ -171,8 +171,7 @@ public class Interactions : MonoBehaviour
                     Transform imageTransform = slot.GetChild(0).GetChild(0);
                     Image image = imageTransform.GetChild(0).GetComponent<Image>();
                     // ItemDragHandler itemDragHandler = imageTransform.GetComponent<ItemDragHandler>();
-                    InventoryVariable inventoryVariable =
-                        imageTransform.GetComponent<InventoryVariable>();
+                    InventoryVariable inventoryVariable = imageTransform.GetComponent<InventoryVariable>();
 
                     if (!image.enabled)
                     {
@@ -180,6 +179,7 @@ public class Interactions : MonoBehaviour
                         image.sprite = e.Item.image;
 
                         inventoryVariable.jenisSampah = e.Item.jenisSampah;
+                        inventoryVariable.totalSampah += e.Item.jumlahItem;
 
                         // itemDragHandler.Item = e.Item;
 
@@ -195,17 +195,15 @@ public class Interactions : MonoBehaviour
         }
         else if (e.Item.typeSampah == "Collectible")
         {
-            Debug.Log(inventoryExtPanel.GetChild(0).childCount);
             foreach (Transform slot in inventoryExtPanel)
             {
                 if (slot.GetChild(0).childCount > 0)
                 {
-                    Transform imageTransform = slot.GetChild(0).GetChild(0);
-                    Image image = imageTransform.GetComponent<Image>();
-                    ItemDragHandler itemDragHandler =
-                        imageTransform.GetComponent<ItemDragHandler>();
-                    InventoryVariable inventoryVariable =
-                        imageTransform.GetComponent<InventoryVariable>();
+                    Transform childTransform = slot.GetChild(0);
+                    Image image = childTransform.GetChild(0).GetComponent<Image>();
+                    InventoryVariable inventoryVariable = childTransform.GetChild(0).GetComponent<InventoryVariable>();
+                    TextMeshProUGUI totalItem = childTransform.GetChild(1).GetComponent<TextMeshProUGUI>();
+                    // ItemDragHandler itemDragHandler = imageTransform.GetComponent<ItemDragHandler>();
 
                     if (!image.enabled)
                     {
@@ -213,6 +211,8 @@ public class Interactions : MonoBehaviour
                         image.sprite = e.Item.image;
 
                         inventoryVariable.jenisSampah = e.Item.jenisSampah;
+                        inventoryVariable.totalSampah += e.Item.jumlahItem;
+                        totalItem.text = inventoryVariable.totalSampah.ToString();
 
                         //itemDragHandler.Item = e.Item;
 
@@ -221,6 +221,12 @@ public class Interactions : MonoBehaviour
                             mainChar.cubeVal++;
                         }
 
+                        break;
+                    }
+                    else if (inventoryVariable.jenisSampah == e.Item.jenisSampah)
+                    {
+                        inventoryVariable.totalSampah += e.Item.jumlahItem;
+                        totalItem.text = inventoryVariable.totalSampah.ToString();
                         break;
                     }
                 }

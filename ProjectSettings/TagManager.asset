@@ -9,6 +9,7 @@ TagManager:
   - Quest
   - BersihSampah
   - Merchant
+  - Props
   layers:
   - Default
   - TransparentFX

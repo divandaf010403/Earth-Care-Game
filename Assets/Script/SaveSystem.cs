@@ -20,6 +20,7 @@ public static class SaveSystem
 
     private static readonly string playerPath = Application.persistentDataPath + "/save/player.json";
     private static readonly string shopPath = Application.persistentDataPath + "/save/shopData.json";
+    private static readonly string inventoryPath = Application.persistentDataPath + "/save/inventoryData.json";
 
     public static void SavePlayer(MainCharMovement mainChar)
     {
@@ -43,7 +44,6 @@ public static class SaveSystem
 
     public static void SaveShop(List<ShopController.ShopItem> shopItemList)
     {
-        Debug.Log(shopPath);
         ShopData shopData = new ShopData(shopItemList);
         string json = JsonUtility.ToJson(shopData);
         File.WriteAllText(shopPath, json);
@@ -64,5 +64,10 @@ public static class SaveSystem
             Debug.LogError("Shop data not found at path: " + shopPath);
             return null;
         }
+    }
+
+    public static void SaveInventory(List<Inventory.inventoryData> inventoryData)
+    {
+        
     }
 }
