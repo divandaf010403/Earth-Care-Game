@@ -31,7 +31,7 @@ public class MainCharMovement : MonoBehaviour
     public FixedJoystick[] joysticks;
     public FixedTouchField touchField;
     GameController gc;
-    Animator anim;
+    public Animator anim;
     public GameObject loadingPanel;
     public GameObject shopPanel;
     public GameObject mulaiMisiBtn;
@@ -86,52 +86,51 @@ public class MainCharMovement : MonoBehaviour
     }
 
     private void analogInput()
-{
-    foreach (FixedJoystick joystick in joysticks)
     {
-        if (joystick.gameObject.activeSelf)
+        foreach (FixedJoystick joystick in joysticks)
         {
-            float rotationX = touchField.TouchDist.x * rotationSpeedX * Time.deltaTime;
-            float rotationY = touchField.TouchDist.y * rotationSpeedY * Time.deltaTime;
-
-            camFreeLook.m_XAxis.Value += rotationX;
-            camFreeLook.m_YAxis.Value -= rotationY;
-
-            // IMPLEMENTASI JOYSTICK
-            float x = joystick.Horizontal;
-            float z = joystick.Vertical;
-
-            Vector3 cameraForward = playerCamera.forward;
-            Vector3 cameraRight = playerCamera.right;
-            cameraForward.y = 0f;
-            cameraRight.y = 0f;
-            Vector3 desiredMoveDirection = Vector3.zero;
-
-            if (x != 0 || z != 0)
+            if (joystick.gameObject.activeSelf)
             {
-                desiredMoveDirection = (cameraForward.normalized * z + cameraRight.normalized * x).normalized;
-            }
+                float rotationX = touchField.TouchDist.x * rotationSpeedX * Time.deltaTime;
+                float rotationY = touchField.TouchDist.y * rotationSpeedY * Time.deltaTime;
 
-            MoveCharacter(desiredMoveDirection);
-            ApplyGravity();
-            RotateCharacter(desiredMoveDirection);
+                camFreeLook.m_XAxis.Value += rotationX;
+                camFreeLook.m_YAxis.Value -= rotationY;
 
-            if (anim != null)
-            {
+                // IMPLEMENTASI JOYSTICK
+                float x = joystick.Horizontal;
+                float z = joystick.Vertical;
+
+                Debug.Log("Horizontal: " + joystick.Horizontal + ", Vertical: " + joystick.Vertical);
+
+                Vector3 cameraForward = playerCamera.forward;
+                Vector3 cameraRight = playerCamera.right;
+                cameraForward.y = 0f;
+                cameraRight.y = 0f;
+                Vector3 desiredMoveDirection = Vector3.zero;
+
                 if (x != 0 || z != 0)
                 {
-                    anim.SetTrigger("run_Trigger");
-                    anim.ResetTrigger("idle_Trigger");
+                    desiredMoveDirection = (cameraForward.normalized * z + cameraRight.normalized * x).normalized;
+                }
+
+                MoveCharacter(desiredMoveDirection);
+                ApplyGravity();
+                RotateCharacter(desiredMoveDirection);
+
+                if (x != 0 || z != 0)
+                {
+                    anim.SetTrigger("running");
+                    anim.ResetTrigger("idle");
                 }
                 else
                 {
-                    anim.SetTrigger("idle_Trigger");
-                    anim.ResetTrigger("run_Trigger");
+                    anim.SetTrigger("idle");
+                    anim.ResetTrigger("running");
                 }
             }
         }
     }
-}
 
 
     private void keyboardInput()
@@ -150,6 +149,17 @@ public class MainCharMovement : MonoBehaviour
         cameraForward.y = 0f;
         cameraRight.y = 0f;
         Vector3 desiredMoveDirection = (cameraForward.normalized * verticalInput + cameraRight.normalized * horizontalInput).normalized;
+
+        if (horizontalInput != 0 || verticalInput != 0)
+        {
+            anim.SetTrigger("running");
+            // anim.ResetTrigger("idle");
+        }
+        else
+        {
+            anim.SetTrigger("idle");
+            // anim.ResetTrigger("running");
+        }
 
         MoveCharacter(desiredMoveDirection);
         ApplyGravity();

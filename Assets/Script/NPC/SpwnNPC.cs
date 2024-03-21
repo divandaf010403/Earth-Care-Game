@@ -24,7 +24,6 @@ public class SpwnNPC : MonoBehaviour
             obj.GetComponent<WaypointNavigator>().currentWaypoint = child.GetComponent<Waypoint>();
             obj.transform.SetParent(NpcParent); // Set the parent
             obj.transform.localPosition = new Vector3(child.localPosition.x, NpcParent.localPosition.y, child.localPosition.z);
-            Debug.Log(obj.transform.localPosition);
 
             yield return new WaitForEndOfFrame();
             count++;
