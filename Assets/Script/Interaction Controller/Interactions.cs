@@ -8,30 +8,19 @@ using UnityEngine.UI;
 
 public class Interactions : MonoBehaviour
 {
-    [SerializeField]
-    private Transform _interactPoint;
-
-    [SerializeField]
-    private float _interactPointRadius;
-
-    [SerializeField]
-    private LayerMask _interactLayerMask;
-
-    [SerializeField]
-    private LayerMask _questLayerMask;
-
+    [SerializeField] private Transform _interactPoint;
+    [SerializeField] private float _interactPointRadius;
+    [SerializeField] private LayerMask _interactLayerMask;
+    [SerializeField] private LayerMask _questLayerMask;
     private readonly Collider[] _colliders = new Collider[1];
-
-    [SerializeField]
-    private int _numFound;
-
-    [SerializeField]
-    public GameObject buttonInteract;
+    [SerializeField] private int _numFound;
+    [SerializeField] public GameObject buttonInteract;
     public List<Sprite> imgAction;
 
     [Header("Get Component")]
     MainCharMovement mainChar;
     public Inventory inventory;
+    public InventoryExt inventoryExt;
     TrashcanController trashcanController;
 
     [Header("Inventory")]
@@ -43,23 +32,12 @@ public class Interactions : MonoBehaviour
     GameController gc;
 
     [Header("Main Character Settings")]
-    [SerializeField]
-    public Vector3 newPosition;
-
-    [SerializeField]
-    public Vector3 newRotation;
-
-    [SerializeField]
-    public Vector3 oldPosition = Vector3.zero;
-
-    [SerializeField]
-    public Vector3 oldRotation = Vector3.zero;
-
-    [SerializeField]
-    public Vector3 cameraSetPosition = Vector3.zero;
-
-    [SerializeField]
-    public Vector3 cameraSetRotation = Vector3.zero;
+    [SerializeField] public Vector3 newPosition;
+    [SerializeField] public Vector3 newRotation;
+    [SerializeField] public Vector3 oldPosition = Vector3.zero;
+    [SerializeField] public Vector3 oldRotation = Vector3.zero;
+    [SerializeField] public Vector3 cameraSetPosition = Vector3.zero;
+    [SerializeField] public Vector3 cameraSetRotation = Vector3.zero;
 
     [Header("Quest")]
     public bool isQuestStart = false;
@@ -76,6 +54,7 @@ public class Interactions : MonoBehaviour
         buttonInteract.SetActive(false);
 
         inventory.ItemAdded += InventoryScript_ItemAdded;
+        inventoryExt.ItemAdded += InventoryExtScript_ItemAdded;
     }
 
     // Update is called once per frame
@@ -93,6 +72,12 @@ public class Interactions : MonoBehaviour
         {
             Image setActionImg = buttonInteract.transform.GetChild(0).GetComponent<Image>();
             if (_colliders[0].CompareTag("Item"))
+            {
+                buttonInteract.SetActive(true);
+                setActionImg.sprite = imgAction[0];
+                
+            }
+            else if (_colliders[0].CompareTag("ItemCraft"))
             {
                 buttonInteract.SetActive(true);
                 setActionImg.sprite = imgAction[0];
@@ -132,6 +117,10 @@ public class Interactions : MonoBehaviour
             {
                 removeItem();
             }
+            else if (_colliders[0].CompareTag("ItemCraft"))
+            {
+                removeItemCraft();
+            }
             else if (_colliders[0].CompareTag("Trashcan"))
             {
                 Interact_Trashcan();
@@ -156,6 +145,22 @@ public class Interactions : MonoBehaviour
         if (item != null)
         {
             inventory.AddItem(item);
+        }
+    }
+    
+    public void removeItemCraft()
+    {
+        var interactableItem = _colliders[0].GetComponent<Interactable>();
+        IInventoryItem item = _colliders[0].GetComponent<IInventoryItem>();
+
+        if (interactableItem != null)
+        {
+            interactableItem.Interact(this);
+        }
+
+        if (item != null)
+        {
+            inventoryExt.AddItem(item);
         }
     }
 
@@ -193,7 +198,11 @@ public class Interactions : MonoBehaviour
                 }
             }
         }
-        else if (e.Item.typeSampah == "Collectible")
+    }
+    
+    private void InventoryExtScript_ItemAdded(object sender, InventoryEventArgs e)
+    {
+        if (e.Item.typeSampah == "Collectible")
         {
             foreach (Transform slot in inventoryExtPanel)
             {

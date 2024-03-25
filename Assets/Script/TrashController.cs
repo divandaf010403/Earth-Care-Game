@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class TrashController : MonoBehaviour, Interactable, IInventoryItem
 {
-    private List<string> jenisSampahList = new List<string> { "Organik", "Anorganik" };
-
     [SerializeField]
     private string _prompt;
     public string InteractionPrompt => _prompt;
@@ -13,6 +11,17 @@ public class TrashController : MonoBehaviour, Interactable, IInventoryItem
     public string jenisSampahNama;
     public string typeSampahTxt;
     public int totalSampahTxt = 1;
+
+    public InventoryItemData GetItemData()
+    {
+        InventoryItemData itemData = new InventoryItemData();
+        itemData.itemName = itemName;
+        itemData.jenisSampah = jenisSampahNama;
+        itemData.typeSampah = typeSampahTxt;
+        itemData.jumlahItem = totalSampahTxt;
+        // Populate other fields as needed
+        return itemData;
+    }
 
     public bool Interact(Interactions interactions)
     {

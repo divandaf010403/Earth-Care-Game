@@ -10,6 +10,7 @@ TagManager:
   - BersihSampah
   - Merchant
   - Props
+  - ItemCraft
   layers:
   - Default
   - TransparentFX

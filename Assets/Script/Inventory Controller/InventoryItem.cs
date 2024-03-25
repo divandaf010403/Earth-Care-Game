@@ -23,3 +23,13 @@ public class InventoryEventArgs : EventArgs
 
     public IInventoryItem Item;
 }
+
+[Serializable]
+public class InventoryItemData
+{
+    public string itemName;
+    public string jenisSampah;
+    public string typeSampah;
+    public int jumlahItem;
+    // Add other fields as needed
+}

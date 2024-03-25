@@ -9,6 +9,7 @@ public class Inventory : MonoBehaviour
 {
     private const int SLOTS = 10;
     private List<IInventoryItem> mItem = new List<IInventoryItem>();
+    private List<int> cobaInventory = new List<int>();
     public event EventHandler<InventoryEventArgs> ItemAdded;
     public event EventHandler<InventoryEventArgs> ItemRemoved;
 
@@ -16,33 +17,16 @@ public class Inventory : MonoBehaviour
     public ItemClickHandler[] itemSelected;
     public int defaultSelectedItemIndex = -1;
 
-    [Header("Save/Load")]
-    public List<GameObject> allItemInventory = new List<GameObject>();
-
-    [System.Serializable] public class inventoryData
-    {
-        public Sprite imgInv;
-        public string jenisSampahInv;
-        public int slotIndex;
-
-        public inventoryData(Sprite imgInv, string jenisSampahInv, int totalItem, int slotIndex)
-        {
-            this.imgInv = imgInv;
-            this.jenisSampahInv = jenisSampahInv;
-            this.slotIndex = slotIndex;
-        }
-    }
-
     private void Start()
     {
         ChangedSelectedSlot(0);
 
-        // SaveSystem.loadInventory();
+        LoadInventory();
     }
 
     public void OnApplicationQuit()
     {
-        // SaveSystem.SaveInventory();
+        // SaveInventory();
     }
 
     public void ChangedSelectedSlot(int newValue)
@@ -73,6 +57,8 @@ public class Inventory : MonoBehaviour
                 {
                     ItemAdded(this, new InventoryEventArgs(item));
                 }
+
+                SaveInventory();
             }
         }
     }
@@ -90,10 +76,22 @@ public class Inventory : MonoBehaviour
                 collider.enabled = true;
             }
 
+            // SaveInventory();
+
             if (ItemRemoved != null)
             {
                 ItemRemoved(this, new InventoryEventArgs(item));
             }
         }
+    }
+    
+    private void SaveInventory()
+    {
+        SaveSystem.SaveInventory(mItem);
+    }
+
+    private void LoadInventory()
+    {
+        mItem = SaveSystem.LoadInventory();
     }
 }
