@@ -31,7 +31,7 @@ public static class SaveSystem
 
     private static readonly string playerPath = Application.persistentDataPath + "/save/player.json";
     private static readonly string shopPath = Application.persistentDataPath + "/save/shopData.json";
-    private static readonly string inventoryPath = Application.persistentDataPath + "/save/inventoryData.savSn";
+    private static readonly string inventoryPath = Application.persistentDataPath + "/save/inventoryData.json";
 
     public static void SavePlayer(MainCharMovement mainChar)
     {
@@ -86,61 +86,39 @@ public static class SaveSystem
         }
     }
 
-    public static void SaveInventory(List<IInventoryItem> inventory)
+    public static void SaveInventory(List<IInventoryItem> mItem)
     {
-        try
-        {
-            // Create the directory if it doesn't exist
-            string directoryPath = Path.GetDirectoryName(inventoryPath);
-            if (!Directory.Exists(directoryPath))
-            {
-                Directory.CreateDirectory(directoryPath);
-            }
+        InventoryItemDataList inventoryItemDataList = new InventoryItemDataList();
+        string directoryPath = Path.GetDirectoryName(inventoryPath);
 
-            // Use using statement to ensure proper file closure
-            using (FileStream stream = new FileStream(inventoryPath, FileMode.Create))
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                InventoryData data = new InventoryData(inventory);
-                formatter.Serialize(stream, data);
-            }
-
-            Debug.Log("Inventory data saved successfully.");
-        }
-        catch (Exception e)
+        if (!Directory.Exists(directoryPath))
         {
-            Debug.LogError("Error saving inventory data: " + e.Message);
+            Directory.CreateDirectory(directoryPath);
         }
+
+        for(int i = 0; i < mItem.Count; i++) {
+            InventoryItemData inventoryItemData = new InventoryItemData(mItem[i].itemName, mItem[i].image, mItem[i].typeSampah, mItem[i].jenisSampah, mItem[i].jumlahItem);
+            inventoryItemDataList.slotData.Add(inventoryItemData);
+        }
+
+        string json = JsonUtility.ToJson(inventoryItemDataList);
+
+        File.WriteAllText(inventoryPath, json);
+        Debug.Log("Inventory data saved successfully!");
     }
 
     public static List<IInventoryItem> LoadInventory()
     {
-        List<IInventoryItem> inventory = new List<IInventoryItem>();
-
-        try
+        if (File.Exists(inventoryPath))
         {
-            if (File.Exists(inventoryPath))
-            {
-                // Use using statement to ensure proper file closure
-                using (FileStream stream = new FileStream(inventoryPath, FileMode.Open))
-                {
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    InventoryData data = formatter.Deserialize(stream) as InventoryData;
-                    inventory = data.items; // Retrieving items from data
-                }
-
-                Debug.Log("Inventory data loaded successfully.");
-            }
-            else
-            {
-                Debug.LogWarning("Inventory data file does not exist.");
-            }
+            string json = File.ReadAllText(inventoryPath);
+            InventoryData inventoryData = JsonUtility.FromJson<InventoryData>(json);
+            return inventoryData.items;
         }
-        catch (Exception e)
+        else
         {
-            Debug.LogError("Error loading inventory data: " + e.Message);
+            Debug.LogError("Shop data not found at path: " + inventoryPath);
+            return null;
         }
-
-        return inventory;
     }
 }

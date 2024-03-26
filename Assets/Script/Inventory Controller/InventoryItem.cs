@@ -14,22 +14,19 @@ public interface IInventoryItem
     void OnDrop();
 }
 
-public class InventoryEventArgs : EventArgs
-{
-    public InventoryEventArgs(IInventoryItem item)
-    {
-        Item = item;
-    }
-
-    public IInventoryItem Item;
-}
-
-[Serializable]
-public class InventoryItemData
+[System.Serializable] public class InventoryEventArgs : EventArgs
 {
     public string itemName;
-    public string jenisSampah;
+    public Sprite itemImage;
     public string typeSampah;
+    public string jenisSampah;
     public int jumlahItem;
-    // Add other fields as needed
+    public InventoryEventArgs(IInventoryItem item)
+    {
+        this.itemName = item.itemName;
+        this.itemImage = item.image;
+        this.typeSampah = item.typeSampah;
+        this.jenisSampah = item.jenisSampah;
+        this.jumlahItem = item.jumlahItem;
+    }
 }

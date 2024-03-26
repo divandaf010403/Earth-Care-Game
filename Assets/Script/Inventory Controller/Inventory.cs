@@ -8,8 +8,7 @@ using UnityEngine.UI;
 public class Inventory : MonoBehaviour
 {
     private const int SLOTS = 10;
-    private List<IInventoryItem> mItem = new List<IInventoryItem>();
-    private List<int> cobaInventory = new List<int>();
+    [SerializeField] public List<IInventoryItem> mItem = new List<IInventoryItem>();
     public event EventHandler<InventoryEventArgs> ItemAdded;
     public event EventHandler<InventoryEventArgs> ItemRemoved;
 
@@ -21,7 +20,7 @@ public class Inventory : MonoBehaviour
     {
         ChangedSelectedSlot(0);
 
-        LoadInventory();
+        // LoadInventory();
     }
 
     public void OnApplicationQuit()
@@ -58,7 +57,8 @@ public class Inventory : MonoBehaviour
                     ItemAdded(this, new InventoryEventArgs(item));
                 }
 
-                SaveInventory();
+                // SaveSystem.SaveInventory(item.itemName, item.image, item.typeSampah, item.jenisSampah, item.jumlahItem);
+                SaveSystem.SaveInventory(mItem);
             }
         }
     }
@@ -84,14 +84,32 @@ public class Inventory : MonoBehaviour
             }
         }
     }
-    
-    private void SaveInventory()
-    {
-        SaveSystem.SaveInventory(mItem);
-    }
 
     private void LoadInventory()
     {
         mItem = SaveSystem.LoadInventory();
     }
+}
+
+[System.Serializable] public class InventoryItemData
+{
+    public string itemName;
+    public Sprite itemImage;
+    public string typeSampah;
+    public string jenisSampah;
+    public int jumlahItem;
+    public InventoryItemData(string itemName, Sprite itemImage, string typeSampah, string jenisSampah, int jumlahItem)
+    {
+        this.itemName = itemName;
+        this.itemImage = itemImage;
+        this.typeSampah = typeSampah;
+        this.jenisSampah = jenisSampah;
+        this.jumlahItem = jumlahItem;
+    }
+}
+
+[System.Serializable]
+public class InventoryItemDataList
+{
+    public List<InventoryItemData> slotData = new List<InventoryItemData>();
 }

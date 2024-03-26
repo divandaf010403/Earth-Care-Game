@@ -12,17 +12,6 @@ public class TrashController : MonoBehaviour, Interactable, IInventoryItem
     public string typeSampahTxt;
     public int totalSampahTxt = 1;
 
-    public InventoryItemData GetItemData()
-    {
-        InventoryItemData itemData = new InventoryItemData();
-        itemData.itemName = itemName;
-        itemData.jenisSampah = jenisSampahNama;
-        itemData.typeSampah = typeSampahTxt;
-        itemData.jumlahItem = totalSampahTxt;
-        // Populate other fields as needed
-        return itemData;
-    }
-
     public bool Interact(Interactions interactions)
     {
         var interactKey = interactions.GetComponent<InteractKey>();
@@ -40,12 +29,12 @@ public class TrashController : MonoBehaviour, Interactable, IInventoryItem
         return false;
     }
 
-    public void Interact(GameObject go)
-    {
-        Debug.Log("Item picked up!");
-        Destroy(go);
-        Debug.Log(go.transform.parent.gameObject.name);
-    }
+    // public void Interact(GameObject go)
+    // {
+    //     Debug.Log("Item picked up!");
+    //     Destroy(go);
+    //     Debug.Log(go.transform.parent.gameObject.name);
+    // }
 
     public string itemName
     {
@@ -74,8 +63,9 @@ public class TrashController : MonoBehaviour, Interactable, IInventoryItem
 
     public void OnPickup()
     {
-        //gameObject.SetActive(false);
-        Destroy(gameObject);
+        Debug.Log("Item picked up!");
+        gameObject.SetActive(false);
+        Invoke("DestroyAfterDelay", 5f);
     }
 
     public void OnDrop()
@@ -106,5 +96,10 @@ public class TrashController : MonoBehaviour, Interactable, IInventoryItem
         {
             Debug.LogError("MainCharacter not found!");
         }
+    }
+
+    private void DestroyAfterDelay()
+    {
+        Destroy(gameObject);
     }
 }

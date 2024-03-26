@@ -166,7 +166,7 @@ public class Interactions : MonoBehaviour
 
     private void InventoryScript_ItemAdded(object sender, InventoryEventArgs e)
     {
-        if (e.Item.typeSampah == "Trash")
+        if (e.typeSampah == "Trash")
         {
             foreach (Transform slot in inventoryPanel)
             {
@@ -181,10 +181,10 @@ public class Interactions : MonoBehaviour
                     if (!image.enabled)
                     {
                         image.enabled = true;
-                        image.sprite = e.Item.image;
+                        image.sprite = e.itemImage;
 
-                        inventoryVariable.jenisSampah = e.Item.jenisSampah;
-                        inventoryVariable.totalSampah += e.Item.jumlahItem;
+                        inventoryVariable.jenisSampah = e.jenisSampah;
+                        inventoryVariable.totalSampah += e.jumlahItem;
 
                         // itemDragHandler.Item = e.Item;
 
@@ -202,7 +202,7 @@ public class Interactions : MonoBehaviour
     
     private void InventoryExtScript_ItemAdded(object sender, InventoryEventArgs e)
     {
-        if (e.Item.typeSampah == "Collectible")
+        if (e.typeSampah == "Collectible")
         {
             foreach (Transform slot in inventoryExtPanel)
             {
@@ -217,10 +217,10 @@ public class Interactions : MonoBehaviour
                     if (!image.enabled)
                     {
                         image.enabled = true;
-                        image.sprite = e.Item.image;
+                        image.sprite = e.itemImage;
 
-                        inventoryVariable.jenisSampah = e.Item.jenisSampah;
-                        inventoryVariable.totalSampah += e.Item.jumlahItem;
+                        inventoryVariable.jenisSampah = e.jenisSampah;
+                        inventoryVariable.totalSampah += e.jumlahItem;
                         totalItem.text = inventoryVariable.totalSampah.ToString();
 
                         //itemDragHandler.Item = e.Item;
@@ -232,9 +232,9 @@ public class Interactions : MonoBehaviour
 
                         break;
                     }
-                    else if (inventoryVariable.jenisSampah == e.Item.jenisSampah)
+                    else if (inventoryVariable.jenisSampah == e.jenisSampah)
                     {
-                        inventoryVariable.totalSampah += e.Item.jumlahItem;
+                        inventoryVariable.totalSampah += e.jumlahItem;
                         totalItem.text = inventoryVariable.totalSampah.ToString();
                         break;
                     }
