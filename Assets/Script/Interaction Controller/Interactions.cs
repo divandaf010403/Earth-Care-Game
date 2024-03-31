@@ -53,8 +53,8 @@ public class Interactions : MonoBehaviour
         gc = gameController.GetComponent<GameController>();
         buttonInteract.SetActive(false);
 
-        inventory.ItemAdded += InventoryScript_ItemAdded;
-        inventoryExt.ItemAdded += InventoryExtScript_ItemAdded;
+        // inventory.ItemAdded += InventoryScript_ItemAdded;
+        // inventoryExt.ItemAdded += InventoryExtScript_ItemAdded;
     }
 
     // Update is called once per frame
@@ -123,7 +123,7 @@ public class Interactions : MonoBehaviour
             }
             else if (_colliders[0].CompareTag("Trashcan"))
             {
-                Interact_Trashcan();
+                // inventory.RemoveItem();
             }
         }
         else
@@ -164,41 +164,40 @@ public class Interactions : MonoBehaviour
         }
     }
 
-    private void InventoryScript_ItemAdded(object sender, InventoryEventArgs e)
-    {
-        if (e.typeSampah == "Trash")
-        {
-            foreach (Transform slot in inventoryPanel)
-            {
-                // Check if the slot has any children
-                if (slot.childCount > 0)
-                {
-                    Transform imageTransform = slot.GetChild(0).GetChild(0);
-                    Image image = imageTransform.GetChild(0).GetComponent<Image>();
-                    // ItemDragHandler itemDragHandler = imageTransform.GetComponent<ItemDragHandler>();
-                    InventoryVariable inventoryVariable = imageTransform.GetComponent<InventoryVariable>();
+    // private void InventoryScript_ItemAdded(object sender, InventoryEventArgs e)
+    // {
+    //     if (e.typeSampah == "Trash")
+    //     {
+    //         foreach (Transform slot in inventoryPanel)
+    //         {
+    //             if (slot.childCount > 0)
+    //             {
+    //                 Transform imageTransform = slot.GetChild(0).GetChild(0);
+    //                 Image image = imageTransform.GetChild(0).GetComponent<Image>();
+    //                 // ItemDragHandler itemDragHandler = imageTransform.GetComponent<ItemDragHandler>();
+    //                 InventoryVariable inventoryVariable = imageTransform.GetComponent<InventoryVariable>();
 
-                    if (!image.enabled)
-                    {
-                        image.enabled = true;
-                        image.sprite = e.itemImage;
+    //                 if (!image.enabled)
+    //                 {
+    //                     image.enabled = true;
+    //                     image.sprite = e.itemImage;
 
-                        inventoryVariable.jenisSampah = e.jenisSampah;
-                        inventoryVariable.totalSampah += e.jumlahItem;
+    //                     inventoryVariable.jenisSampah = e.jenisSampah;
+    //                     inventoryVariable.totalSampah += e.jumlahItem;
 
-                        // itemDragHandler.Item = e.Item;
+    //                     // itemDragHandler.Item = e.Item;
 
-                        if (mainChar != null)
-                        {
-                            mainChar.cubeVal++;
-                        }
+    //                     if (mainChar != null)
+    //                     {
+    //                         mainChar.cubeVal++;
+    //                     }
 
-                        break;
-                    }
-                }
-            }
-        }
-    }
+    //                     break;
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
     
     private void InventoryExtScript_ItemAdded(object sender, InventoryEventArgs e)
     {
@@ -243,44 +242,40 @@ public class Interactions : MonoBehaviour
         }
     }
 
-    private void Interact_Trashcan()
-    {
-        inventory = inventoryPanel.GetComponent<Inventory>();
-        Transform imageTransform = inventoryPanel
-            .GetChild(inventory.defaultSelectedItemIndex)
-            .GetChild(0);
-        Image image = imageTransform.GetChild(0).GetChild(0).GetComponent<Image>();
-        InventoryVariable inventoryVariable = imageTransform
-            .GetChild(0)
-            .GetComponent<InventoryVariable>();
+    // private void Interact_Trashcan()
+    // {
+    //     inventory = inventoryPanel.GetComponent<Inventory>();
+    //     Transform imageTransform = inventoryPanel.GetChild(inventory.defaultSelectedItemIndex).GetChild(0);
+    //     Image image = imageTransform.GetChild(0).GetChild(0).GetComponent<Image>();
+    //     InventoryVariable inventoryVariable = imageTransform.GetChild(0).GetComponent<InventoryVariable>();
 
-        trashcanController = _colliders[0].GetComponent<TrashcanController>();
-        if (trashcanController != null)
-        {
-            if (inventoryVariable.jenisSampah != "")
-            {
-                if (trashcanController.jenisTempatSampah == inventoryVariable.jenisSampah)
-                {
-                    image.enabled = false;
-                    image.sprite = null;
-                    inventoryVariable.jenisSampah = "";
-                    mainChar.countCoin(5);
-                    Debug.Log("Buang Sampah");
-                }
-                else
-                {
-                    StartCoroutine(
-                        time_delay(mainChar.notificationPanel, 2f, "Jenis Sampah Tidak Sesuai")
-                    );
-                    Debug.Log("Gagal Buang Sampah");
-                }
-            }
-            else
-            {
-                Debug.Log("Pembuangan Sampah Tidak Berhasil");
-            }
-        }
-    }
+    //     trashcanController = _colliders[0].GetComponent<TrashcanController>();
+    //     if (trashcanController != null)
+    //     {
+    //         if (inventoryVariable.jenisSampah != "")
+    //         {
+    //             if (trashcanController.jenisTempatSampah == inventoryVariable.jenisSampah)
+    //             {
+    //                 image.enabled = false;
+    //                 image.sprite = null;
+    //                 inventoryVariable.jenisSampah = "";
+    //                 mainChar.countCoin(5);
+    //                 Debug.Log("Buang Sampah");
+    //             }
+    //             else
+    //             {
+    //                 StartCoroutine(
+    //                     time_delay(mainChar.notificationPanel, 2f, "Jenis Sampah Tidak Sesuai")
+    //                 );
+    //                 Debug.Log("Gagal Buang Sampah");
+    //             }
+    //         }
+    //         else
+    //         {
+    //             Debug.Log("Pembuangan Sampah Tidak Berhasil");
+    //         }
+    //     }
+    // }
 
     IEnumerator time_delay(
         TextMeshProUGUI notificationPanel,

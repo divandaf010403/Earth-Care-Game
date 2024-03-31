@@ -8,7 +8,9 @@ using UnityEngine.UI;
 public class Inventory : MonoBehaviour
 {
     private const int SLOTS = 10;
-    [SerializeField] public List<IInventoryItem> mItem = new List<IInventoryItem>();
+
+    [SerializeField]
+    public List<IInventoryItem> mItem = new List<IInventoryItem>();
     public event EventHandler<InventoryEventArgs> ItemAdded;
     public event EventHandler<InventoryEventArgs> ItemRemoved;
 
@@ -20,12 +22,16 @@ public class Inventory : MonoBehaviour
     {
         ChangedSelectedSlot(0);
 
-        // LoadInventory();
+        LoadInventoryItem();
     }
 
     public void OnApplicationQuit()
     {
         // SaveInventory();
+    }
+    
+    void Update() {
+        LoadInventoryItem();
     }
 
     public void ChangedSelectedSlot(int newValue)
@@ -41,8 +47,11 @@ public class Inventory : MonoBehaviour
 
     public void AddItem(IInventoryItem item)
     {
+        InventoryItemDataList inventoryItemDataList = new InventoryItemDataList();
         Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
-        if (mItem.Count < SLOTS)
+        Debug.Log(inventoryItemDataList.slotData.Count);
+
+        if (inventoryItemDataList.slotData.Count < SLOTS)
         {
             if (collider.enabled)
             {
@@ -50,15 +59,18 @@ public class Inventory : MonoBehaviour
 
                 mItem.Add(item);
 
-                item.OnPickup();
+                // item.OnPickup();
 
                 if (ItemAdded != null)
                 {
                     ItemAdded(this, new InventoryEventArgs(item));
                 }
 
-                // SaveSystem.SaveInventory(item.itemName, item.image, item.typeSampah, item.jenisSampah, item.jumlahItem);
                 SaveSystem.SaveInventory(mItem);
+
+                LoadInventoryItem();
+
+                item.OnPickup();
             }
         }
     }
@@ -68,7 +80,7 @@ public class Inventory : MonoBehaviour
         if (mItem.Contains(item))
         {
             mItem.Remove(item);
-            item.OnDrop();
+            // item.OnDrop();
 
             Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
             if (collider != null)
@@ -76,29 +88,65 @@ public class Inventory : MonoBehaviour
                 collider.enabled = true;
             }
 
-            // SaveInventory();
-
             if (ItemRemoved != null)
             {
                 ItemRemoved(this, new InventoryEventArgs(item));
             }
+
+            SaveSystem.SaveInventory(mItem);
+
+            LoadInventoryItem();
         }
     }
 
-    private void LoadInventory()
+    void LoadInventoryItem() 
     {
-        mItem = SaveSystem.LoadInventory();
+        List<InventoryItemData> loadedItemData = SaveSystem.LoadInventory();
+
+        if (loadedItemData != null)
+        {
+            int childIndex = 0;
+            foreach (InventoryItemData itemData in loadedItemData)
+            {
+                Transform imageTransform = transform.GetChild(childIndex).GetChild(0).GetChild(0);
+                Image image = imageTransform.GetChild(0).GetComponent<Image>();
+                InventoryVariable inventoryVariable = imageTransform.GetComponent<InventoryVariable>();
+
+                // if (!image.enabled)
+                // {
+                    
+                // }
+
+                image.enabled = true;
+
+                inventoryVariable.itemName = itemData.itemName;
+                inventoryVariable.jenisSampah = itemData.jenisSampah;
+                inventoryVariable.totalSampah = itemData.jumlahItem;
+                
+                image.sprite = itemData.itemImage;
+
+                childIndex++;
+            }
+        }
     }
 }
 
-[System.Serializable] public class InventoryItemData
+[System.Serializable]
+public class InventoryItemData
 {
     public string itemName;
     public Sprite itemImage;
     public string typeSampah;
     public string jenisSampah;
     public int jumlahItem;
-    public InventoryItemData(string itemName, Sprite itemImage, string typeSampah, string jenisSampah, int jumlahItem)
+
+    public InventoryItemData(
+        string itemName,
+        Sprite itemImage,
+        string typeSampah,
+        string jenisSampah,
+        int jumlahItem
+    )
     {
         this.itemName = itemName;
         this.itemImage = itemImage;

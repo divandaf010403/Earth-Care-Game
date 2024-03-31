@@ -77,6 +77,7 @@ public static class SaveSystem
         {
             string json = File.ReadAllText(shopPath);
             ShopData shopData = JsonUtility.FromJson<ShopData>(json);
+            Debug.Log("Shop List" + shopData.shopItemList);
             return shopData.shopItemList;
         }
         else
@@ -86,20 +87,45 @@ public static class SaveSystem
         }
     }
 
+    // public static void SaveInventory(List<IInventoryItem> mItem)
+    // {
+    //     InventoryItemDataList inventoryItemDataList = new InventoryItemDataList();
+    //     string directoryPath = Path.GetDirectoryName(inventoryPath);
+
+    //     if (!Directory.Exists(directoryPath))
+    //     {
+    //         Directory.CreateDirectory(directoryPath);
+    //     }
+
+    //     for(int i = 0; i < mItem.Count; i++) {
+    //         InventoryItemData inventoryItemData = new InventoryItemData(mItem[i].itemName, mItem[i].image, mItem[i].typeSampah, mItem[i].jenisSampah, mItem[i].jumlahItem);
+    //         inventoryItemDataList.slotData.Add(inventoryItemData);
+    //     }
+
+    //     string json = JsonUtility.ToJson(inventoryItemDataList);
+
+    //     File.WriteAllText(inventoryPath, json);
+    //     Debug.Log("Inventory data saved successfully!");
+    // }
+
     public static void SaveInventory(List<IInventoryItem> mItem)
     {
-        InventoryItemDataList inventoryItemDataList = new InventoryItemDataList();
-        string directoryPath = Path.GetDirectoryName(inventoryPath);
-
-        if (!Directory.Exists(directoryPath))
+        List<InventoryItemData> existingInventoryData = LoadInventory();
+        if (existingInventoryData == null)
         {
-            Directory.CreateDirectory(directoryPath);
+            existingInventoryData = new List<InventoryItemData>();
         }
 
-        for(int i = 0; i < mItem.Count; i++) {
-            InventoryItemData inventoryItemData = new InventoryItemData(mItem[i].itemName, mItem[i].image, mItem[i].typeSampah, mItem[i].jenisSampah, mItem[i].jumlahItem);
-            inventoryItemDataList.slotData.Add(inventoryItemData);
+        existingInventoryData.Clear();
+
+        foreach (IInventoryItem item in mItem)
+        {
+            InventoryItemData inventoryItemData = new InventoryItemData(item.itemName, item.image, item.typeSampah, item.jenisSampah, item.jumlahItem);
+            existingInventoryData.Add(inventoryItemData);
         }
+
+        InventoryItemDataList inventoryItemDataList = new InventoryItemDataList();
+        inventoryItemDataList.slotData = existingInventoryData;
 
         string json = JsonUtility.ToJson(inventoryItemDataList);
 
@@ -107,13 +133,13 @@ public static class SaveSystem
         Debug.Log("Inventory data saved successfully!");
     }
 
-    public static List<IInventoryItem> LoadInventory()
+    public static List<InventoryItemData> LoadInventory()
     {
         if (File.Exists(inventoryPath))
         {
             string json = File.ReadAllText(inventoryPath);
-            InventoryData inventoryData = JsonUtility.FromJson<InventoryData>(json);
-            return inventoryData.items;
+            InventoryItemDataList inventoryDataItemList = JsonUtility.FromJson<InventoryItemDataList>(json);
+            return inventoryDataItemList.slotData;
         }
         else
         {

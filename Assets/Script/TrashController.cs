@@ -65,7 +65,7 @@ public class TrashController : MonoBehaviour, Interactable, IInventoryItem
     {
         Debug.Log("Item picked up!");
         gameObject.SetActive(false);
-        Invoke("DestroyAfterDelay", 5f);
+        // Destroy(gameObject);
     }
 
     public void OnDrop()

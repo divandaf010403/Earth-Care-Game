@@ -5,6 +5,7 @@ using UnityEngine;
 public class InventoryVariable : MonoBehaviour
 {
     public IInventoryItem Item { get; set; }
+    [SerializeField] public string itemName;
     [SerializeField] public string jenisSampah;
     [SerializeField] public int totalSampah;
 }
