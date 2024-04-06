@@ -109,9 +109,9 @@ public static class SaveSystem
     //     Debug.Log("Inventory data saved successfully!");
     // }
 
+    // Save untuk bottom Inventory
     public static void SaveInventory(List<InventoryItemData> existingInventoryData)
     {
-
         string directoryPath = Path.GetDirectoryName(inventoryPath);
 
         if (!Directory.Exists(directoryPath))
@@ -143,24 +143,18 @@ public static class SaveSystem
         }
     }
 
-    public static void SaveInventoryExt(List<IInventoryItem> mItem)
+    // Save untuk Inventory Extended
+    public static void SaveInventoryExt(List<InventoryExtItemData> existingInventoryData)
     {
-        List<InventoryExtItemData> existingInventoryExtData = LoadInventoryExt();
-        if (existingInventoryExtData == null)
-        {
-            existingInventoryExtData = new List<InventoryExtItemData>();
-        }
+        string directoryPath = Path.GetDirectoryName(inventoryExtPath);
 
-        existingInventoryExtData.Clear();
-
-        foreach (IInventoryItem item in mItem)
+        if (!Directory.Exists(directoryPath))
         {
-            InventoryExtItemData inventoryExtItemData = new InventoryExtItemData(item.itemName, item.image, item.typeSampah, item.jenisSampah, item.jumlahItem);
-            existingInventoryExtData.Add(inventoryExtItemData);
+            Directory.CreateDirectory(directoryPath);
         }
 
         InventoryExtItemDataList inventoryExtItemDataList = new InventoryExtItemDataList();
-        inventoryExtItemDataList.slotData = existingInventoryExtData;
+        inventoryExtItemDataList.slotData = existingInventoryData;
 
         string json = JsonUtility.ToJson(inventoryExtItemDataList);
 

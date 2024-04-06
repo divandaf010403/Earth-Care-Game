@@ -33,10 +33,11 @@ public class Inventory : MonoBehaviour
 
     public void OnApplicationQuit()
     {
-        // SaveInventory();
+        SaveSystem.SaveInventory(inventoryItemDataList.slotData);
     }
     
-    void Update() {
+    void Update() 
+    {
         LoadInventoryItem();
     }
 

@@ -18,7 +18,7 @@ public class GameController : MonoBehaviour
     public Transform inventoryExt;
 
     private void Start() {
-        inventoryExt.gameObject.SetActive(false);
+        // inventoryExt.gameObject.SetActive(false);
     }
 
     public void openCloseinventoryExt(bool isActive) {

@@ -23,6 +23,13 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     public Transform TrashSpawner => trashSpawner;
     public Transform IsActiveTrigger => isActiveTrigger;
 
+    [Header("Spawner")]
+    public List<GameObject> objectToSpawn;
+    public Transform spawnerMidPosition;
+    public float spawnRadius = 5f;
+    public int numberOfObjectsToSpawn = 10;
+
+
     IEnumerator ActivateObjectDelayed()
     {
         yield return null; // Menunggu satu frame
@@ -66,6 +73,8 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
         gc.mainUI.SetActive(false);
         gc.pilahSampahUI.SetActive(true);
 
+        SpawnObjects();
+
         foreach (GameObject obj in colliderQuest)
         {
             obj.SetActive(true);
@@ -104,5 +113,27 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     public void OnQuestFinish() {
         Selesai_Misi();
         StartCoroutine(ActivateObjectDelayed());
+    }
+
+    void SpawnObjects()
+    {
+        for (int i = 0; i < numberOfObjectsToSpawn; i++)
+        {
+            // Membuat titik spawn secara acak dalam radius spawn
+            Vector3 spawnPosition = Random.insideUnitSphere * spawnRadius;
+            spawnPosition += spawnerMidPosition.position;
+
+            // Set nilai y dari posisi spawn agar sama dengan nilai y dari posisi spawnerMidPosition
+            spawnPosition.y = spawnerMidPosition.position.y;
+
+            // Memilih objek secara acak dari daftar objectToSpawn
+            GameObject objectPrefab = objectToSpawn[Random.Range(0, objectToSpawn.Count)];
+
+            // Menginstansiasi objek di posisi spawn
+            GameObject spawnedObject = Instantiate(objectPrefab, spawnPosition, Quaternion.identity);
+
+            // Menjadikan objek yang di-spawn sebagai child dari spawnerMidPosition
+            spawnedObject.transform.parent = spawnerMidPosition;
+        }
     }
 }
