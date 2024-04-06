@@ -32,6 +32,7 @@ public static class SaveSystem
     private static readonly string playerPath = Application.persistentDataPath + "/save/player.json";
     private static readonly string shopPath = Application.persistentDataPath + "/save/shopData.json";
     private static readonly string inventoryPath = Application.persistentDataPath + "/save/inventoryData.json";
+    private static readonly string inventoryExtPath = Application.persistentDataPath + "/save/inventoryExtData.json";
 
     public static void SavePlayer(MainCharMovement mainChar)
     {
@@ -108,20 +109,14 @@ public static class SaveSystem
     //     Debug.Log("Inventory data saved successfully!");
     // }
 
-    public static void SaveInventory(List<IInventoryItem> mItem)
+    public static void SaveInventory(List<InventoryItemData> existingInventoryData)
     {
-        List<InventoryItemData> existingInventoryData = LoadInventory();
-        if (existingInventoryData == null)
-        {
-            existingInventoryData = new List<InventoryItemData>();
-        }
 
-        existingInventoryData.Clear();
+        string directoryPath = Path.GetDirectoryName(inventoryPath);
 
-        foreach (IInventoryItem item in mItem)
+        if (!Directory.Exists(directoryPath))
         {
-            InventoryItemData inventoryItemData = new InventoryItemData(item.itemName, item.image, item.typeSampah, item.jenisSampah, item.jumlahItem);
-            existingInventoryData.Add(inventoryItemData);
+            Directory.CreateDirectory(directoryPath);
         }
 
         InventoryItemDataList inventoryItemDataList = new InventoryItemDataList();
@@ -144,6 +139,46 @@ public static class SaveSystem
         else
         {
             Debug.LogError("Shop data not found at path: " + inventoryPath);
+            return null;
+        }
+    }
+
+    public static void SaveInventoryExt(List<IInventoryItem> mItem)
+    {
+        List<InventoryExtItemData> existingInventoryExtData = LoadInventoryExt();
+        if (existingInventoryExtData == null)
+        {
+            existingInventoryExtData = new List<InventoryExtItemData>();
+        }
+
+        existingInventoryExtData.Clear();
+
+        foreach (IInventoryItem item in mItem)
+        {
+            InventoryExtItemData inventoryExtItemData = new InventoryExtItemData(item.itemName, item.image, item.typeSampah, item.jenisSampah, item.jumlahItem);
+            existingInventoryExtData.Add(inventoryExtItemData);
+        }
+
+        InventoryExtItemDataList inventoryExtItemDataList = new InventoryExtItemDataList();
+        inventoryExtItemDataList.slotData = existingInventoryExtData;
+
+        string json = JsonUtility.ToJson(inventoryExtItemDataList);
+
+        File.WriteAllText(inventoryExtPath, json);
+        Debug.Log("Inventory data saved successfully!");
+    }
+
+    public static List<InventoryExtItemData> LoadInventoryExt()
+    {
+        if (File.Exists(inventoryExtPath))
+        {
+            string json = File.ReadAllText(inventoryExtPath);
+            InventoryExtItemDataList inventoryExtDataItemList = JsonUtility.FromJson<InventoryExtItemDataList>(json);
+            return inventoryExtDataItemList.slotData;
+        }
+        else
+        {
+            Debug.LogError("Shop data not found at path: " + inventoryExtPath);
             return null;
         }
     }

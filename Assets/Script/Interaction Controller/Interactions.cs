@@ -123,7 +123,8 @@ public class Interactions : MonoBehaviour
             }
             else if (_colliders[0].CompareTag("Trashcan"))
             {
-                // inventory.RemoveItem();
+                trashcanController = _colliders[0].GetComponent<TrashcanController>();
+                inventory.RemoveItem(trashcanController);
             }
         }
         else
@@ -199,55 +200,55 @@ public class Interactions : MonoBehaviour
     //     }
     // }
     
-    private void InventoryExtScript_ItemAdded(object sender, InventoryEventArgs e)
-    {
-        if (e.typeSampah == "Collectible")
-        {
-            foreach (Transform slot in inventoryExtPanel)
-            {
-                if (slot.GetChild(0).childCount > 0)
-                {
-                    Transform childTransform = slot.GetChild(0);
-                    Image image = childTransform.GetChild(0).GetComponent<Image>();
-                    InventoryVariable inventoryVariable = childTransform.GetChild(0).GetComponent<InventoryVariable>();
-                    TextMeshProUGUI totalItem = childTransform.GetChild(1).GetComponent<TextMeshProUGUI>();
-                    // ItemDragHandler itemDragHandler = imageTransform.GetComponent<ItemDragHandler>();
+    // private void InventoryExtScript_ItemAdded(object sender, InventoryEventArgs e)
+    // {
+    //     if (e.typeSampah == "Collectible")
+    //     {
+    //         foreach (Transform slot in inventoryExtPanel)
+    //         {
+    //             if (slot.GetChild(0).childCount > 0)
+    //             {
+    //                 Transform childTransform = slot.GetChild(0);
+    //                 Image image = childTransform.GetChild(0).GetComponent<Image>();
+    //                 InventoryVariable inventoryVariable = childTransform.GetChild(0).GetComponent<InventoryVariable>();
+    //                 TextMeshProUGUI totalItem = childTransform.GetChild(1).GetComponent<TextMeshProUGUI>();
+    //                 // ItemDragHandler itemDragHandler = imageTransform.GetComponent<ItemDragHandler>();
 
-                    if (!image.enabled)
-                    {
-                        image.enabled = true;
-                        image.sprite = e.itemImage;
+    //                 if (!image.enabled)
+    //                 {
+    //                     image.enabled = true;
+    //                     image.sprite = e.itemImage;
 
-                        inventoryVariable.jenisSampah = e.jenisSampah;
-                        inventoryVariable.totalSampah += e.jumlahItem;
-                        totalItem.text = inventoryVariable.totalSampah.ToString();
+    //                     inventoryVariable.jenisSampah = e.jenisSampah;
+    //                     inventoryVariable.totalSampah += e.jumlahItem;
+    //                     totalItem.text = inventoryVariable.totalSampah.ToString();
 
-                        //itemDragHandler.Item = e.Item;
+    //                     //itemDragHandler.Item = e.Item;
 
-                        if (mainChar != null)
-                        {
-                            mainChar.cubeVal++;
-                        }
+    //                     if (mainChar != null)
+    //                     {
+    //                         mainChar.cubeVal++;
+    //                     }
 
-                        break;
-                    }
-                    else if (inventoryVariable.jenisSampah == e.jenisSampah)
-                    {
-                        inventoryVariable.totalSampah += e.jumlahItem;
-                        totalItem.text = inventoryVariable.totalSampah.ToString();
-                        break;
-                    }
-                }
-            }
-        }
-    }
+    //                     break;
+    //                 }
+    //                 else if (inventoryVariable.jenisSampah == e.jenisSampah)
+    //                 {
+    //                     inventoryVariable.totalSampah += e.jumlahItem;
+    //                     totalItem.text = inventoryVariable.totalSampah.ToString();
+    //                     break;
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
     // private void Interact_Trashcan()
     // {
-    //     inventory = inventoryPanel.GetComponent<Inventory>();
-    //     Transform imageTransform = inventoryPanel.GetChild(inventory.defaultSelectedItemIndex).GetChild(0);
-    //     Image image = imageTransform.GetChild(0).GetChild(0).GetComponent<Image>();
-    //     InventoryVariable inventoryVariable = imageTransform.GetChild(0).GetComponent<InventoryVariable>();
+        // inventory = inventoryPanel.GetComponent<Inventory>();
+        // Transform imageTransform = inventoryPanel.GetChild(inventory.defaultSelectedItemIndex).GetChild(0);
+        // Image image = imageTransform.GetChild(0).GetChild(0).GetComponent<Image>();
+        // InventoryVariable inventoryVariable = imageTransform.GetChild(0).GetComponent<InventoryVariable>();
 
     //     trashcanController = _colliders[0].GetComponent<TrashcanController>();
     //     if (trashcanController != null)

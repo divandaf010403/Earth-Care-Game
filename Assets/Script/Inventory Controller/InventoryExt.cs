@@ -63,3 +63,34 @@ public class InventoryExt : MonoBehaviour
         }
     }
 }
+
+[System.Serializable]
+public class InventoryExtItemData
+{
+    public string itemName;
+    public Sprite itemImage;
+    public string typeSampah;
+    public string jenisSampah;
+    public int jumlahItem;
+
+    public InventoryExtItemData(
+        string itemName,
+        Sprite itemImage,
+        string typeSampah,
+        string jenisSampah,
+        int jumlahItem
+    )
+    {
+        this.itemName = itemName;
+        this.itemImage = itemImage;
+        this.typeSampah = typeSampah;
+        this.jenisSampah = jenisSampah;
+        this.jumlahItem = jumlahItem;
+    }
+}
+
+[System.Serializable]
+public class InventoryExtItemDataList
+{
+    public List<InventoryExtItemData> slotData = new List<InventoryExtItemData>();
+}

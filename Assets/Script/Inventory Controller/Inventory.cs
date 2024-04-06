@@ -13,13 +13,19 @@ public class Inventory : MonoBehaviour
     public List<IInventoryItem> mItem = new List<IInventoryItem>();
     public event EventHandler<InventoryEventArgs> ItemAdded;
     public event EventHandler<InventoryEventArgs> ItemRemoved;
+    public InventoryItemDataList inventoryItemDataList;
 
     [Header("Pilihan Inventory")]
     public ItemClickHandler[] itemSelected;
     public int defaultSelectedItemIndex = -1;
 
+    public int myItemId;
+    public string ID_KEY = "ID_KEY";
+
     private void Start()
     {
+        myItemId = PlayerPrefs.GetInt(ID_KEY, 1);
+
         ChangedSelectedSlot(0);
 
         LoadInventoryItem();
@@ -47,7 +53,6 @@ public class Inventory : MonoBehaviour
 
     public void AddItem(IInventoryItem item)
     {
-        InventoryItemDataList inventoryItemDataList = new InventoryItemDataList();
         Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
         Debug.Log(inventoryItemDataList.slotData.Count);
 
@@ -58,44 +63,72 @@ public class Inventory : MonoBehaviour
                 collider.enabled = false;
 
                 mItem.Add(item);
-
-                // item.OnPickup();
+                InventoryItemData inventoryItemData = new InventoryItemData(myItemId, item.itemName, item.image, item.typeSampah, item.jenisSampah, item.jumlahItem);
+                inventoryItemDataList.slotData.Add(inventoryItemData);
 
                 if (ItemAdded != null)
                 {
                     ItemAdded(this, new InventoryEventArgs(item));
                 }
 
-                SaveSystem.SaveInventory(mItem);
+                SaveSystem.SaveInventory(inventoryItemDataList.slotData);
 
                 LoadInventoryItem();
 
                 item.OnPickup();
+
+                IncrementAndSaveItemId();
             }
         }
     }
 
-    public void RemoveItem(IInventoryItem item)
+    // public void RemoveItem(IInventoryItem item)
+    // {
+    //     if (mItem.Contains(item))
+    //     {
+    //         mItem.Remove(item);
+    //         // item.OnDrop();
+
+    //         Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
+    //         if (collider != null)
+    //         {
+    //             collider.enabled = true;
+    //         }
+
+    //         if (ItemRemoved != null)
+    //         {
+    //             ItemRemoved(this, new InventoryEventArgs(item));
+    //         }
+
+    //         // SaveSystem.SaveInventory(myItemId, item);
+
+    //         LoadInventoryItem();
+    //     }
+    // }
+
+    public void RemoveItem(TrashcanController trashcanController)
     {
-        if (mItem.Contains(item))
+        Transform imageTransform = transform.GetChild(defaultSelectedItemIndex).GetChild(0);
+        InventoryVariable inventoryVariable = imageTransform.GetChild(0).GetComponent<InventoryVariable>();
+        
+        int indexToRemove = inventoryItemDataList.slotData.FindIndex(item => {            
+            return item.itemId == inventoryVariable.itemId && item.jenisSampah == trashcanController.jenisTempatSampah;
+        });
+
+        Debug.Log("Index yang dihapus : " + indexToRemove);
+
+        if (indexToRemove != -1)
         {
-            mItem.Remove(item);
-            // item.OnDrop();
+            inventoryItemDataList.slotData.RemoveAt(indexToRemove);
 
-            Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
-            if (collider != null)
-            {
-                collider.enabled = true;
-            }
-
-            if (ItemRemoved != null)
-            {
-                ItemRemoved(this, new InventoryEventArgs(item));
-            }
-
-            SaveSystem.SaveInventory(mItem);
-
+            SaveSystem.SaveInventory(inventoryItemDataList.slotData);
             LoadInventoryItem();
+            Debug.Log("Buang Sampah Berhasil");
+        }
+        else
+        {
+            // Item with the specified itemId not found
+            Debug.Log("Gagal Buang Sampah");
         }
     }
 
@@ -105,6 +138,8 @@ public class Inventory : MonoBehaviour
 
         if (loadedItemData != null)
         {
+            inventoryItemDataList.slotData = loadedItemData;
+
             int childIndex = 0;
             foreach (InventoryItemData itemData in loadedItemData)
             {
@@ -112,13 +147,9 @@ public class Inventory : MonoBehaviour
                 Image image = imageTransform.GetChild(0).GetComponent<Image>();
                 InventoryVariable inventoryVariable = imageTransform.GetComponent<InventoryVariable>();
 
-                // if (!image.enabled)
-                // {
-                    
-                // }
-
                 image.enabled = true;
 
+                inventoryVariable.itemId = itemData.itemId;
                 inventoryVariable.itemName = itemData.itemName;
                 inventoryVariable.jenisSampah = itemData.jenisSampah;
                 inventoryVariable.totalSampah = itemData.jumlahItem;
@@ -129,11 +160,18 @@ public class Inventory : MonoBehaviour
             }
         }
     }
+
+    private void IncrementAndSaveItemId() {
+        myItemId++;
+        PlayerPrefs.SetInt(ID_KEY, myItemId);
+        PlayerPrefs.Save();
+    }
 }
 
 [System.Serializable]
 public class InventoryItemData
 {
+    public int itemId;
     public string itemName;
     public Sprite itemImage;
     public string typeSampah;
@@ -141,6 +179,7 @@ public class InventoryItemData
     public int jumlahItem;
 
     public InventoryItemData(
+        int itemId,
         string itemName,
         Sprite itemImage,
         string typeSampah,
@@ -148,6 +187,7 @@ public class InventoryItemData
         int jumlahItem
     )
     {
+        this.itemId = itemId;
         this.itemName = itemName;
         this.itemImage = itemImage;
         this.typeSampah = typeSampah;
@@ -159,5 +199,5 @@ public class InventoryItemData
 [System.Serializable]
 public class InventoryItemDataList
 {
-    public List<InventoryItemData> slotData = new List<InventoryItemData>();
+    public List<InventoryItemData> slotData;
 }
