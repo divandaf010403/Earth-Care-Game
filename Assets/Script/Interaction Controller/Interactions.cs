@@ -257,9 +257,9 @@ public class Interactions : MonoBehaviour
     //         {
     //             if (trashcanController.jenisTempatSampah == inventoryVariable.jenisSampah)
     //             {
-    //                 image.enabled = false;
-    //                 image.sprite = null;
-    //                 inventoryVariable.jenisSampah = "";
+                    // image.enabled = false;
+                    // image.sprite = null;
+                    // inventoryVariable.jenisSampah = "";
     //                 mainChar.countCoin(5);
     //                 Debug.Log("Buang Sampah");
     //             }

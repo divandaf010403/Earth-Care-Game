@@ -62,8 +62,21 @@ public class Inventory : MonoBehaviour
             {
                 collider.enabled = false;
 
+                List<int> usedSlotNumbers = new List<int>();
+                foreach (InventoryItemData itemData in inventoryItemDataList.slotData)
+                {
+                    usedSlotNumbers.Add(itemData.slotNumber);
+                }
+
+                // Menemukan nomor slot yang tersedia
+                int availableSlotNumber = 1;
+                while (usedSlotNumbers.Contains(availableSlotNumber))
+                {
+                    availableSlotNumber++;
+                }
+
                 mItem.Add(item);
-                InventoryItemData inventoryItemData = new InventoryItemData(myItemId, item.itemName, item.image, item.typeSampah, item.jenisSampah, item.jumlahItem);
+                InventoryItemData inventoryItemData = new InventoryItemData(availableSlotNumber, myItemId, item.itemName, item.image, item.typeSampah, item.jenisSampah, item.jumlahItem);
                 inventoryItemDataList.slotData.Add(inventoryItemData);
 
                 if (ItemAdded != null)
@@ -108,8 +121,9 @@ public class Inventory : MonoBehaviour
 
     public void RemoveItem(TrashcanController trashcanController)
     {
-        Transform imageTransform = transform.GetChild(defaultSelectedItemIndex).GetChild(0);
-        InventoryVariable inventoryVariable = imageTransform.GetChild(0).GetComponent<InventoryVariable>();
+        Transform imageTransform = transform.GetChild(defaultSelectedItemIndex).GetChild(0).GetChild(0);
+        Image image = imageTransform.GetChild(0).GetComponent<Image>();
+        InventoryVariable inventoryVariable = imageTransform.GetComponent<InventoryVariable>();
         
         int indexToRemove = inventoryItemDataList.slotData.FindIndex(item => {            
             return item.itemId == inventoryVariable.itemId && item.jenisSampah == trashcanController.jenisTempatSampah;
@@ -123,6 +137,14 @@ public class Inventory : MonoBehaviour
 
             SaveSystem.SaveInventory(inventoryItemDataList.slotData);
             LoadInventoryItem();
+
+            image.enabled = false;
+            image.sprite = null;
+            inventoryVariable.itemId = 0;
+            inventoryVariable.itemName = "";
+            inventoryVariable.jenisSampah = "";
+            inventoryVariable.totalSampah = 0;
+
             Debug.Log("Buang Sampah Berhasil");
         }
         else
@@ -140,23 +162,24 @@ public class Inventory : MonoBehaviour
         {
             inventoryItemDataList.slotData = loadedItemData;
 
-            int childIndex = 0;
             foreach (InventoryItemData itemData in loadedItemData)
             {
-                Transform imageTransform = transform.GetChild(childIndex).GetChild(0).GetChild(0);
+                int slotNumberItem = itemData.slotNumber - 1;
+
+                Transform imageTransform = transform.GetChild(slotNumberItem).GetChild(0).GetChild(0);
                 Image image = imageTransform.GetChild(0).GetComponent<Image>();
                 InventoryVariable inventoryVariable = imageTransform.GetComponent<InventoryVariable>();
 
-                image.enabled = true;
+                if (!image.enabled) {
+                    image.enabled = true;
 
-                inventoryVariable.itemId = itemData.itemId;
-                inventoryVariable.itemName = itemData.itemName;
-                inventoryVariable.jenisSampah = itemData.jenisSampah;
-                inventoryVariable.totalSampah = itemData.jumlahItem;
-                
-                image.sprite = itemData.itemImage;
-
-                childIndex++;
+                    inventoryVariable.itemId = itemData.itemId;
+                    inventoryVariable.itemName = itemData.itemName;
+                    inventoryVariable.jenisSampah = itemData.jenisSampah;
+                    inventoryVariable.totalSampah = itemData.jumlahItem;
+                    
+                    image.sprite = itemData.itemImage;
+                }
             }
         }
     }
@@ -171,6 +194,7 @@ public class Inventory : MonoBehaviour
 [System.Serializable]
 public class InventoryItemData
 {
+    public int slotNumber;
     public int itemId;
     public string itemName;
     public Sprite itemImage;
@@ -179,6 +203,7 @@ public class InventoryItemData
     public int jumlahItem;
 
     public InventoryItemData(
+        int slotNumber,
         int itemId,
         string itemName,
         Sprite itemImage,
@@ -187,6 +212,7 @@ public class InventoryItemData
         int jumlahItem
     )
     {
+        this.slotNumber = slotNumber;
         this.itemId = itemId;
         this.itemName = itemName;
         this.itemImage = itemImage;
