@@ -88,6 +88,11 @@ public class Interactions : MonoBehaviour
                 buttonInteract.SetActive(true);
                 setActionImg.sprite = imgAction[1];
             }
+            else if (_colliders[0].CompareTag("Merchant"))
+            {
+                buttonInteract.SetActive(true);
+                setActionImg.sprite = imgAction[0];
+            }
             else
             {
                 buttonInteract.SetActive(false);
@@ -125,6 +130,10 @@ public class Interactions : MonoBehaviour
             {
                 trashcanController = _colliders[0].GetComponent<TrashcanController>();
                 inventory.RemoveItem(trashcanController);
+            }
+            else if (_colliders[0].CompareTag("Merchant"))
+            {
+                gc.openCloseinventoryExtMerchant(true);
             }
         }
         else

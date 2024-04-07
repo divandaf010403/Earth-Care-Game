@@ -58,6 +58,10 @@ public class MainCharMovement : MonoBehaviour
         shopPanel.SetActive(false);
         mulaiMisiBtn.SetActive(false);
         endMisiBtn.SetActive(false);
+
+        LoadPlayer();
+
+        InvokeRepeating("SavePlayerData", 0f, 5f);
     }
 
     private void Update()
@@ -83,6 +87,8 @@ public class MainCharMovement : MonoBehaviour
         {
             MoveCharacterRightAndLeft(0f);
         }
+
+        playerCoinTxt.text = playerCoin.ToString();
     }
 
     private void analogInput()
@@ -221,38 +227,27 @@ public class MainCharMovement : MonoBehaviour
         controller.Move(desiredMoveDirection * speed * Time.deltaTime);
     }
 
-    public void LoadPlayer()
+    public void SavePlayerData()
     {
-        StartCoroutine(LoadPlayerCoroutine());
+        SaveSystem.SavePlayer(this);
     }
 
-    private IEnumerator LoadPlayerCoroutine()
+    public void LoadPlayer()
     {
-        // Tampilkan layar loading di sini
-        loadingPanel.SetActive(true);
-        loadingPanel.transform.localPosition = new Vector3(0f, 0f, 0f);
-
-        yield return null; // Delay untuk memberikan kesempatan layar loading untuk tampil
-
         PlayerData data = SaveSystem.LoadPlayer();
 
         if (data != null)
         {
             Vector3 position = new Vector3(data.position[0], data.position[1], data.position[2]);
             Quaternion rotation = Quaternion.Euler(data.rotation[0], data.rotation[1], data.rotation[2]);
+            playerCoin = data.playerCoin;
 
             if (position != null && rotation != null)
             {
                 gc.mainCharacter.transform.position = position;
                 gc.mainCharacter.transform.rotation = rotation;
             }
-
-            Debug.Log("Posisi" + position);
-            Debug.Log("Rotasi" + rotation);
         }
-
-        // Sembunyikan layar loading di sini
-        loadingPanel.SetActive(false);
     }
 
     public void ShowShopPanel()

@@ -6,7 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Abra's Odyssey.unity
+    path: Assets/Scene/MainMenu.unity
+    guid: 2437d5db7e2bedc43935a3227bb52c73
+  - enabled: 1
+    path: Assets/Scene/PlayGame.unity
     guid: 0e22200ac70747e4f8d82f43cce8411e
   m_configObjects:
     com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000,

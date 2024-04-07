@@ -7,6 +7,7 @@ public class PlayerData
 {
     public float[] position;
     public float[] rotation;
+    public int playerCoin;
 
     public PlayerData(MainCharMovement mainChar)
     {
@@ -19,5 +20,7 @@ public class PlayerData
         rotation[0] = mainChar.transform.rotation.eulerAngles.x;
         rotation[1] = mainChar.transform.rotation.eulerAngles.y;
         rotation[2] = mainChar.transform.rotation.eulerAngles.z;
+
+        playerCoin = mainChar.playerCoin;
     }
 }
