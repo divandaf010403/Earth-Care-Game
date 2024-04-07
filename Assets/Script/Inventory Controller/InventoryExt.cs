@@ -102,7 +102,7 @@ public class InventoryExt : MonoBehaviour
     //     }
     // }
 
-    void LoadInventoryItem() 
+    public void LoadInventoryItem() 
     {
         List<InventoryExtItemData> loadedItemData = SaveSystem.LoadInventoryExt();
 
@@ -133,7 +133,7 @@ public class InventoryExt : MonoBehaviour
         }
     }
 
-    private void IncrementAndSaveItemId() {
+    public void IncrementAndSaveItemId() {
         myItemIdExt++;
         PlayerPrefs.SetInt(ID_KEY, myItemIdExt);
         PlayerPrefs.Save();
