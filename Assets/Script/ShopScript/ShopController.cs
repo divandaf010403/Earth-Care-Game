@@ -44,8 +44,10 @@ public class ShopController : MonoBehaviour
     {
         InventoryExt inventoryExt = inventoryExtTransform.GetComponent<InventoryExt>();
         MainCharMovement mainCharComponent = mainChar.GetComponent<MainCharMovement>();
+
+        Debug.Log("Uang Saya adalah : " + mainCharComponent.playerCoin + " dan saya akan membeli item dengan harga : " + item.priceItem);
         
-        if (mainCharComponent.playerCoin < item.priceItem)
+        if (mainCharComponent.playerCoin > item.priceItem)
         {
             bool itemExists = false;
 
@@ -76,6 +78,10 @@ public class ShopController : MonoBehaviour
             mainCharComponent.playerCoin -= item.priceItem;
 
             mainCharComponent.SavePlayerData();
+        }
+        else
+        {
+            Debug.LogError("Uang Kurang");
         }
     }
 

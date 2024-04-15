@@ -17,6 +17,9 @@ public class InventoryExt : MonoBehaviour
     public int myItemIdExt;
     public string ID_KEY = "ID_KEY_EXt";
 
+    [Header("Crafting")]
+    public List<NewRecipe> itemRecipes = new List<NewRecipe>();
+
     private void Start()
     {
         myItemIdExt = PlayerPrefs.GetInt(ID_KEY, 1);
@@ -37,7 +40,6 @@ public class InventoryExt : MonoBehaviour
     public void AddItem(IInventoryItem item)
     {
         Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
-        Debug.Log(inventoryExtItemDataList.slotData.Count);
 
         if (inventoryExtItemDataList.slotData.Count < SLOTS)
         {
@@ -137,6 +139,78 @@ public class InventoryExt : MonoBehaviour
         myItemIdExt++;
         PlayerPrefs.SetInt(ID_KEY, myItemIdExt);
         PlayerPrefs.Save();
+    }
+
+    public void craftItem(string itemName)
+    {
+        foreach (NewRecipe recipe in itemRecipes)
+        {
+            if (recipe.createdItemPrefab.GetComponent<NewItem>().name == itemName)
+            {
+                bool haveAllIngredients = true;
+                for (int i = 0; i < recipe.requiredIngredients.Count; i++)
+                {
+                    if (haveAllIngredients)
+                        haveAllIngredients = haveIngredient(recipe.requiredIngredients[i].itemName, recipe.requiredIngredients[i].requiredQuantity);
+                }
+
+                if (haveAllIngredients)
+                {
+                    for (int i = 0; i < recipe.requiredIngredients.Count; i++)
+                    {
+                        removeIngredient(recipe.requiredIngredients[i].itemName, recipe.requiredIngredients[i].requiredQuantity);
+                    }
+
+                    // GameObject craftedItem = Instantiate(recipe.createdItemPrefab, dropLocation.position, Quaternion.identity);
+                    // craftedItem.GetComponent<NewItem>().currentQuantity = recipe.quantityProduced;
+
+                    // addItemToInventory(craftedItem.GetComponent<NewItem>());
+
+                    Debug.Log("Buat Barang");
+                }
+
+                break;
+            }
+        }
+    }
+
+    private void removeIngredient(string itemName, int quantity)
+    {
+        int remainingQuantity = quantity;
+
+        foreach (InventoryExtItemData itemData in inventoryExtItemDataList.slotData)
+        {
+            if (itemData.itemName == itemName)
+            {
+                if (itemData.jumlahItem >= remainingQuantity)
+                {
+                    itemData.jumlahItem -= remainingQuantity;
+                    remainingQuantity = 0;
+                    break; // Exit the loop since we have removed the required quantity
+                }
+                else
+                {
+                    remainingQuantity -= itemData.jumlahItem;
+                    itemData.jumlahItem = 0;
+                }
+            }
+        }
+    }
+
+    private bool haveIngredient(string itemName, int quantity)
+    {
+        int foundQuantity = 0;
+        foreach (InventoryExtItemData itemData in inventoryExtItemDataList.slotData)
+        {
+            if (itemData.itemName == itemName)
+            {
+                foundQuantity += itemData.jumlahItem;
+
+                if (foundQuantity >= quantity)
+                    return true;
+            }
+        }
+        return false;
     }
 }
 

@@ -78,7 +78,6 @@ public static class SaveSystem
         {
             string json = File.ReadAllText(shopPath);
             ShopData shopData = JsonUtility.FromJson<ShopData>(json);
-            Debug.Log("Shop List" + shopData.shopItemList);
             return shopData.shopItemList;
         }
         else
