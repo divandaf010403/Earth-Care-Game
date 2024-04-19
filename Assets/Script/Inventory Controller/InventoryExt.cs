@@ -66,6 +66,8 @@ public class InventoryExt : MonoBehaviour
                     mItem.Add(item);
                     InventoryExtItemData inventoryExtItemData = new InventoryExtItemData(myItemIdExt, item.itemName, item.image, item.typeSampah, item.jenisSampah, item.jumlahItem);
                     inventoryExtItemDataList.slotData.Add(inventoryExtItemData);
+
+                    IncrementAndSaveItemId();
                 }
 
                 if (ItemAdded != null)
@@ -78,8 +80,6 @@ public class InventoryExt : MonoBehaviour
                 LoadInventoryItem();
 
                 item.OnPickup();
-
-                IncrementAndSaveItemId();
             }
         }
     }

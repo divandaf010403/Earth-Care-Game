@@ -23,7 +23,7 @@ public class MainCharMovement : MonoBehaviour
     public TextMeshProUGUI cube, sphere, totalSampah;
     public int cubeVal = 0, sphereVal = 0, totalVal = 0;
     public GameObject[] TrashBagObj;
-    public TextMeshProUGUI notificationPanel;
+    public Transform notificationPanel;
     public bool isCanInteractTrash = true;
 
     [Header("Joystick Utils")]

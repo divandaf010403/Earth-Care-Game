@@ -15,6 +15,10 @@ public class CraftingMain : MonoBehaviour
     public ItemClickHandlerCrafting[] itemSelected;
     public int defaultSelectedItemIndex = -1;
 
+    [Header("Get Saved ID")]
+    public int myItemIdExt;
+    public string ID_KEY = "ID_KEY_EXt";
+
     // Start is called before the first frame update
     void Start()
     {
@@ -61,6 +65,9 @@ public class CraftingMain : MonoBehaviour
                 buttonImage.sprite = currentRecipe.imageItemCraft;
 
                 itemSelected[i] = recipeButton.transform.GetChild(0).GetComponent<ItemClickHandlerCrafting>();
+
+                // Button Condition If Item Exits
+                buttonComponent.interactable = !recipes[i].isHaveItem;
             }
 
             // Display ingredients for the default recipe
@@ -90,5 +97,42 @@ public class CraftingMain : MonoBehaviour
             imageComponent.sprite = ingredient.imageIngredient;
             // You can add more customization here if needed, like displaying the name or quantity
         }
+    }
+
+    public void CraftingItemBtn()
+    {
+        InventoryExt inventoryExtData = transform.parent.GetComponent<InventoryExt>();
+
+        var recipeToCraft = recipes[defaultSelectedItemIndex].output;
+
+        bool itemExists = false;
+
+        // Mengecek apakah item dengan jenisSampah yang sama sudah ada dalam inventaris
+        foreach (InventoryExtItemData existingItem in inventoryExtData.inventoryExtItemDataList.slotData)
+        {
+            if (existingItem.jenisSampah == recipeToCraft.jenisSampah)
+            {
+                Debug.Log("Item Already Exist");
+                itemExists = true;
+                break;
+            }
+        }
+
+        // Jika item dengan jenisSampah yang sama tidak ditemukan, tambahkan item baru ke inventaris
+        if (!itemExists)
+        {
+            InventoryExtItemData inventoryExtItemData = new InventoryExtItemData(myItemIdExt, recipeToCraft.itemName, recipeToCraft.itemImage, recipeToCraft.typeSampah, recipeToCraft.jenisSampah, recipeToCraft.jumlahItem);
+            inventoryExtData.inventoryExtItemDataList.slotData.Add(inventoryExtItemData);
+        }
+
+        SaveSystem.SaveInventoryExt(inventoryExtData.inventoryExtItemDataList.slotData);
+
+        inventoryExtData.LoadInventoryItem();
+    }
+
+    public void IncrementAndSaveItemId() {
+        myItemIdExt++;
+        PlayerPrefs.SetInt(ID_KEY, myItemIdExt);
+        PlayerPrefs.Save();
     }
 }

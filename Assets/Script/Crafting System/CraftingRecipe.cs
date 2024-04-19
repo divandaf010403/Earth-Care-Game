@@ -6,7 +6,7 @@ using UnityEngine;
 public class CraftingRecipe
 {
     [SerializeField] public Sprite imageItemCraft;
-    [SerializeField] private InventoryExtItemData output;
+    [SerializeField] public InventoryExtItemData output;
     [SerializeField] public bool isHaveItem;
     public List<RequiredIngredients> requiredIngredients = new List<RequiredIngredients>();
 }
