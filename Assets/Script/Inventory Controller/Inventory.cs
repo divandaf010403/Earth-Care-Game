@@ -24,8 +24,6 @@ public class Inventory : MonoBehaviour
 
     private void Start()
     {
-        myItemId = PlayerPrefs.GetInt(ID_KEY, 1);
-
         ChangedSelectedSlot(0);
 
         LoadInventoryItem();
@@ -55,7 +53,7 @@ public class Inventory : MonoBehaviour
     public void AddItem(IInventoryItem item)
     {
         Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
-        Debug.Log(inventoryItemDataList.slotData.Count);
+        myItemId = PlayerPrefs.GetInt(ID_KEY, 1);
 
         if (inventoryItemDataList.slotData.Count < SLOTS)
         {

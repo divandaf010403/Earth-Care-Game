@@ -49,28 +49,23 @@ public class CraftingMain : MonoBehaviour
         {
             itemSelected = new ItemClickHandlerCrafting[recipes.Count];
 
-            // Loop through recipes to create buttons for each recipe
             for (int i = 0; i < recipes.Count; i++)
             {
                 GameObject recipeButton = Instantiate(btnTemplate, btnRecipe);
                 recipeButton.transform.SetParent(btnRecipe, false);
                 Button buttonComponent = recipeButton.transform.GetChild(0).GetComponent<Button>();
 
-                // Add a listener with the corresponding recipe
                 CraftingRecipe currentRecipe = recipes[i];
                 buttonComponent.onClick.AddListener(() => DisplayIngredients(currentRecipe));
 
-                // Assign image to the button
                 Image buttonImage = recipeButton.transform.GetChild(0).GetChild(0).GetComponent<Image>();
                 buttonImage.sprite = currentRecipe.imageItemCraft;
 
                 itemSelected[i] = recipeButton.transform.GetChild(0).GetComponent<ItemClickHandlerCrafting>();
 
-                // Button Condition If Item Exits
                 buttonComponent.interactable = !recipes[i].isHaveItem;
             }
 
-            // Display ingredients for the default recipe
             DisplayIngredients(recipes[0]);
         }
         else
@@ -79,38 +74,34 @@ public class CraftingMain : MonoBehaviour
         }
     }
 
-    // Method to display ingredients for a recipe
     public void DisplayIngredients(CraftingRecipe recipe)
     {
-        // Clear previous ingredients
         foreach (Transform child in imgIngredient)
         {
             Destroy(child.gameObject);
         }
 
-        // Instantiate and display ingredients
         foreach (RequiredIngredients ingredient in recipe.requiredIngredients)
         {
             GameObject ingredientImage = Instantiate(imgIngredientTemplate, imgIngredient);
             ingredientImage.transform.SetParent(imgIngredient, false);
             Image imageComponent = ingredientImage.transform.GetChild(0).GetComponent<Image>();
             imageComponent.sprite = ingredient.imageIngredient;
-            // You can add more customization here if needed, like displaying the name or quantity
         }
     }
 
     public void CraftingItemBtn()
     {
         InventoryExt inventoryExtData = transform.parent.GetComponent<InventoryExt>();
+        myItemIdExt = PlayerPrefs.GetInt(ID_KEY);
 
-        var recipeToCraft = recipes[defaultSelectedItemIndex].output;
+        var recipeToCraft = recipes[defaultSelectedItemIndex];
 
         bool itemExists = false;
 
-        // Mengecek apakah item dengan jenisSampah yang sama sudah ada dalam inventaris
         foreach (InventoryExtItemData existingItem in inventoryExtData.inventoryExtItemDataList.slotData)
         {
-            if (existingItem.jenisSampah == recipeToCraft.jenisSampah)
+            if (existingItem.jenisSampah == recipeToCraft.output.jenisSampah)
             {
                 Debug.Log("Item Already Exist");
                 itemExists = true;
@@ -118,11 +109,61 @@ public class CraftingMain : MonoBehaviour
             }
         }
 
-        // Jika item dengan jenisSampah yang sama tidak ditemukan, tambahkan item baru ke inventaris
         if (!itemExists)
         {
-            InventoryExtItemData inventoryExtItemData = new InventoryExtItemData(myItemIdExt, recipeToCraft.itemName, recipeToCraft.itemImage, recipeToCraft.typeSampah, recipeToCraft.jenisSampah, recipeToCraft.jumlahItem);
-            inventoryExtData.inventoryExtItemDataList.slotData.Add(inventoryExtItemData);
+            bool allIngredientsAvailable = true;
+
+            // Periksa ketersediaan semua bahan yang diperlukan
+            foreach (RequiredIngredients ingredient in recipeToCraft.requiredIngredients)
+            {
+                bool ingredientFound = false;
+
+                // Iterasi melalui setiap item dalam inventori
+                foreach (InventoryExtItemData existingItem in inventoryExtData.inventoryExtItemDataList.slotData)
+                {
+                    // Jika nama item cocok
+                    if (existingItem.itemName == ingredient.itemName)
+                    {
+                        // Periksa jumlah yang cukup
+                        if (existingItem.jumlahItem >= ingredient.requiredQuantity)
+                        {
+                            ingredientFound = true;
+                            break;
+                        }
+                    }
+                }
+
+                // Jika salah satu bahan tidak ditemukan atau jumlahnya tidak mencukupi, set allIngredientsAvailable menjadi false
+                if (!ingredientFound)
+                {
+                    allIngredientsAvailable = false;
+                    break;
+                }
+            }
+
+            // Jika semua bahan tersedia, buat item baru dan kurangi jumlah bahan dari inventori
+            if (allIngredientsAvailable)
+            {
+                // Kurangi jumlah item yang digunakan dari inventori
+                foreach (RequiredIngredients ingredient in recipeToCraft.requiredIngredients)
+                {
+                    foreach (InventoryExtItemData existingItem in inventoryExtData.inventoryExtItemDataList.slotData)
+                    {
+                        if (existingItem.itemName == ingredient.itemName)
+                        {
+                            existingItem.jumlahItem -= ingredient.requiredQuantity;
+                            break;
+                        }
+                    }
+                }
+
+                InventoryExtItemData inventoryExtItemData = new InventoryExtItemData(myItemIdExt, recipeToCraft.output.itemName, recipeToCraft.output.itemImage, recipeToCraft.output.typeSampah, recipeToCraft.output.jenisSampah, recipeToCraft.output.jumlahItem);
+                inventoryExtData.inventoryExtItemDataList.slotData.Add(inventoryExtItemData);
+            }
+            else
+            {
+                Debug.Log("Not enough ingredients to craft the item!");
+            }
         }
 
         SaveSystem.SaveInventoryExt(inventoryExtData.inventoryExtItemDataList.slotData);
