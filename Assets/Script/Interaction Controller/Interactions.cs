@@ -39,9 +39,6 @@ public class Interactions : MonoBehaviour
     [SerializeField] public Vector3 cameraSetPosition = Vector3.zero;
     [SerializeField] public Vector3 cameraSetRotation = Vector3.zero;
 
-    [Header("Quest")]
-    public bool isQuestStart = false;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -104,7 +101,7 @@ public class Interactions : MonoBehaviour
         }
 
         // Quest
-        if (isQuestStart)
+        if (GameVariable.isQuestStarting)
         {
             mainChar.endMisiBtn.SetActive(true);
         }
@@ -120,7 +117,14 @@ public class Interactions : MonoBehaviour
         {
             if (_colliders[0].CompareTag("Item"))
             {
-                removeItem();
+                if(!GameVariable.isQuestStarting)
+                {
+                    removeItem();
+                }
+                else
+                {
+                    
+                }
             }
             else if (_colliders[0].CompareTag("ItemCraft"))
             {

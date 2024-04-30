@@ -11,6 +11,7 @@ TagManager:
   - Merchant
   - Props
   - ItemCraft
+  - Interaction
   layers:
   - Default
   - TransparentFX

@@ -29,13 +29,31 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     public float spawnRadius = 5f;
     public int numberOfObjectsToSpawn = 10;
 
+    [Header("Checker")]
+    private bool isTrashAlreadyEmpty = false;
+    private bool isQuestFinish = false;
+
+    [Header("Next Action")]
+    GameObject questToActive;
+
+    private void Update() 
+    {
+        if (!isTrashAlreadyEmpty)
+        {
+            
+        }
+
+        if(isTrashAlreadyEmpty && isQuestFinish) 
+        {
+            questToActive.SetActive(true);
+            gameObject.SetActive(false);
+        }
+    }
 
     IEnumerator ActivateObjectDelayed()
     {
         yield return null; // Menunggu satu frame
-        if (interactions != null)
-        {
-            if (interactions.isQuestStart)
+        if (GameVariable.isQuestStarting)
             {
                 isActiveTrigger.gameObject.SetActive(false);
             }
@@ -43,7 +61,6 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
             {
                 isActiveTrigger.gameObject.SetActive(true);
             }
-        }
     }
 
     // Panggil coroutine ini ketika Anda ingin mengubah keadaan objek
@@ -68,7 +85,7 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
         gc.camera2.gameObject.SetActive(true);
 
         mainController.playerCamera = gc.camera2;
-        interactions.isQuestStart = true;
+        GameVariable.isQuestStarting = true;
 
         gc.mainUI.SetActive(false);
         gc.pilahSampahUI.SetActive(true);
@@ -94,7 +111,7 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
         interactions.oldRotation = Vector3.zero;
 
         mainController.playerCamera = gc.mainCamera;
-        interactions.isQuestStart = false;
+        GameVariable.isQuestStarting = false;
 
         gc.mainUI.SetActive(true);
         gc.pilahSampahUI.SetActive(false);
@@ -102,6 +119,15 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
         foreach (GameObject obj in colliderQuest)
         {
             obj.SetActive(false);
+        }
+
+        if (spawnerMidPosition != null)
+        {
+            // Looping untuk menghapus semua child objek
+            foreach (Transform child in spawnerMidPosition.transform)
+            {
+                Destroy(child.gameObject);
+            }
         }
     }
 
@@ -119,20 +145,15 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     {
         for (int i = 0; i < numberOfObjectsToSpawn; i++)
         {
-            // Membuat titik spawn secara acak dalam radius spawn
             Vector3 spawnPosition = Random.insideUnitSphere * spawnRadius;
             spawnPosition += spawnerMidPosition.position;
 
-            // Set nilai y dari posisi spawn agar sama dengan nilai y dari posisi spawnerMidPosition
             spawnPosition.y = spawnerMidPosition.position.y;
 
-            // Memilih objek secara acak dari daftar objectToSpawn
             GameObject objectPrefab = objectToSpawn[Random.Range(0, objectToSpawn.Count)];
 
-            // Menginstansiasi objek di posisi spawn
             GameObject spawnedObject = Instantiate(objectPrefab, spawnPosition, Quaternion.identity);
 
-            // Menjadikan objek yang di-spawn sebagai child dari spawnerMidPosition
             spawnedObject.transform.parent = spawnerMidPosition;
         }
     }

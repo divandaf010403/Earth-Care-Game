@@ -59,37 +59,40 @@ public class Inventory : MonoBehaviour
         {
             if (collider.enabled)
             {
-                collider.enabled = false;
-
-                List<int> usedSlotNumbers = new List<int>();
-                foreach (InventoryItemData itemData in inventoryItemDataList.slotData)
+                if (!GameVariable.isQuestStarting)
                 {
-                    usedSlotNumbers.Add(itemData.slotNumber);
+                    collider.enabled = false;
+
+                    List<int> usedSlotNumbers = new List<int>();
+                    foreach (InventoryItemData itemData in inventoryItemDataList.slotData)
+                    {
+                        usedSlotNumbers.Add(itemData.slotNumber);
+                    }
+
+                    // Menemukan nomor slot yang tersedia
+                    int availableSlotNumber = 1;
+                    while (usedSlotNumbers.Contains(availableSlotNumber))
+                    {
+                        availableSlotNumber++;
+                    }
+
+                    mItem.Add(item);
+                    InventoryItemData inventoryItemData = new InventoryItemData(availableSlotNumber, myItemId, item.itemName, item.image, item.typeSampah, item.jenisSampah, item.jumlahItem);
+                    inventoryItemDataList.slotData.Add(inventoryItemData);
+
+                    if (ItemAdded != null)
+                    {
+                        ItemAdded(this, new InventoryEventArgs(item));
+                    }
+
+                    SaveSystem.SaveInventory(inventoryItemDataList.slotData);
+
+                    LoadInventoryItem();
+
+                    item.OnPickup();
+
+                    IncrementAndSaveItemId();
                 }
-
-                // Menemukan nomor slot yang tersedia
-                int availableSlotNumber = 1;
-                while (usedSlotNumbers.Contains(availableSlotNumber))
-                {
-                    availableSlotNumber++;
-                }
-
-                mItem.Add(item);
-                InventoryItemData inventoryItemData = new InventoryItemData(availableSlotNumber, myItemId, item.itemName, item.image, item.typeSampah, item.jenisSampah, item.jumlahItem);
-                inventoryItemDataList.slotData.Add(inventoryItemData);
-
-                if (ItemAdded != null)
-                {
-                    ItemAdded(this, new InventoryEventArgs(item));
-                }
-
-                SaveSystem.SaveInventory(inventoryItemDataList.slotData);
-
-                LoadInventoryItem();
-
-                item.OnPickup();
-
-                IncrementAndSaveItemId();
             }
         }
     }
