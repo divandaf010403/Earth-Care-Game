@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BersihSungai : MonoBehaviour, IQuestHandler
 {
+    [SerializeField] public string quest_id = "2Q";
     [SerializeField] public Camera questCamera;
     [SerializeField] public Transform questPlayerPosition;
     [SerializeField] public Transform questCameraPosition;

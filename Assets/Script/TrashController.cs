@@ -68,6 +68,11 @@ public class TrashController : MonoBehaviour, Interactable, IInventoryItem
         // Destroy(gameObject);
     }
 
+    public void OnPickupDestroy()
+    {
+        Destroy(gameObject);
+    }
+
     public void OnDrop()
     {
         //RaycastHit hit = new RaycastHit();

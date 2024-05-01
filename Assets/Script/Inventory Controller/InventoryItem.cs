@@ -11,6 +11,7 @@ public interface IInventoryItem
     string jenisSampah { get; }
     int jumlahItem { get; }
     void OnPickup();
+    void OnPickupDestroy();
     void OnDrop();
 }
 

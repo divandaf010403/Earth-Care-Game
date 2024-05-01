@@ -57,7 +57,6 @@ public class Interactions : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Ambil Sampah
         _numFound = Physics.OverlapSphereNonAlloc(
             _interactPoint.position,
             _interactPointRadius,
@@ -68,31 +67,22 @@ public class Interactions : MonoBehaviour
         if (_numFound > 0)
         {
             Image setActionImg = buttonInteract.transform.GetChild(0).GetComponent<Image>();
-            if (_colliders[0].CompareTag("Item"))
+
+            switch (_colliders[0].tag)
             {
-                buttonInteract.SetActive(true);
-                setActionImg.sprite = imgAction[0];
-                
-            }
-            else if (_colliders[0].CompareTag("ItemCraft"))
-            {
-                buttonInteract.SetActive(true);
-                setActionImg.sprite = imgAction[0];
-                
-            }
-            else if (_colliders[0].CompareTag("Trashcan"))
-            {
-                buttonInteract.SetActive(true);
-                setActionImg.sprite = imgAction[1];
-            }
-            else if (_colliders[0].CompareTag("Merchant"))
-            {
-                buttonInteract.SetActive(true);
-                setActionImg.sprite = imgAction[0];
-            }
-            else
-            {
-                buttonInteract.SetActive(false);
+                case "Item":
+                case "ItemCraft":
+                case "Merchant":
+                    buttonInteract.SetActive(true);
+                    setActionImg.sprite = imgAction[0];
+                    break;
+                case "Trashcan":
+                    buttonInteract.SetActive(true);
+                    setActionImg.sprite = imgAction[1];
+                    break;
+                default:
+                    buttonInteract.SetActive(false);
+                    break;
             }
         }
         else
@@ -101,43 +91,36 @@ public class Interactions : MonoBehaviour
         }
 
         // Quest
-        if (GameVariable.isQuestStarting)
-        {
-            mainChar.endMisiBtn.SetActive(true);
-        }
-        else
-        {
-            mainChar.endMisiBtn.SetActive(false);
-        }
+        mainChar.endMisiBtn.SetActive(GameVariable.isQuestStarting);
     }
 
     public void buttonCondition()
     {
         if (_numFound > 0)
         {
-            if (_colliders[0].CompareTag("Item"))
+            switch (_colliders[0].tag)
             {
-                if(!GameVariable.isQuestStarting)
-                {
+                case "Item":
                     removeItem();
-                }
-                else
-                {
-                    
-                }
-            }
-            else if (_colliders[0].CompareTag("ItemCraft"))
-            {
-                removeItemCraft();
-            }
-            else if (_colliders[0].CompareTag("Trashcan"))
-            {
-                trashcanController = _colliders[0].GetComponent<TrashcanController>();
-                inventory.RemoveItem(trashcanController);
-            }
-            else if (_colliders[0].CompareTag("Merchant"))
-            {
-                gc.openCloseinventoryExtMerchant(true);
+                    break;
+                case "ItemCraft":
+                    removeItemCraft();
+                    break;
+                case "Trashcan":
+                    TrashcanController trashcanController = _colliders[0].GetComponent<TrashcanController>();
+                    if (GameVariable.isQuestStarting && (GameVariable.questId == "1Q"))
+                    {
+                        PilahSampah pilahSampah = FindObjectOfType<PilahSampah>();
+                        pilahSampah.Buang_Sampah(trashcanController);
+                    }
+                    else
+                    {
+                        inventory.RemoveItem(trashcanController);
+                    }
+                    break;
+                case "Merchant":
+                    gc.openCloseinventoryExtMerchant(true);
+                    break;
             }
         }
         else
@@ -158,7 +141,15 @@ public class Interactions : MonoBehaviour
 
         if (item != null)
         {
-            inventory.AddItem(item);
+            if (GameVariable.isQuestStarting && GameVariable.questId == "1Q")
+            {
+                PilahSampah pilahSampah = FindObjectOfType<PilahSampah>();
+                pilahSampah.Ambil_Sampah(item);
+            }
+            else
+            {
+                inventory.AddItem(item);
+            }
         }
     }
     
@@ -176,131 +167,6 @@ public class Interactions : MonoBehaviour
         {
             inventoryExt.AddItem(item);
         }
-    }
-
-    // private void InventoryScript_ItemAdded(object sender, InventoryEventArgs e)
-    // {
-    //     if (e.typeSampah == "Trash")
-    //     {
-    //         foreach (Transform slot in inventoryPanel)
-    //         {
-    //             if (slot.childCount > 0)
-    //             {
-    //                 Transform imageTransform = slot.GetChild(0).GetChild(0);
-    //                 Image image = imageTransform.GetChild(0).GetComponent<Image>();
-    //                 // ItemDragHandler itemDragHandler = imageTransform.GetComponent<ItemDragHandler>();
-    //                 InventoryVariable inventoryVariable = imageTransform.GetComponent<InventoryVariable>();
-
-    //                 if (!image.enabled)
-    //                 {
-    //                     image.enabled = true;
-    //                     image.sprite = e.itemImage;
-
-    //                     inventoryVariable.jenisSampah = e.jenisSampah;
-    //                     inventoryVariable.totalSampah += e.jumlahItem;
-
-    //                     // itemDragHandler.Item = e.Item;
-
-    //                     if (mainChar != null)
-    //                     {
-    //                         mainChar.cubeVal++;
-    //                     }
-
-    //                     break;
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-    
-    // private void InventoryExtScript_ItemAdded(object sender, InventoryEventArgs e)
-    // {
-    //     if (e.typeSampah == "Collectible")
-    //     {
-    //         foreach (Transform slot in inventoryExtPanel)
-    //         {
-    //             if (slot.GetChild(0).childCount > 0)
-    //             {
-    //                 Transform childTransform = slot.GetChild(0);
-    //                 Image image = childTransform.GetChild(0).GetComponent<Image>();
-    //                 InventoryVariable inventoryVariable = childTransform.GetChild(0).GetComponent<InventoryVariable>();
-    //                 TextMeshProUGUI totalItem = childTransform.GetChild(1).GetComponent<TextMeshProUGUI>();
-    //                 // ItemDragHandler itemDragHandler = imageTransform.GetComponent<ItemDragHandler>();
-
-    //                 if (!image.enabled)
-    //                 {
-    //                     image.enabled = true;
-    //                     image.sprite = e.itemImage;
-
-    //                     inventoryVariable.jenisSampah = e.jenisSampah;
-    //                     inventoryVariable.totalSampah += e.jumlahItem;
-    //                     totalItem.text = inventoryVariable.totalSampah.ToString();
-
-    //                     //itemDragHandler.Item = e.Item;
-
-    //                     if (mainChar != null)
-    //                     {
-    //                         mainChar.cubeVal++;
-    //                     }
-
-    //                     break;
-    //                 }
-    //                 else if (inventoryVariable.jenisSampah == e.jenisSampah)
-    //                 {
-    //                     inventoryVariable.totalSampah += e.jumlahItem;
-    //                     totalItem.text = inventoryVariable.totalSampah.ToString();
-    //                     break;
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
-    // private void Interact_Trashcan()
-    // {
-        // inventory = inventoryPanel.GetComponent<Inventory>();
-        // Transform imageTransform = inventoryPanel.GetChild(inventory.defaultSelectedItemIndex).GetChild(0);
-        // Image image = imageTransform.GetChild(0).GetChild(0).GetComponent<Image>();
-        // InventoryVariable inventoryVariable = imageTransform.GetChild(0).GetComponent<InventoryVariable>();
-
-    //     trashcanController = _colliders[0].GetComponent<TrashcanController>();
-    //     if (trashcanController != null)
-    //     {
-    //         if (inventoryVariable.jenisSampah != "")
-    //         {
-    //             if (trashcanController.jenisTempatSampah == inventoryVariable.jenisSampah)
-    //             {
-                    // image.enabled = false;
-                    // image.sprite = null;
-                    // inventoryVariable.jenisSampah = "";
-    //                 mainChar.countCoin(5);
-    //                 Debug.Log("Buang Sampah");
-    //             }
-    //             else
-    //             {
-    //                 StartCoroutine(
-    //                     time_delay(mainChar.notificationPanel, 2f, "Jenis Sampah Tidak Sesuai")
-    //                 );
-    //                 Debug.Log("Gagal Buang Sampah");
-    //             }
-    //         }
-    //         else
-    //         {
-    //             Debug.Log("Pembuangan Sampah Tidak Berhasil");
-    //         }
-    //     }
-    // }
-
-    IEnumerator time_delay(
-        TextMeshProUGUI notificationPanel,
-        float delayTime,
-        string notificationText
-    )
-    {
-        notificationPanel.gameObject.SetActive(true);
-        notificationPanel.text = notificationText;
-        yield return new WaitForSeconds(delayTime);
-        notificationPanel.gameObject.SetActive(false);
     }
 
     private void OnDrawGizmos()

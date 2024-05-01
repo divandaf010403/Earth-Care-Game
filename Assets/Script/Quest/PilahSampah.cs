@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PilahSampah : MonoBehaviour, IQuestHandler
 {
+    [SerializeField] public string quest_id = "1Q";
     [SerializeField] public Camera questCamera;
     [SerializeField] public Transform questPlayerPosition;
     [SerializeField] public Transform questCameraPosition;
@@ -15,6 +18,7 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     public GameController gc;
     public MainCharMovement mainController;
     public Interactions interactions;
+    public Transform inventoryQuest;
 
     // Interface
     public Camera QuestCamera => questCamera;
@@ -38,16 +42,11 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
 
     private void Update() 
     {
-        if (!isTrashAlreadyEmpty)
-        {
-            
-        }
-
-        if(isTrashAlreadyEmpty && isQuestFinish) 
-        {
-            questToActive.SetActive(true);
-            gameObject.SetActive(false);
-        }
+        // if(isTrashAlreadyEmpty && isQuestFinish) 
+        // {
+        //     questToActive.SetActive(true);
+        //     gameObject.SetActive(false);
+        // }
     }
 
     IEnumerator ActivateObjectDelayed()
@@ -85,7 +84,10 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
         gc.camera2.gameObject.SetActive(true);
 
         mainController.playerCamera = gc.camera2;
+
+        //Variable Set
         GameVariable.isQuestStarting = true;
+        GameVariable.questId = quest_id;
 
         gc.mainUI.SetActive(false);
         gc.pilahSampahUI.SetActive(true);
@@ -115,6 +117,10 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
 
         gc.mainUI.SetActive(true);
         gc.pilahSampahUI.SetActive(false);
+
+        //Variable Set
+        GameVariable.isQuestStarting = false;
+        GameVariable.questId = "";
 
         foreach (GameObject obj in colliderQuest)
         {
@@ -155,6 +161,52 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
             GameObject spawnedObject = Instantiate(objectPrefab, spawnPosition, Quaternion.identity);
 
             spawnedObject.transform.parent = spawnerMidPosition;
+        }
+    }
+
+    public void Ambil_Sampah(IInventoryItem item)
+    {
+        Transform childTransform = inventoryQuest.GetChild(0);
+        Image image = childTransform.GetComponent<Image>();
+        InventoryVariable inventoryVariable = childTransform.GetComponent<InventoryVariable>();
+
+        if (!image.enabled)
+        {
+            image.enabled = true;
+            image.sprite = item.image;
+
+            inventoryVariable.itemName = item.itemName;
+            inventoryVariable.jenisSampah = item.jenisSampah;
+            inventoryVariable.totalSampah = item.jumlahItem;
+
+            item.OnPickupDestroy();
+        }
+        else
+        {
+            Debug.Log("Buang Sampah Dulu");
+        }
+    }
+
+    public void Buang_Sampah(TrashcanController trashcanController)
+    {
+        Transform childTransform = inventoryQuest.GetChild(0);
+        Image image = childTransform.GetComponent<Image>();
+        InventoryVariable inventoryVariable = childTransform.GetComponent<InventoryVariable>();
+
+        if(trashcanController.jenisTempatSampah == inventoryVariable.jenisSampah)
+        {
+            if (image.enabled)
+            {
+                image.enabled = false;
+
+                inventoryVariable.itemName = "";
+                inventoryVariable.jenisSampah = "";
+                inventoryVariable.totalSampah = 0;
+            }
+        }
+        else
+        {
+            Debug.Log("Salah Tempat Sampah");
         }
     }
 }
