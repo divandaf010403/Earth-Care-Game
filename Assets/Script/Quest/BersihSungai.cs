@@ -60,12 +60,16 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
 
     public void Mulai_Misi()
     {
-        interactions.oldPosition = gc.mainCharacter.transform.position;
-        interactions.oldRotation = new Vector3(0f, gc.mainCharacter.transform.eulerAngles.y, 0f);
+        //Variable Set
+        GameVariable.isQuestStarting = true;
+        GameVariable.questId = quest_id;
+
+        gc.mainCharacter.gameObject.SetActive(false);
+        gc.mainCharacterRiverQuest.gameObject.SetActive(true);
 
         mainController.controller.enabled = false;
-        gc.mainCharacter.transform.position = interactions.newPosition;
-        gc.mainCharacter.transform.rotation = Quaternion.Euler(interactions.newRotation);
+        gc.mainCharacterRiverQuest.transform.position = interactions.newPosition;
+        gc.mainCharacterRiverQuest.transform.rotation = Quaternion.Euler(interactions.newRotation);
         gc.camera2.transform.position = interactions.cameraSetPosition;
         gc.camera2.transform.rotation = Quaternion.Euler(interactions.cameraSetRotation);
         mainController.controller.enabled = true;
@@ -89,15 +93,15 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
 
     public void Selesai_Misi()
     {
-        mainController.controller.enabled = false;
-        gc.mainCharacter.transform.position = interactions.oldPosition;
-        gc.mainCharacter.transform.localRotation = Quaternion.Euler(interactions.oldRotation);
-        mainController.controller.enabled = true;
+        //Variable Set
+        GameVariable.isQuestStarting = false;
+        GameVariable.questId = "";
+
+        gc.mainCharacter.gameObject.SetActive(true);
+        gc.mainCharacterRiverQuest.gameObject.SetActive(false);
 
         gc.mainCamera.gameObject.SetActive(true);
         gc.camera2.gameObject.SetActive(false);
-        interactions.oldPosition = Vector3.zero;
-        interactions.oldRotation = Vector3.zero;
 
         mainController.playerCamera = gc.mainCamera;
         GameVariable.isQuestStarting = false;

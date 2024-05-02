@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     public Transform mainCharacter;
+    public Transform mainCharacterRiverQuest;
     public Transform mainCamera;
     public Transform camera2;
 

@@ -38,7 +38,6 @@ public class MainCharMovement : MonoBehaviour
     public GameObject loadingPanel;
     public GameObject shopPanel;
     public GameObject mulaiMisiBtn;
-    public GameObject endMisiBtn;
 
     [Header("Movement Condition")]
     public bool isMoveLeft = false;
@@ -60,7 +59,6 @@ public class MainCharMovement : MonoBehaviour
         loadingPanel.SetActive(false);
         shopPanel.SetActive(false);
         mulaiMisiBtn.SetActive(false);
-        endMisiBtn.SetActive(false);
 
         LoadPlayer();
 

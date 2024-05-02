@@ -89,9 +89,6 @@ public class Interactions : MonoBehaviour
         {
             buttonInteract.SetActive(false);
         }
-
-        // Quest
-        mainChar.endMisiBtn.SetActive(GameVariable.isQuestStarting);
     }
 
     public void buttonCondition()
