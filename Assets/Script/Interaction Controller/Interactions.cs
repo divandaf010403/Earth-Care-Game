@@ -17,11 +17,13 @@ public class Interactions : MonoBehaviour
     [SerializeField] public GameObject buttonInteract;
     public List<Sprite> imgAction;
 
+    [Header("Conversation")]
+    [SerializeField] private Transform btnStartConversation;
+
     [Header("Get Component")]
     MainCharMovement mainChar;
     public Inventory inventory;
     public InventoryExt inventoryExt;
-    TrashcanController trashcanController;
 
     [Header("Inventory")]
     Transform otherGameObject;
@@ -183,13 +185,26 @@ public class Interactions : MonoBehaviour
             cameraSetPosition = questHandler.QuestCameraPosition.transform.position;
             cameraSetRotation = questHandler.QuestCameraPosition.transform.rotation.eulerAngles;
         }
+
+        if (other.CompareTag("Conversation"))
+        {
+            btnStartConversation.gameObject.SetActive(true);
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        mainChar.mulaiMisiBtn.SetActive(false);
-        newPosition = Vector3.zero;
-        newRotation = Vector3.zero;
+        if (other.CompareTag("Quest"))
+        {
+            mainChar.mulaiMisiBtn.SetActive(false);
+            newPosition = Vector3.zero;
+            newRotation = Vector3.zero;
+        }
+
+        if (other.CompareTag("Conversation"))
+        {
+            btnStartConversation.gameObject.SetActive(false);
+        }
     }
 
     public void QuestButtonClick()
