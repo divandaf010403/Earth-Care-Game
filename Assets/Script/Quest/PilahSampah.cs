@@ -33,33 +33,32 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     public float spawnRadius = 5f;
     public int numberOfObjectsToSpawn = 10;
 
-    [Header("Checker")]
-    private bool isTrashAlreadyEmpty = false;
-    private bool isQuestFinish = false;
-
     [Header("Next Action")]
-    GameObject questToActive;
+    [SerializeField] private GameObject questToActive;
 
     private void Update() 
     {
-        // if(isTrashAlreadyEmpty && isQuestFinish) 
-        // {
-        //     questToActive.SetActive(true);
-        //     gameObject.SetActive(false);
-        // }
+        if (GameVariable.isQuestStarting && (GameVariable.questId == quest_id))
+        {
+            if (spawnerMidPosition.childCount == 0 && inventoryQuest.GetChild(0).GetComponent<Image>().enabled == false)
+            {
+                Selesai_Misi();
+                questToActive.SetActive(true);
+            }
+        }
     }
 
     IEnumerator ActivateObjectDelayed()
     {
         yield return null; // Menunggu satu frame
         if (GameVariable.isQuestStarting)
-            {
-                isActiveTrigger.gameObject.SetActive(false);
-            }
-            else
-            {
-                isActiveTrigger.gameObject.SetActive(true);
-            }
+        {
+            isActiveTrigger.gameObject.SetActive(false);
+        }
+        else
+        {
+            isActiveTrigger.gameObject.SetActive(true);
+        }
     }
 
     // Panggil coroutine ini ketika Anda ingin mengubah keadaan objek

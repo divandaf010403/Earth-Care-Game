@@ -8,6 +8,7 @@ public class PlayerData
     public float[] position;
     public float[] rotation;
     public int playerCoin;
+    public int questNumber;
 
     public PlayerData(MainCharMovement mainChar)
     {
@@ -22,5 +23,7 @@ public class PlayerData
         rotation[2] = mainChar.transform.rotation.eulerAngles.z;
 
         playerCoin = mainChar.playerCoin;
+
+        questNumber = GameVariable.questNumber;
     }
 }

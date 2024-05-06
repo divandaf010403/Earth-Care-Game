@@ -247,6 +247,8 @@ public class MainCharMovement : MonoBehaviour
                 gc.mainCharacter.transform.position = position;
                 gc.mainCharacter.transform.rotation = rotation;
             }
+
+            data.questNumber = GameVariable.questNumber;
         }
     }
 

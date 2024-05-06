@@ -207,6 +207,12 @@ public class Interactions : MonoBehaviour
         }
     }
 
+    private void OnDisable() {
+        // Pastikan tombol-tombol dinonaktifkan saat trigger dinonaktifkan
+        mainChar.mulaiMisiBtn.SetActive(false);
+        btnStartConversation.gameObject.SetActive(false);
+    }
+
     public void QuestButtonClick()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, 5f, _questLayerMask);
