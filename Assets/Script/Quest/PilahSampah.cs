@@ -186,7 +186,7 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
         }
     }
 
-    public void Buang_Sampah(TrashcanController trashcanController)
+    public void Buang_Sampah(TrashcanController trashcanController, MainCharMovement nPanelShow)
     {
         Transform childTransform = inventoryQuest.GetChild(0);
         Image image = childTransform.GetComponent<Image>();
@@ -206,6 +206,7 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
         else
         {
             Debug.Log("Salah Tempat Sampah");
+            nPanelShow.showNotification("SALAH GOBLOK!!!");
         }
     }
 }

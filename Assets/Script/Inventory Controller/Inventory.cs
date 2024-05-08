@@ -121,7 +121,7 @@ public class Inventory : MonoBehaviour
     //     }
     // }
 
-    public void RemoveItem(TrashcanController trashcanController)
+    public void RemoveItem(TrashcanController trashcanController, MainCharMovement nPanelShow)
     {
         Transform imageTransform = transform.GetChild(defaultSelectedItemIndex).GetChild(0).GetChild(0);
         Image image = imageTransform.GetChild(0).GetComponent<Image>();
@@ -153,6 +153,7 @@ public class Inventory : MonoBehaviour
         {
             // Item with the specified itemId not found
             Debug.Log("Gagal Buang Sampah");
+            nPanelShow.showNotification("SALAH GOBLOK!!!");
         }
     }
 
