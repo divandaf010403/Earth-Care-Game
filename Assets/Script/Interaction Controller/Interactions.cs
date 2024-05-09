@@ -110,11 +110,11 @@ public class Interactions : MonoBehaviour
                     if (GameVariable.isQuestStarting && (GameVariable.questId == "1Q"))
                     {
                         PilahSampah pilahSampah = FindObjectOfType<PilahSampah>();
-                        pilahSampah.Buang_Sampah(trashcanController);
+                        pilahSampah.Buang_Sampah(trashcanController, mainChar);
                     }
                     else
                     {
-                        inventory.RemoveItem(trashcanController);
+                        inventory.RemoveItem(trashcanController, mainChar);
                     }
                     break;
                 case "Merchant":
@@ -207,10 +207,17 @@ public class Interactions : MonoBehaviour
         }
     }
 
-    private void OnDisable() {
-        // Pastikan tombol-tombol dinonaktifkan saat trigger dinonaktifkan
-        mainChar.mulaiMisiBtn.SetActive(false);
-        btnStartConversation.gameObject.SetActive(false);
+    private void OnDisable() 
+    {
+        // Mengatur tombol-tombol untuk nonaktif ketika game object ini dinonaktifkan
+        if (mainChar.mulaiMisiBtn != null)
+        {
+            mainChar.mulaiMisiBtn.SetActive(false);
+        }
+        if (btnStartConversation.gameObject != null)
+        {
+            btnStartConversation.gameObject.SetActive(false);
+        }
     }
 
     public void QuestButtonClick()

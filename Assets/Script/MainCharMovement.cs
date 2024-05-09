@@ -23,11 +23,6 @@ public class MainCharMovement : MonoBehaviour
     [Header("Interaction Utils")]
     public float interactRadius = 2f;
     public Transform notificationPanel;
-    public float fadeInTime = 1.0f;
-    public float fadeOutTime = 1.0f;
-    public float displayTime = 3.0f;
-    private CanvasGroup canvasGroup;
-    public bool isCanInteractTrash = true;
 
     [Header("Joystick Utils")]
     public bool enableMobileInput = false;
@@ -282,35 +277,27 @@ public class MainCharMovement : MonoBehaviour
 
     public void showNotification(string message)
     {
-        canvasGroup = notificationPanel.GetComponent<CanvasGroup>();
-        // Memulai coroutine untuk menampilkan pesan dengan efek fade-in
-        StartCoroutine(ShowMessage());
+        notificationPanel.gameObject.SetActive(true);
+        if (notificationPanel != null)
+        {
+            Animator nPanelAnimator = notificationPanel.GetComponent<Animator>();
+            if (nPanelAnimator != null)
+            {
+                bool isOpen = nPanelAnimator.GetBool("isOpen");
+                nPanelAnimator.SetBool("isOpen", !isOpen);
+
+                StartCoroutine(CloseNotificationAfterDelay(nPanelAnimator, 2f, notificationPanel));
+            }
+
+            TextMeshProUGUI txtTMP = notificationPanel.GetChild(0).GetComponent<TextMeshProUGUI>();
+            txtTMP.text = message;
+        }
     }
 
-    IEnumerator ShowMessage()
+    IEnumerator CloseNotificationAfterDelay(Animator animator, float delay, Transform nPanel)
     {
-        // Fade-in
-        float elapsedTime = 0.0f;
-        while (elapsedTime < fadeInTime)
-        {
-            elapsedTime += Time.deltaTime;
-            canvasGroup.alpha = Mathf.Clamp01(elapsedTime / fadeInTime);
-            yield return null;
-        }
-
-        // Menunggu sebentar sebelum memulai fade-out
-        yield return new WaitForSeconds(displayTime);
-
-        // Fade-out
-        elapsedTime = 0.0f;
-        while (elapsedTime < fadeOutTime)
-        {
-            elapsedTime += Time.deltaTime;
-            canvasGroup.alpha = Mathf.Clamp01(1.0f - (elapsedTime / fadeOutTime));
-            yield return null;
-        }
-
-        // Menonaktifkan game object setelah fade-out selesai
-        notificationPanel.gameObject.SetActive(false);
+        yield return new WaitForSeconds(delay);
+        animator.SetBool("isOpen", false);
+        nPanel.gameObject.SetActive(false);
     }
 }
