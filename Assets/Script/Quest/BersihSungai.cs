@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class BersihSungai : MonoBehaviour, IQuestHandler
 {
+    public static BersihSungai Instance;
     [SerializeField] public string quest_id = "2Q";
     [SerializeField] public Camera questCamera;
     [SerializeField] public Transform questPlayerPosition;
@@ -27,16 +29,97 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     public Transform TrashSpawner => trashSpawner;
     public Transform IsActiveTrigger => isActiveTrigger;
 
-    void Start()
+    [Header("Quest Setting")]
+    public TextMeshProUGUI countdownText;
+    public TextMeshProUGUI pointsText;
+    float questStartTimer = 3f; // Timer untuk memulai quest
+    float questDuration = 60f; // Durasi quest dalam detik (3 menit)
+    bool questStarted = false; // Untuk melacak apakah quest sudah dimulai
+    float trashSpawnInterval = 5f; // Interval untuk spawn trash
+    float trashSpawnTimer = 0f; // Timer untuk spawn trash
+    int questPoint = 0; // Poin saat menjalankan quest
+
+    void Awake()
     {
-        if (interactions != null)
+        // Pastikan hanya ada satu instance QuestManager yang ada
+        if (Instance == null)
         {
-            // Interaction component found, you can use it now
+            Instance = this;
         }
         else
         {
-            Debug.LogError("Interactions component not found on MainCharacter.");
+            Destroy(gameObject);
         }
+    }
+
+    void Update() 
+    {
+        if (GameVariable.isQuestStarting && (GameVariable.questId == quest_id))
+        {
+            // Jika quest belum dimulai, mulai countdown
+            if (!questStarted)
+            {
+                questStartTimer -= Time.deltaTime;
+                GameVariable.speed = 0f; // Karakter tidak bisa bergerak
+
+                if (questStartTimer <= 0f)
+                {
+                    questStarted = true;
+                    GameVariable.speed = 5f; // Karakter bisa bergerak
+                    trashSpawnTimer = trashSpawnInterval; // Mulai spawn trash
+                }
+            }
+            else
+            {
+                // Quest sudah dimulai, mulai countdown 3 menit
+                questDuration -= Time.deltaTime;
+
+                if (questDuration <= 0f)
+                {
+                    // Quest selesai, lakukan penanganan sesuai kebutuhan
+                    // Misalnya: Menampilkan pesan quest selesai, mereset quest, dll.
+                    // Reset variabel dan kondisi yang diperlukan
+                    questStartTimer = 3f;
+                    questStarted = false;
+                    GameVariable.speed = 0f; // Karakter tidak bisa bergerak lagi
+                    questDuration = 180f; // Reset durasi quest
+                }
+                else
+                {
+                    // Quest masih berlangsung, jalankan fungsi RandomSpawnTrash setiap interval
+                    trashSpawnTimer -= Time.deltaTime;
+                    if (trashSpawnTimer <= 0f)
+                    {
+                        RandomSpawnTrash();
+                        trashSpawnTimer = trashSpawnInterval; // Reset timer spawn trash
+                    }
+                }
+            }
+
+            // Update countdown text
+            UpdateCountdownText();
+
+            pointsText.text = questPoint.ToString();
+        }    
+    }
+
+    void UpdateCountdownText()
+    {
+        // Pastikan countdownText tidak null
+        if (countdownText != null)
+        {
+            // Ubah durasi quest menjadi format menit:detik
+            int minutes = Mathf.FloorToInt(questDuration / 60f);
+            int seconds = Mathf.FloorToInt(questDuration % 60f);
+            
+            // Tampilkan pada TextMeshPro Text UI
+            countdownText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        }
+    }
+
+    public void AddPoints(int pointsToAdd)
+    {
+        questPoint += pointsToAdd;
     }
 
     IEnumerator ActivateObjectDelayed()

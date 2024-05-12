@@ -100,7 +100,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a413f3b91c3791847a9d2430cab5f927,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1756770187540998935}
+      addedObject: {fileID: -4227764898601403961}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a413f3b91c3791847a9d2430cab5f927,
         type: 3}
       insertIndex: -1
@@ -116,8 +116,8 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 7329743920574739020}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &1756770187540998935
-BoxCollider:
+--- !u!64 &-4227764898601403961
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -134,9 +134,10 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.0652184, y: 0.06960093, z: 0.024442177}
-  m_Center: {x: -1.2358453e-10, y: 0.023384817, z: -0.00011415572}
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 2534964839176971238, guid: a413f3b91c3791847a9d2430cab5f927, type: 3}
 --- !u!54 &1827411726720962438
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -160,7 +161,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0

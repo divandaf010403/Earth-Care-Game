@@ -9,7 +9,6 @@ public class MainCharMovement : MonoBehaviour
 {
     [Header("Character Utils")]
     public CharacterController controller;
-    public float speed, rotationSpeed;
     public Transform playerCamera;
     public CinemachineFreeLook camFreeLook;
     public float raycastDistance = 1f;
@@ -22,7 +21,7 @@ public class MainCharMovement : MonoBehaviour
 
     [Header("Interaction Utils")]
     public float interactRadius = 2f;
-    public Transform notificationPanel;
+    // public Transform notificationPanel;
 
     [Header("Joystick Utils")]
     public bool enableMobileInput = false;
@@ -30,9 +29,9 @@ public class MainCharMovement : MonoBehaviour
     public FixedTouchField touchField;
     GameController gc;
     public Animator anim;
-    public GameObject loadingPanel;
-    public GameObject shopPanel;
-    public GameObject mulaiMisiBtn;
+    // public GameObject loadingPanel;
+    // public GameObject shopPanel;
+    // public GameObject mulaiMisiBtn;
 
     [Header("Movement Condition")]
     public bool isMoveLeft = false;
@@ -40,6 +39,10 @@ public class MainCharMovement : MonoBehaviour
 
     [Header("Shop Controller")]
     public ShopController shop;
+
+    [Header("Coba Dictionary")]
+    [SerializeField] public CustomDictionary customDictionary;
+    [SerializeField] public Dictionary<string, Transform> newDictionary;
 
     // Start is called before the first frame update
     void Start()
@@ -50,10 +53,17 @@ public class MainCharMovement : MonoBehaviour
         gc = gameController.GetComponent<GameController>();
         anim = GetComponent<Animator>();
 
-        notificationPanel.gameObject.SetActive(false);
-        loadingPanel.SetActive(false);
-        shopPanel.SetActive(false);
-        mulaiMisiBtn.SetActive(false);
+        // notificationPanel.gameObject.SetActive(false);
+        // loadingPanel.SetActive(false);
+        // shopPanel.SetActive(false);
+        // mulaiMisiBtn.SetActive(false);
+
+        newDictionary = customDictionary.ToDictionary();
+
+        foreach (var kvp in newDictionary)
+        {
+            kvp.Value.gameObject.SetActive(false);
+        }
 
         LoadPlayer();
 
@@ -165,7 +175,7 @@ public class MainCharMovement : MonoBehaviour
     private void MoveCharacter(Vector3 direction)
     {
         direction.Normalize();
-        controller.Move(direction * speed * Time.deltaTime);
+        controller.Move(direction * GameVariable.speed * Time.deltaTime);
     }
 
     private void RotateCharacter(Vector3 direction)
@@ -176,7 +186,7 @@ public class MainCharMovement : MonoBehaviour
         {
             Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
             Quaternion currentRotation = transform.rotation;
-            Quaternion newRotation = Quaternion.Slerp(currentRotation, toRotation, rotationSpeed * Time.deltaTime);
+            Quaternion newRotation = Quaternion.Slerp(currentRotation, toRotation, GameVariable.rotationSpeed * Time.deltaTime);
             // Use transform.rotation to rotate the character
             transform.rotation = newRotation;
         }
@@ -219,7 +229,7 @@ public class MainCharMovement : MonoBehaviour
         Vector3 desiredMoveDirection = (cameraRight.normalized * direction).normalized;
 
         desiredMoveDirection.Normalize();
-        controller.Move(desiredMoveDirection * speed * Time.deltaTime);
+        controller.Move(desiredMoveDirection * GameVariable.speed * Time.deltaTime);
     }
 
     public void SavePlayerData()
@@ -249,14 +259,14 @@ public class MainCharMovement : MonoBehaviour
 
     public void ShowShopPanel()
     {
-        shopPanel.SetActive(true);
-        shopPanel.transform.localPosition = new Vector3(0f, 0f, 0f);
+        newDictionary["shop"].gameObject.SetActive(true);
+        newDictionary["shop"].localPosition = new Vector3(0f, 0f, 0f);
         shop.LoadShopData();
     }
 
     public void CloseShopPanel()
     {
-        shopPanel.SetActive(false);
+        newDictionary["shop"].gameObject.SetActive(false);
         if (shop != null && shop.ShopScrollView != null)
         {
             foreach (Transform child in shop.ShopScrollView)
@@ -277,19 +287,19 @@ public class MainCharMovement : MonoBehaviour
 
     public void showNotification(string message)
     {
-        notificationPanel.gameObject.SetActive(true);
-        if (notificationPanel != null)
+        newDictionary["pesan"].gameObject.SetActive(true);
+        if (newDictionary["pesan"] != null)
         {
-            Animator nPanelAnimator = notificationPanel.GetComponent<Animator>();
+            Animator nPanelAnimator = newDictionary["pesan"].GetComponent<Animator>();
             if (nPanelAnimator != null)
             {
                 bool isOpen = nPanelAnimator.GetBool("isOpen");
                 nPanelAnimator.SetBool("isOpen", !isOpen);
 
-                StartCoroutine(CloseNotificationAfterDelay(nPanelAnimator, 2f, notificationPanel));
+                StartCoroutine(CloseNotificationAfterDelay(nPanelAnimator, 2f, newDictionary["pesan"]));
             }
 
-            TextMeshProUGUI txtTMP = notificationPanel.GetChild(0).GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI txtTMP = newDictionary["pesan"].GetChild(0).GetComponent<TextMeshProUGUI>();
             txtTMP.text = message;
         }
     }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public static class GameVariable
 {
+    public static float speed = 5;
+    public static float rotationSpeed = 10;
     public static int questNumber = 0;
     public static bool isQuestStarting = false;
     public static string questId;

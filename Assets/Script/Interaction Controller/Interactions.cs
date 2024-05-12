@@ -14,14 +14,11 @@ public class Interactions : MonoBehaviour
     [SerializeField] private LayerMask _questLayerMask;
     private readonly Collider[] _colliders = new Collider[1];
     [SerializeField] private int _numFound;
-    [SerializeField] public GameObject buttonInteract;
     public List<Sprite> imgAction;
-
-    [Header("Conversation")]
-    [SerializeField] private Transform btnStartConversation;
 
     [Header("Get Component")]
     MainCharMovement mainChar;
+    
     public Inventory inventory;
     public InventoryExt inventoryExt;
 
@@ -50,7 +47,6 @@ public class Interactions : MonoBehaviour
 
         mainChar = GetComponent<MainCharMovement>();
         gc = gameController.GetComponent<GameController>();
-        buttonInteract.SetActive(false);
 
         // inventory.ItemAdded += InventoryScript_ItemAdded;
         // inventoryExt.ItemAdded += InventoryExtScript_ItemAdded;
@@ -66,30 +62,32 @@ public class Interactions : MonoBehaviour
             _interactLayerMask
         );
 
+        Transform btn_i = mainChar.newDictionary["interact"];
+
         if (_numFound > 0)
         {
-            Image setActionImg = buttonInteract.transform.GetChild(0).GetComponent<Image>();
+            Image setActionImg = btn_i.transform.GetChild(0).GetComponent<Image>();
 
             switch (_colliders[0].tag)
             {
                 case "Item":
                 case "ItemCraft":
                 case "Merchant":
-                    buttonInteract.SetActive(true);
+                    btn_i.gameObject.SetActive(true);
                     setActionImg.sprite = imgAction[0];
                     break;
                 case "Trashcan":
-                    buttonInteract.SetActive(true);
+                    btn_i.gameObject.SetActive(true);
                     setActionImg.sprite = imgAction[1];
                     break;
                 default:
-                    buttonInteract.SetActive(false);
+                    btn_i.gameObject.SetActive(false);
                     break;
             }
         }
         else
         {
-            buttonInteract.SetActive(false);
+            btn_i.gameObject.SetActive(false);
         }
     }
 
@@ -124,7 +122,7 @@ public class Interactions : MonoBehaviour
         }
         else
         {
-            buttonInteract.SetActive(false);
+            mainChar.newDictionary["interact"].gameObject.SetActive(false);
         }
     }
 
@@ -178,7 +176,7 @@ public class Interactions : MonoBehaviour
     {
         if (other.CompareTag("Quest"))
         {
-            mainChar.mulaiMisiBtn.SetActive(true);
+            mainChar.newDictionary["quest"].gameObject.SetActive(true);
             IQuestHandler questHandler = other.GetComponentInParent<IQuestHandler>();
             newPosition = questHandler.QuestPlayerPosition.transform.position;
             newRotation = questHandler.QuestPlayerPosition.transform.rotation.eulerAngles;
@@ -188,7 +186,7 @@ public class Interactions : MonoBehaviour
 
         if (other.CompareTag("Conversation"))
         {
-            btnStartConversation.gameObject.SetActive(true);
+            mainChar.newDictionary["dialog"].gameObject.SetActive(true);
         }
     }
 
@@ -196,27 +194,23 @@ public class Interactions : MonoBehaviour
     {
         if (other.CompareTag("Quest"))
         {
-            mainChar.mulaiMisiBtn.SetActive(false);
+            mainChar.newDictionary["quest"].gameObject.SetActive(false);
             newPosition = Vector3.zero;
             newRotation = Vector3.zero;
         }
 
         if (other.CompareTag("Conversation"))
         {
-            btnStartConversation.gameObject.SetActive(false);
+            mainChar.newDictionary["dialog"].gameObject.SetActive(false);
         }
     }
 
     private void OnDisable() 
     {
         // Mengatur tombol-tombol untuk nonaktif ketika game object ini dinonaktifkan
-        if (mainChar.mulaiMisiBtn != null)
+        if (mainChar.newDictionary["quest"].gameObject != null)
         {
-            mainChar.mulaiMisiBtn.SetActive(false);
-        }
-        if (btnStartConversation.gameObject != null)
-        {
-            btnStartConversation.gameObject.SetActive(false);
+            mainChar.newDictionary["quest"].gameObject.SetActive(false);
         }
     }
 
