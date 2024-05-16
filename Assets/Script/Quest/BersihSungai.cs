@@ -6,7 +6,7 @@ using TMPro;
 public class BersihSungai : MonoBehaviour, IQuestHandler
 {
     public static BersihSungai Instance;
-    [SerializeField] public string quest_id = "2Q";
+    [SerializeField] public string quest_id = "3Q";
     [SerializeField] public Camera questCamera;
     [SerializeField] public Transform questPlayerPosition;
     [SerializeField] public Transform questCameraPosition;
@@ -14,12 +14,13 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     public Transform isActiveTrigger;
     public List<GameObject> colliderQuest;
     public List<GameObject> objectToSpawn;
+    private Coroutine spawnCoroutine;
+
     private float spawnIntervalMin = 1f;
     private float spawnIntervalMax = 3f;
 
     [Header("Get Component")]
-    public GameController gc;
-    public MainCharMovement mainController;
+    // public MainCharMovement mainController;
     public Interactions interactions;
 
     //Interface
@@ -76,13 +77,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
 
                 if (questDuration <= 0f)
                 {
-                    // Quest selesai, lakukan penanganan sesuai kebutuhan
-                    // Misalnya: Menampilkan pesan quest selesai, mereset quest, dll.
-                    // Reset variabel dan kondisi yang diperlukan
-                    questStartTimer = 3f;
-                    questStarted = false;
-                    GameVariable.speed = 0f; // Karakter tidak bisa bergerak lagi
-                    questDuration = 180f; // Reset durasi quest
+                    OnQuestFinish();
                 }
                 else
                 {
@@ -147,26 +142,24 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
         GameVariable.isQuestStarting = true;
         GameVariable.questId = quest_id;
 
-        gc.mainCharacter.gameObject.SetActive(false);
-        gc.mainCharacterRiverQuest.gameObject.SetActive(true);
+        GameController.Instance.mainCharacter.gameObject.SetActive(false);
+        GameController.Instance.mainCharacterRiverQuest.gameObject.SetActive(true);
 
-        mainController.controller.enabled = false;
-        gc.mainCharacterRiverQuest.transform.position = interactions.newPosition;
-        gc.mainCharacterRiverQuest.transform.rotation = Quaternion.Euler(interactions.newRotation);
-        gc.camera2.transform.position = interactions.cameraSetPosition;
-        gc.camera2.transform.rotation = Quaternion.Euler(interactions.cameraSetRotation);
-        mainController.controller.enabled = true;
+        MainCharMovement.Instance.controller.enabled = false;
+        GameController.Instance.mainCharacterRiverQuest.transform.position = interactions.newPosition;
+        GameController.Instance.mainCharacterRiverQuest.transform.rotation = Quaternion.Euler(interactions.newRotation);
+        GameController.Instance.camera2.transform.position = interactions.cameraSetPosition;
+        GameController.Instance.camera2.transform.rotation = Quaternion.Euler(interactions.cameraSetRotation);
+        MainCharMovement.Instance.controller.enabled = true;
 
-        gc.mainCamera.gameObject.SetActive(false);
-        gc.camera2.gameObject.SetActive(true);
-
-        mainController.playerCamera = gc.camera2;
+        GameController.Instance.mainCamera.gameObject.SetActive(false);
+        GameController.Instance.camera2.gameObject.SetActive(true);
         GameVariable.isQuestStarting = true;
 
-        gc.mainUI.SetActive(false);
-        gc.bersihSungaiUI.SetActive(true);
+        GameController.Instance.mainUI.SetActive(false);
+        GameController.Instance.bersihSungaiUI.SetActive(true);
 
-        StartCoroutine(SpawnItemsPeriodically());
+        spawnCoroutine = StartCoroutine(SpawnItemsPeriodically());
 
         foreach (GameObject obj in colliderQuest)
         {
@@ -180,27 +173,23 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
         GameVariable.isQuestStarting = false;
         GameVariable.questId = "";
 
-        gc.mainCharacter.gameObject.SetActive(true);
-        gc.mainCharacterRiverQuest.gameObject.SetActive(false);
+        GameController.Instance.mainCharacter.gameObject.SetActive(true);
+        GameController.Instance.mainCharacterRiverQuest.gameObject.SetActive(false);
 
-        gc.mainCamera.gameObject.SetActive(true);
-        gc.camera2.gameObject.SetActive(false);
+        GameController.Instance.mainCamera.gameObject.SetActive(true);
+        GameController.Instance.camera2.gameObject.SetActive(false);
 
-        mainController.playerCamera = gc.mainCamera;
-        GameVariable.isQuestStarting = false;
-
-        gc.mainUI.SetActive(true);
-        gc.bersihSungaiUI.SetActive(false);
+        GameController.Instance.mainUI.SetActive(true);
+        GameController.Instance.bersihSungaiUI.SetActive(false);
 
         foreach (GameObject obj in colliderQuest)
         {
             obj.SetActive(false);
         }
 
-        // Hentikan coroutine spawn jika sedang berjalan
-        if (SpawnItemsPeriodically() != null)
+        if (spawnCoroutine != null)
         {
-            StopCoroutine(SpawnItemsPeriodically());
+            StopCoroutine(spawnCoroutine);
         }
 
         // Hapus semua objek yang menjadi child dari spawnPoint

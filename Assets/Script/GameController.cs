@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    public static GameController Instance;
     public Transform mainCharacter;
     public Transform mainCharacterRiverQuest;
     public Transform mainCamera;
@@ -18,8 +19,21 @@ public class GameController : MonoBehaviour
     public Transform inventory;
     public Transform inventoryExt;
 
-    private void Start() {
-        // inventoryExt.gameObject.SetActive(false);
+    [Header("Shop Panel")]
+    public Transform shopPanel;
+    public ShopController shopController;
+
+    private void Awake() 
+    {
+        // Pastikan hanya ada satu instance QuestManager yang ada
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void openCloseinventoryExtMerchant(bool isActive) 
@@ -46,5 +60,28 @@ public class GameController : MonoBehaviour
         inventoryExt.GetChild(0).localPosition = new Vector3(0f, 0f, 0f);
         inventoryExt.GetChild(2).gameObject.SetActive(false);
         inventory.gameObject.SetActive(true);
+    }
+
+    public void ShowShopPanel()
+    {
+        shopPanel.gameObject.SetActive(true);
+        shopPanel.localPosition = new Vector3(0f, 0f, 0f);
+        shopController.LoadShopData();
+    }
+
+    public void CloseShopPanel()
+    {
+        shopPanel.gameObject.SetActive(false);
+        if (shopController != null && shopController.ShopScrollView != null)
+        {
+            foreach (Transform child in shopController.ShopScrollView)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+        else
+        {
+            Debug.LogError("Invalid shop or ShopScrollView reference.");
+        }
     }
 }

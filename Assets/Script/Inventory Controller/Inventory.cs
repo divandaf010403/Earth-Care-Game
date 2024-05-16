@@ -121,7 +121,7 @@ public class Inventory : MonoBehaviour
     //     }
     // }
 
-    public void RemoveItem(TrashcanController trashcanController, MainCharMovement nPanelShow)
+    public bool RemoveItem(TrashcanController trashcanController, MainCharMovement nPanelShow)
     {
         Transform imageTransform = transform.GetChild(defaultSelectedItemIndex).GetChild(0).GetChild(0);
         Image image = imageTransform.GetChild(0).GetComponent<Image>();
@@ -148,12 +148,16 @@ public class Inventory : MonoBehaviour
             inventoryVariable.totalSampah = 0;
 
             Debug.Log("Buang Sampah Berhasil");
+
+            return true;
         }
         else
         {
             // Item with the specified itemId not found
             Debug.Log("Gagal Buang Sampah");
             nPanelShow.showNotification("SALAH GOBLOK!!!");
+
+            return false;
         }
     }
 

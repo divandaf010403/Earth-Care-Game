@@ -112,7 +112,6 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
         interactions.oldRotation = Vector3.zero;
 
         mainController.playerCamera = gc.mainCamera;
-        GameVariable.isQuestStarting = false;
 
         gc.mainUI.SetActive(true);
         gc.pilahSampahUI.SetActive(false);

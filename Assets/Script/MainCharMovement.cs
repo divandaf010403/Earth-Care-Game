@@ -1,4 +1,5 @@
 using Cinemachine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,6 +8,8 @@ using UnityEngine.UI;
 
 public class MainCharMovement : MonoBehaviour
 {
+    public static MainCharMovement Instance;
+
     [Header("Character Utils")]
     public CharacterController controller;
     public Transform playerCamera;
@@ -27,36 +30,30 @@ public class MainCharMovement : MonoBehaviour
     public bool enableMobileInput = false;
     public FixedJoystick[] joysticks;
     public FixedTouchField touchField;
-    GameController gc;
     public Animator anim;
-    // public GameObject loadingPanel;
-    // public GameObject shopPanel;
-    // public GameObject mulaiMisiBtn;
-
-    [Header("Movement Condition")]
-    public bool isMoveLeft = false;
-    public bool isMoveRIght = false;
-
-    [Header("Shop Controller")]
-    public ShopController shop;
 
     [Header("Coba Dictionary")]
     [SerializeField] public CustomDictionary customDictionary;
     [SerializeField] public Dictionary<string, Transform> newDictionary;
 
+    private void Awake() 
+    {
+        // Pastikan hanya ada satu instance QuestManager yang ada
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        GameObject gameController = GameObject.Find("GameController");
-
         controller = GetComponent<CharacterController>();
-        gc = gameController.GetComponent<GameController>();
         anim = GetComponent<Animator>();
-
-        // notificationPanel.gameObject.SetActive(false);
-        // loadingPanel.SetActive(false);
-        // shopPanel.SetActive(false);
-        // mulaiMisiBtn.SetActive(false);
 
         newDictionary = customDictionary.ToDictionary();
 
@@ -79,19 +76,6 @@ public class MainCharMovement : MonoBehaviour
         else
         {
             keyboardInput();
-        }
-
-        if (isMoveLeft)
-        {
-            MoveCharacterRightAndLeft(-1f);
-        }
-        else if (isMoveRIght)
-        {
-            MoveCharacterRightAndLeft(1f);
-        }
-        else
-        {
-            MoveCharacterRightAndLeft(0f);
         }
 
         playerCoinTxt.text = playerCoin.ToString();
@@ -206,32 +190,6 @@ public class MainCharMovement : MonoBehaviour
         controller.Move(new Vector3(0f, gravityValue, 0f) * Time.deltaTime);
     }
 
-    public void MoveLeft()
-    {
-        isMoveLeft = true;
-    }
-
-    public void MoveRight()
-    {
-        isMoveRIght = true;
-    }
-
-    public void StopMoving()
-    {
-        isMoveLeft = false;
-        isMoveRIght = false;
-    }
-
-    private void MoveCharacterRightAndLeft(float direction)
-    {
-        Vector3 cameraRight = playerCamera.right;
-        cameraRight.y = 0f;
-        Vector3 desiredMoveDirection = (cameraRight.normalized * direction).normalized;
-
-        desiredMoveDirection.Normalize();
-        controller.Move(desiredMoveDirection * GameVariable.speed * Time.deltaTime);
-    }
-
     public void SavePlayerData()
     {
         SaveSystem.SavePlayer(this);
@@ -249,34 +207,11 @@ public class MainCharMovement : MonoBehaviour
 
             if (position != null && rotation != null)
             {
-                gc.mainCharacter.transform.position = position;
-                gc.mainCharacter.transform.rotation = rotation;
+                GameController.Instance.mainCharacter.transform.position = position;
+                GameController.Instance.mainCharacter.transform.rotation = rotation;
             }
 
             data.questNumber = GameVariable.questNumber;
-        }
-    }
-
-    public void ShowShopPanel()
-    {
-        newDictionary["shop"].gameObject.SetActive(true);
-        newDictionary["shop"].localPosition = new Vector3(0f, 0f, 0f);
-        shop.LoadShopData();
-    }
-
-    public void CloseShopPanel()
-    {
-        newDictionary["shop"].gameObject.SetActive(false);
-        if (shop != null && shop.ShopScrollView != null)
-        {
-            foreach (Transform child in shop.ShopScrollView)
-            {
-                Destroy(child.gameObject);
-            }
-        }
-        else
-        {
-            Debug.LogError("Invalid shop or ShopScrollView reference.");
         }
     }
 

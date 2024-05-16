@@ -77,6 +77,7 @@ public class Interactions : MonoBehaviour
                     setActionImg.sprite = imgAction[0];
                     break;
                 case "Trashcan":
+                case "Quest":
                     btn_i.gameObject.SetActive(true);
                     setActionImg.sprite = imgAction[1];
                     break;
@@ -112,7 +113,21 @@ public class Interactions : MonoBehaviour
                     }
                     else
                     {
-                        inventory.RemoveItem(trashcanController, mainChar);
+                        bool isRemoved = inventory.RemoveItem(trashcanController, mainChar);
+                        if (isRemoved)
+                        {
+                            if (_colliders[0].CompareTag("Quest"))
+                            {
+                                PLTSaQuest q2 = _colliders[0].GetComponent<PLTSaQuest>();
+                                q2.requiredItem++;
+                            }
+                            Debug.Log("Item was successfully removed.");
+                        }
+                        else
+                        {
+                            // Handle failure to remove item if needed
+                            Debug.Log("Failed to remove item.");
+                        }
                     }
                     break;
                 case "Merchant":
