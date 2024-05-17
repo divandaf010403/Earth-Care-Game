@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SpwnNPC : MonoBehaviour
 {
-    public GameObject NPC_Prefab;
+    public GameObject[] NPC_Prefab;
     public int NPC_toSpawn;
     public Transform NpcParent;
     public Transform spawnesPos;
@@ -26,7 +26,8 @@ public class SpwnNPC : MonoBehaviour
         int count = 0;
         while (count < NPC_toSpawn)
         {
-            GameObject obj = Instantiate(NPC_Prefab);
+            int npcIndex = Random.Range(0, NPC_Prefab.Length);
+            GameObject obj = Instantiate(NPC_Prefab[npcIndex]);
             Transform child = transform.GetChild(Random.Range(0, transform.childCount - 1));
             obj.GetComponent<WaypointNavigator>().currentWaypoint = child.GetComponent<Waypoint>();
             obj.transform.SetParent(NpcParent); // Set the parent

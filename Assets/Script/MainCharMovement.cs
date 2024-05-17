@@ -228,9 +228,6 @@ public class MainCharMovement : MonoBehaviour
             Animator nPanelAnimator = newDictionary["pesan"].GetComponent<Animator>();
             if (nPanelAnimator != null)
             {
-                bool isOpen = nPanelAnimator.GetBool("isOpen");
-                nPanelAnimator.SetBool("isOpen", !isOpen);
-
                 StartCoroutine(CloseNotificationAfterDelay(nPanelAnimator, 2f, newDictionary["pesan"]));
             }
 
@@ -241,8 +238,16 @@ public class MainCharMovement : MonoBehaviour
 
     IEnumerator CloseNotificationAfterDelay(Animator animator, float delay, Transform nPanel)
     {
+        animator.SetBool("isOpen", true);
         yield return new WaitForSeconds(delay);
         animator.SetBool("isOpen", false);
+
+        // Tunggu sampai animasi selesai
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        float animationLength = stateInfo.length;
+        yield return new WaitForSeconds(animationLength);
+
+        // Menonaktifkan nPanel setelah animasi selesai
         nPanel.gameObject.SetActive(false);
     }
 }

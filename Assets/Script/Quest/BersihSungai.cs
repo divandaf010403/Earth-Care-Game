@@ -40,6 +40,9 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     float trashSpawnTimer = 0f; // Timer untuk spawn trash
     int questPoint = 0; // Poin saat menjalankan quest
 
+    [Header("Ketika Quest Selesai")]
+    public Transform finishPanel;
+
     void Awake()
     {
         // Pastikan hanya ada satu instance QuestManager yang ada
@@ -77,6 +80,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
 
                 if (questDuration <= 0f)
                 {
+                    finishedQuest(questPoint);
                     OnQuestFinish();
                 }
                 else
@@ -247,5 +251,16 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
             // Tunggu interval antara spawn sebelum melanjutkan
             yield return new WaitForSeconds(Random.Range(spawnIntervalMin, spawnIntervalMax));
         }
+    }
+
+    void finishedQuest(int finishScore)
+    {
+        finishPanel.gameObject.SetActive(true);
+        finishPanel.localPosition = new Vector3(0f, 0f, 0f);
+        Transform finishPanelChild = finishPanel.GetChild(0);
+        
+        finishPanelChild.GetChild(0).GetComponent<TextMeshProUGUI>().text = finishScore.ToString();
+        finishPanelChild.GetChild(1).GetComponent<TextMeshProUGUI>().text = questPoint >= 50 ? "YAY BERHASIL" : "GAGAL!!!";
+        finishPanelChild.GetChild(1).GetComponent<TextMeshProUGUI>().color = questPoint >= 50 ? Color.green : Color.red;
     }
 }

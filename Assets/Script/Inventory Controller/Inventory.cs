@@ -137,6 +137,11 @@ public class Inventory : MonoBehaviour
         {
             inventoryItemDataList.slotData.RemoveAt(indexToRemove);
 
+            if (trashcanController.isVendingMachine)
+            {
+                nPanelShow.countCoin(10);
+            }
+
             SaveSystem.SaveInventory(inventoryItemDataList.slotData);
             LoadInventoryItem();
 
@@ -153,9 +158,15 @@ public class Inventory : MonoBehaviour
         }
         else
         {
-            // Item with the specified itemId not found
-            Debug.Log("Gagal Buang Sampah");
-            nPanelShow.showNotification("SALAH GOBLOK!!!");
+            if (image.sprite == null)
+            {
+                Debug.Log("Gagal Buang Sampah");
+            }
+            else
+            {
+                Debug.Log("Gagal Buang Sampah");
+                nPanelShow.showNotification("SALAH GOBLOK!!!");
+            }
 
             return false;
         }
