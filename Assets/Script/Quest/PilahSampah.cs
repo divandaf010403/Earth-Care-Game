@@ -204,8 +204,15 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
         }
         else
         {
-            Debug.Log("Salah Tempat Sampah");
-            nPanelShow.showNotification("SALAH GOBLOK!!!");
+            if (image.sprite == null)
+            {
+                Debug.Log("Gagal Buang Sampah");
+            }
+            else
+            {
+                Debug.Log("Gagal Buang Sampah");
+                nPanelShow.showNotification("Tempat Sampah Tidak Sesuai");
+            }
         }
     }
 }

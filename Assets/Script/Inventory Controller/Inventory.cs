@@ -165,7 +165,7 @@ public class Inventory : MonoBehaviour
             else
             {
                 Debug.Log("Gagal Buang Sampah");
-                nPanelShow.showNotification("SALAH GOBLOK!!!");
+                nPanelShow.showNotification("Tempat Sampah Tidak Sesuai");
             }
 
             return false;

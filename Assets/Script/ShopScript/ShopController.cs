@@ -92,71 +92,100 @@ public class ShopController : MonoBehaviour
 
     public void LoadShopData()
     {
-        List<ShopItem> loadedShopData = SaveSystem.LoadShop();
+        // List<ShopItem> loadedShopData = SaveSystem.LoadShop();
 
-        if (loadedShopData != null)
+        // if (loadedShopData != null)
+        // {
+        //     foreach (ShopController.ShopItem item in loadedShopData)
+        //     {
+        //         GameObject newItem = Instantiate(ItemTemplate, ShopScrollView);
+        //         ShopVariable shopVariable = newItem.transform.GetComponent<ShopVariable>();
+        //         newItem.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = item.nameItem;
+        //         newItem.transform.GetChild(1).GetComponent<Image>().sprite = item.imageItem;
+
+        //         shopVariable.jenisSampahNama = item.jenisSampahNama;
+        //         shopVariable.typeSampahTxt = item.typeSampahTxt;
+        //         shopVariable.totalSampahTxt = item.totalSampahTxt;
+
+        //         Button button = newItem.transform.GetChild(2).GetComponent<Button>();
+        //         button.onClick.AddListener(() => PurchaseItem(item));
+
+        //         if (item.isPurchased == true)
+        //         {
+        //             newItem.transform.GetChild(2).GetChild(1).GetComponent<TextMeshProUGUI>().gameObject.SetActive(true);
+        //             newItem.transform.GetChild(2).GetComponent<Button>().interactable = false;
+        //         } 
+        //         else
+        //         {
+        //             newItem.transform.GetChild(2).GetComponent<Button>().interactable = true;
+        //             newItem.transform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().gameObject.SetActive(true);
+        //             newItem.transform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = item.priceItem.ToString();
+        //         }
+        //     }
+        // }
+        // else
+        // {
+        //     Debug.LogWarning("Creating new shop data.");
+
+            // int lengthItem = shopItemList.Count;
+            // for (int i = 0; i < lengthItem; i++)
+            // {
+            //     g = Instantiate(ItemTemplate, ShopScrollView);
+            //     g.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = shopItemList[i].nameItem;
+            //     g.transform.GetChild(1).GetComponent<Image>().sprite = shopItemList[i].imageItem;
+
+            //     ShopVariable shopVariable = g.transform.GetComponent<ShopVariable>();
+            //     shopVariable.jenisSampahNama = shopItemList[i].jenisSampahNama;
+            //     shopVariable.typeSampahTxt = shopItemList[i].typeSampahTxt;
+            //     shopVariable.totalSampahTxt = shopItemList[i].totalSampahTxt;
+
+            //     Button button = g.transform.GetChild(2).GetComponent<Button>();
+            //     int index = i;
+            //     button.onClick.AddListener(() => PurchaseItem(shopItemList[index]));
+
+            //     if (shopItemList[i].isPurchased == true)
+            //     {
+            //         g.transform.GetChild(2).GetChild(1).GetComponent<TextMeshProUGUI>().gameObject.SetActive(true);
+            //         g.transform.GetChild(2).GetComponent<Button>().interactable = false;
+            //     }
+            //     else
+            //     {
+            //         g.transform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().gameObject.SetActive(true);
+            //         g.transform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = shopItemList[i].priceItem.ToString();
+            //         g.transform.GetChild(2).GetComponent<Button>().interactable = true;
+            //     }
+            // }
+
+        //     SaveShopData(); // Save the default shop data to the file
+        // }
+
+        int lengthItem = shopItemList.Count;
+        for (int i = 0; i < lengthItem; i++)
         {
-            foreach (ShopController.ShopItem item in loadedShopData)
+            g = Instantiate(ItemTemplate, ShopScrollView);
+            g.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = shopItemList[i].nameItem;
+            g.transform.GetChild(1).GetComponent<Image>().sprite = shopItemList[i].imageItem;
+
+            ShopVariable shopVariable = g.transform.GetComponent<ShopVariable>();
+            shopVariable.jenisSampahNama = shopItemList[i].jenisSampahNama;
+            shopVariable.typeSampahTxt = shopItemList[i].typeSampahTxt;
+            shopVariable.totalSampahTxt = shopItemList[i].totalSampahTxt;
+
+            Button button = g.transform.GetChild(2).GetComponent<Button>();
+            int index = i;
+            button.onClick.AddListener(() => PurchaseItem(shopItemList[index]));
+
+            if (shopItemList[i].isPurchased == true)
             {
-                GameObject newItem = Instantiate(ItemTemplate, ShopScrollView);
-                ShopVariable shopVariable = newItem.transform.GetComponent<ShopVariable>();
-                newItem.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = item.nameItem;
-                newItem.transform.GetChild(1).GetComponent<Image>().sprite = item.imageItem;
-
-                shopVariable.jenisSampahNama = item.jenisSampahNama;
-                shopVariable.typeSampahTxt = item.typeSampahTxt;
-                shopVariable.totalSampahTxt = item.totalSampahTxt;
-
-                Button button = newItem.transform.GetChild(2).GetComponent<Button>();
-                button.onClick.AddListener(() => PurchaseItem(item));
-
-                if (item.isPurchased == true)
-                {
-                    newItem.transform.GetChild(2).GetChild(1).GetComponent<TextMeshProUGUI>().gameObject.SetActive(true);
-                    newItem.transform.GetChild(2).GetComponent<Button>().interactable = false;
-                } 
-                else
-                {
-                    newItem.transform.GetChild(2).GetComponent<Button>().interactable = true;
-                    newItem.transform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().gameObject.SetActive(true);
-                    newItem.transform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = item.priceItem.ToString();
-                }
+                g.transform.GetChild(2).GetChild(1).GetComponent<TextMeshProUGUI>().gameObject.SetActive(true);
+                g.transform.GetChild(2).GetComponent<Button>().interactable = false;
             }
-        }
-        else
-        {
-            Debug.LogWarning("Creating new shop data.");
-
-            int lengthItem = shopItemList.Count;
-            for (int i = 0; i < lengthItem; i++)
+            else
             {
-                g = Instantiate(ItemTemplate, ShopScrollView);
-                g.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = shopItemList[i].nameItem;
-                g.transform.GetChild(1).GetComponent<Image>().sprite = shopItemList[i].imageItem;
-
-                ShopVariable shopVariable = g.transform.GetComponent<ShopVariable>();
-                shopVariable.jenisSampahNama = shopItemList[i].jenisSampahNama;
-                shopVariable.typeSampahTxt = shopItemList[i].typeSampahTxt;
-                shopVariable.totalSampahTxt = shopItemList[i].totalSampahTxt;
-
-                Button button = g.transform.GetChild(2).GetComponent<Button>();
-                int index = i;
-                button.onClick.AddListener(() => PurchaseItem(shopItemList[index]));
-
-                if (shopItemList[i].isPurchased == true)
-                {
-                    g.transform.GetChild(2).GetChild(1).GetComponent<TextMeshProUGUI>().gameObject.SetActive(true);
-                    g.transform.GetChild(2).GetComponent<Button>().interactable = false;
-                }
-                else
-                {
-                    g.transform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().gameObject.SetActive(true);
-                    g.transform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = shopItemList[i].priceItem.ToString();
-                    g.transform.GetChild(2).GetComponent<Button>().interactable = true;
-                }
+                g.transform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().gameObject.SetActive(true);
+                g.transform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = shopItemList[i].priceItem.ToString();
+                g.transform.GetChild(2).GetComponent<Button>().interactable = true;
             }
-
-            SaveShopData(); // Save the default shop data to the file
         }
     }
 }
