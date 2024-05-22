@@ -19,6 +19,7 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     public MainCharMovement mainController;
     public Interactions interactions;
     public Transform inventoryQuest;
+    public TextMeshProUGUI sisaSampahTxt;
 
     // Interface
     public Camera QuestCamera => questCamera;
@@ -40,6 +41,11 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     {
         if (GameVariable.isQuestStarting && (GameVariable.questId == quest_id))
         {
+            if (inventoryQuest.GetChild(0).GetComponent<Image>().enabled == false)
+            {
+                sisaSampahTxt.text = "Sisa : " + spawnerMidPosition.childCount;
+            }
+
             if (spawnerMidPosition.childCount == 0 && inventoryQuest.GetChild(0).GetComponent<Image>().enabled == false)
             {
                 Selesai_Misi();
