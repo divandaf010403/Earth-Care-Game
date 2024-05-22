@@ -98,7 +98,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
             // Update countdown text
             UpdateCountdownText();
 
-            pointsText.text = "Skor : " + questPoint.ToString();
+            pointsText.text = questPoint.ToString();
         }    
     }
 
