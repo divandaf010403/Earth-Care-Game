@@ -159,7 +159,12 @@ public class MainCharMovement : MonoBehaviour
     private void MoveCharacter(Vector3 direction)
     {
         direction.Normalize();
-        controller.Move(direction * GameVariable.speed * Time.deltaTime);
+        Vector3 nextPosition = transform.position + direction * GameVariable.speed * Time.deltaTime;
+
+        if (IsOnGround(nextPosition))
+        {
+            controller.Move(direction * GameVariable.speed * Time.deltaTime);
+        }
     }
 
     private void RotateCharacter(Vector3 direction)
@@ -187,7 +192,19 @@ public class MainCharMovement : MonoBehaviour
             gravityValue = 0f;
         }
 
-        controller.Move(new Vector3(0f, gravityValue, 0f) * Time.deltaTime);
+        Vector3 gravityMove = new Vector3(0f, gravityValue, 0f) * Time.deltaTime;
+        Vector3 nextPosition = transform.position + gravityMove;
+
+        if (IsOnGround(nextPosition))
+        {
+            controller.Move(gravityMove);
+        }
+    }
+
+    private bool IsOnGround(Vector3 position)
+    {
+        Ray ray = new Ray(position, Vector3.down);
+        return Physics.Raycast(ray, 1f, groundLayer);
     }
 
     public void SavePlayerData()

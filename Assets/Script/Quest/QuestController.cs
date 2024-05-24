@@ -4,22 +4,26 @@ using UnityEngine;
 
 public class QuestController : MonoBehaviour
 {
-    [SerializeField] private int _questNumber;
+    [SerializeField] int _questNumberActive;
+
     // Start is called before the first frame update
     void Start()
     {
-        _questNumber = GameVariable.questNumber;
+        // _questNumber = GameVariable.questNumber;
+        // Debug.Log(GameVariable.questNumber);
         ActivateQuest();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (_questNumber != GameVariable.questNumber)
-        {
-            _questNumber = GameVariable.questNumber;
-            ActivateQuest();
-        }
+        // if (_questNumber != GameVariable.questNumber)
+        // {
+        //     _questNumber = GameVariable.questNumber;
+        //     ActivateQuest();
+        // }
+
+        ActivateQuest();
     }
 
     public void ActivateQuest()
@@ -30,12 +34,12 @@ public class QuestController : MonoBehaviour
             transform.GetChild(i).gameObject.SetActive(false);
         }
 
-        transform.GetChild(GameVariable.questNumber).gameObject.SetActive(true);
+        transform.GetChild(_questNumberActive).gameObject.SetActive(true);
 
         // Mengaktifkan child index sebelum questNumber dan ber tag quest
-        for (int i = GameVariable.questNumber - 1; i >= 0; i--)
+        for (int i = 0; i <= _questNumberActive - 1; i++)
         {
-            if (transform.GetChild(i).CompareTag("quest"))
+            if (transform.GetChild(i).CompareTag("Quest"))
             {
                 transform.GetChild(i).gameObject.SetActive(true);
             }
