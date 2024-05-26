@@ -10,6 +10,9 @@ public class GameController : MonoBehaviour
     public Transform mainCamera;
     public Transform camera2;
 
+    [Header("Loading")]
+    public Transform loadingPanel;
+
     [Header("UI Controller")]
     public GameObject mainUI;
     public GameObject pilahSampahUI;
@@ -23,6 +26,8 @@ public class GameController : MonoBehaviour
     public Transform shopPanel;
     public ShopController shopController;
 
+    [SerializeField] public Transform questHandler;
+
     private void Awake() 
     {
         // Pastikan hanya ada satu instance QuestManager yang ada
@@ -34,6 +39,11 @@ public class GameController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public void loadingPanelTransition()
+    {
+
     }
 
     public void openCloseinventoryExtMerchant(bool isActive) 

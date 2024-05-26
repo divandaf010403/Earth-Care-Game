@@ -90,6 +90,13 @@ public class Interactions : MonoBehaviour
         {
             btn_i.gameObject.SetActive(false);
         }
+
+        mainChar.newDictionary["quit_quest"].gameObject.SetActive(GameVariable.isQuestStarting ? true : false);
+        
+        if(GameVariable.isQuestStarting)
+        {
+            mainChar.newDictionary["quest"].gameObject.SetActive(false);
+        }
     }
 
     public void buttonCondition()
@@ -230,7 +237,16 @@ public class Interactions : MonoBehaviour
             if (triggerable != null)
             {
                 triggerable.OnQuestStart();
+                GameController.Instance.questHandler = triggerable.GetTransform();
             }
         }
+    }
+
+    public void EndQuestButtonClick()
+    {
+        GameController.Instance.questHandler.GetComponent<IQuestHandler>().OnQuestFinish();
+        GameController.Instance.questHandler = null;
+
+        QuestController.Instance.ActivateQuest();
     }
 }

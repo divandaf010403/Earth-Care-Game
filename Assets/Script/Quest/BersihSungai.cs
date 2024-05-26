@@ -27,7 +27,6 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     public Camera QuestCamera => questCamera;
     public Transform QuestPlayerPosition => questPlayerPosition;
     public Transform QuestCameraPosition => questCameraPosition;
-    public Transform TrashSpawner => trashSpawner;
     public Transform IsActiveTrigger => isActiveTrigger;
 
     [Header("Quest Setting")]
@@ -99,7 +98,9 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
             UpdateCountdownText();
 
             pointsText.text = "Skor : " + questPoint.ToString();
-        }    
+        }
+
+        isActiveTrigger.gameObject.SetActive(GameVariable.isQuestStarting ? false : true);
     }
 
     void UpdateCountdownText()
@@ -119,25 +120,6 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     public void AddPoints(int pointsToAdd)
     {
         questPoint += pointsToAdd;
-    }
-
-    IEnumerator ActivateObjectDelayed()
-    {
-        yield return null; // Menunggu satu frame
-        if (GameVariable.isQuestStarting)
-            {
-                isActiveTrigger.gameObject.SetActive(false);
-            }
-            else
-            {
-                isActiveTrigger.gameObject.SetActive(true);
-            }
-    }
-
-    // Panggil coroutine ini ketika Anda ingin mengubah keadaan objek
-    public void DeactivateObject()
-    {
-        StartCoroutine(ActivateObjectDelayed());
     }
 
     public void Mulai_Misi()
@@ -206,13 +188,16 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     public void OnQuestStart()
     {
         Mulai_Misi();
-        StartCoroutine(ActivateObjectDelayed());
     }
 
     public void OnQuestFinish()
     {
         Selesai_Misi();
-        StartCoroutine(ActivateObjectDelayed());
+    }
+
+    public Transform GetTransform()
+    {
+        return transform; // Mengembalikan Transform dari GameObject ini
     }
 
     void RandomSpawnTrash()

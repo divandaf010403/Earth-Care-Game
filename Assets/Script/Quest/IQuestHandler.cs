@@ -6,11 +6,11 @@ public interface IQuestHandler
     Camera QuestCamera { get; }
     Transform QuestPlayerPosition { get; }
     Transform QuestCameraPosition { get; }
-    Transform TrashSpawner { get; }
     Transform IsActiveTrigger { get; }
 
     void OnQuestStart();
     void OnQuestFinish();
+    Transform GetTransform();
 }
 
 public class QuestEventArgs : EventArgs

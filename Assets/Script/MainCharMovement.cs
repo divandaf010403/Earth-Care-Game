@@ -107,7 +107,7 @@ public class MainCharMovement : MonoBehaviour
 
         // Character Movement
         MoveCharacter(desiredMoveDirection);
-        ApplyGravity();
+        ApplyGravityAndStayOnGround();
         RotateCharacter(desiredMoveDirection);
 
         // Animation
@@ -152,7 +152,7 @@ public class MainCharMovement : MonoBehaviour
         }
 
         MoveCharacter(desiredMoveDirection);
-        ApplyGravity();
+        ApplyGravityAndStayOnGround();
         RotateCharacter(desiredMoveDirection);
     }
 
@@ -181,23 +181,24 @@ public class MainCharMovement : MonoBehaviour
         }
     }
 
-    private void ApplyGravity()
+    private void ApplyGravityAndStayOnGround()
     {
-        if (!controller.isGrounded)
+        if (!IsOnGround(transform.position))
         {
-            gravityValue += Physics.gravity.y * Time.deltaTime;
-        }
-        else
-        {
-            gravityValue = 0f;
-        }
-
-        Vector3 gravityMove = new Vector3(0f, gravityValue, 0f) * Time.deltaTime;
-        Vector3 nextPosition = transform.position + gravityMove;
-
-        if (IsOnGround(nextPosition))
-        {
+            Vector3 gravityMove = new Vector3(0f, gravityValue * Time.deltaTime, 0f);
             controller.Move(gravityMove);
+        }
+
+        AdjustToGround();
+    }
+
+    private void AdjustToGround()
+    {
+        Ray ray = new Ray(transform.position + Vector3.up * 0.1f, Vector3.down);
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, groundLayer))
+        {
+            Vector3 targetPosition = new Vector3(transform.position.x, hit.point.y, transform.position.z);
+            controller.Move(targetPosition - transform.position);
         }
     }
 

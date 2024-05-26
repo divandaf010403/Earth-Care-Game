@@ -10,7 +10,6 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     [SerializeField] public Camera questCamera;
     [SerializeField] public Transform questPlayerPosition;
     [SerializeField] public Transform questCameraPosition;
-    [SerializeField] public Transform trashSpawner;
     public Transform isActiveTrigger;
     public List<GameObject> colliderQuest;
 
@@ -25,7 +24,6 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     public Camera QuestCamera => questCamera;
     public Transform QuestPlayerPosition => questPlayerPosition;
     public Transform QuestCameraPosition => questCameraPosition;
-    public Transform TrashSpawner => trashSpawner;
     public Transform IsActiveTrigger => isActiveTrigger;
 
     [Header("Spawner")]
@@ -52,25 +50,8 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
                 questToActive.SetActive(true);
             }
         }
-    }
 
-    IEnumerator ActivateObjectDelayed()
-    {
-        yield return null; // Menunggu satu frame
-        if (GameVariable.isQuestStarting)
-        {
-            isActiveTrigger.gameObject.SetActive(false);
-        }
-        else
-        {
-            isActiveTrigger.gameObject.SetActive(true);
-        }
-    }
-
-    // Panggil coroutine ini ketika Anda ingin mengubah keadaan objek
-    public void DeactivateObject()
-    {
-        StartCoroutine(ActivateObjectDelayed());
+        isActiveTrigger.gameObject.SetActive(GameVariable.isQuestStarting ? false : true);
     }
 
     public void Mulai_Misi()
@@ -143,12 +124,15 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
 
     public void OnQuestStart() {
         Mulai_Misi();
-        StartCoroutine(ActivateObjectDelayed());
     }
 
     public void OnQuestFinish() {
         Selesai_Misi();
-        StartCoroutine(ActivateObjectDelayed());
+    }
+
+    public Transform GetTransform()
+    {
+        return transform; // Mengembalikan Transform dari GameObject ini
     }
 
     void SpawnObjects()
