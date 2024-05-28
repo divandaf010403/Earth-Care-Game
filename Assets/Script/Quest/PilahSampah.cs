@@ -67,6 +67,21 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
         StartCoroutine(ActivateObjectDelayed());
     }
 
+    public int GetWaktuQuest()
+    {
+        return -1;
+    }
+
+    public int GetScoreQuest()
+    {
+        return -1;
+    }
+
+    public Sprite GetImageRequiredQuest()
+    {
+        return null;
+    }
+
     public void Mulai_Misi()
     {
         interactions.oldPosition = gc.mainCharacter.transform.position;

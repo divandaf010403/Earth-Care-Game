@@ -31,6 +31,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     public Transform IsActiveTrigger => isActiveTrigger;
 
     [Header("Quest Setting")]
+    public Sprite requiredItem;
     public TextMeshProUGUI countdownText;
     public TextMeshProUGUI pointsText;
     float questStartTimer = 3f; // Timer untuk memulai quest
@@ -39,9 +40,6 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     float trashSpawnInterval = 5f; // Interval untuk spawn trash
     float trashSpawnTimer = 0f; // Timer untuk spawn trash
     int questPoint = 0; // Poin saat menjalankan quest
-
-    [Header("Ketika Quest Selesai")]
-    public Transform finishPanel;
 
     void Awake()
     {
@@ -80,8 +78,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
 
                 if (questDuration <= 0f)
                 {
-                    finishedQuest(questPoint);
-                    OnQuestFinish();
+                    GameController.Instance.finishedQuest(questPoint);
                 }
                 else
                 {
@@ -121,6 +118,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
         questPoint += pointsToAdd;
     }
 
+<<<<<<< Updated upstream
     IEnumerator ActivateObjectDelayed()
     {
         yield return null; // Menunggu satu frame
@@ -138,6 +136,21 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     public void DeactivateObject()
     {
         StartCoroutine(ActivateObjectDelayed());
+=======
+    public int GetWaktuQuest()
+    {
+        return (int)questDuration;
+    }
+
+    public int GetScoreQuest()
+    {
+        return 50;
+    }
+
+    public Sprite GetImageRequiredQuest()
+    {
+        return requiredItem;
+>>>>>>> Stashed changes
     }
 
     public void Mulai_Misi()
@@ -253,14 +266,5 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
         }
     }
 
-    void finishedQuest(int finishScore)
-    {
-        finishPanel.gameObject.SetActive(true);
-        finishPanel.localPosition = new Vector3(0f, 0f, 0f);
-        Transform finishPanelChild = finishPanel.GetChild(0);
-        
-        finishPanelChild.GetChild(0).GetComponent<TextMeshProUGUI>().text = finishScore.ToString();
-        finishPanelChild.GetChild(1).GetComponent<TextMeshProUGUI>().text = questPoint >= 50 ? "YAY BERHASIL" : "GAGAL!!!";
-        finishPanelChild.GetChild(1).GetComponent<TextMeshProUGUI>().color = questPoint >= 50 ? Color.green : Color.red;
-    }
+    
 }

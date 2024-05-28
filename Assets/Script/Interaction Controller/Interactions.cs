@@ -90,6 +90,14 @@ public class Interactions : MonoBehaviour
         {
             btn_i.gameObject.SetActive(false);
         }
+<<<<<<< Updated upstream
+=======
+        
+        if(GameVariable.isQuestStarting)
+        {
+            mainChar.newDictionary["quest"].gameObject.SetActive(false);
+        }
+>>>>>>> Stashed changes
     }
 
     public void buttonCondition()
@@ -229,7 +237,12 @@ public class Interactions : MonoBehaviour
             IQuestHandler triggerable = collider.GetComponentInParent<IQuestHandler>();
             if (triggerable != null)
             {
+<<<<<<< Updated upstream
                 triggerable.OnQuestStart();
+=======
+                GameController.Instance.questHandler = triggerable.GetTransform();
+                GameController.Instance.showPanelBeforeQuestStart();
+>>>>>>> Stashed changes
             }
         }
     }

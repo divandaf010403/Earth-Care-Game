@@ -1,5 +1,7 @@
 using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public interface IQuestHandler
 {
@@ -9,6 +11,11 @@ public interface IQuestHandler
     Transform TrashSpawner { get; }
     Transform IsActiveTrigger { get; }
 
+    int GetWaktuQuest();
+    int GetScoreQuest();
+    Sprite GetImageRequiredQuest();
+
+    // void OnQuestBeforeStart();
     void OnQuestStart();
     void OnQuestFinish();
 }
