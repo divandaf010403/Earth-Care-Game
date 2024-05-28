@@ -16,4 +16,12 @@ public class ConversationStarter : MonoBehaviour
             ConversationManager.Instance.StartConversation(npcConversation);
         }
     }
+
+    public void SkipConversation()
+    {
+        if (ConversationManager.Instance != null && ConversationManager.Instance.IsConversationActive)
+        {
+            ConversationManager.Instance.SkipConversation();
+        }
+    }
 }

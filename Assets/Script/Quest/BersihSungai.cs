@@ -30,6 +30,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     public Transform IsActiveTrigger => isActiveTrigger;
 
     [Header("Quest Setting")]
+    public Sprite imgRequireItem;
     public TextMeshProUGUI countdownText;
     public TextMeshProUGUI pointsText;
     float questStartTimer = 3f; // Timer untuk memulai quest
@@ -193,6 +194,21 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     public void OnQuestFinish()
     {
         Selesai_Misi();
+    }
+
+    public int GetWaktuQuest()
+    {
+        return (int)questDuration;
+    }
+
+    public int GetScoreQuest()
+    {
+        return questPoint;
+    }
+
+    public Sprite GetImageRequiredQuest()
+    {
+        return imgRequireItem;
     }
 
     public Transform GetTransform()

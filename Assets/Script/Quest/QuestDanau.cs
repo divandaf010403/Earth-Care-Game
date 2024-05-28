@@ -70,6 +70,21 @@ public class NewBehaviourScript : MonoBehaviour, IQuestHandler
         StartCoroutine(ActivateObjectDelayed());
     }
 
+    public int GetWaktuQuest()
+    {
+        return -1;
+    }
+
+    public int GetScoreQuest()
+    {
+        return -1;
+    }
+
+    public Sprite GetImageRequiredQuest()
+    {
+        return null;
+    }
+
     public Transform GetTransform()
     {
         return transform; // Mengembalikan Transform dari GameObject ini

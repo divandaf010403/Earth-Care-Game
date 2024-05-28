@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Transactions;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -38,6 +39,7 @@ namespace DialogueEditor
         public Sprite OptionImage;
         public bool OptionImageSliced;
         public bool AllowMouseInteraction;
+        public Transform ButtonSkipConversation;
 
         // Non-User facing 
         // Not exposed via custom inspector
@@ -160,6 +162,22 @@ namespace DialogueEditor
 
             if (OnConversationEnded != null)
                 OnConversationEnded.Invoke();
+        }
+
+        public void SkipConversation()
+        {
+            if (m_currentSpeech.ConnectionType == Connection.eConnectionType.Speech)
+            {
+                SpeechNode next = GetValidSpeechOfNode(m_currentSpeech);
+                if (next != null)
+                {
+                    SetupSpeech(next);
+                }
+            }
+            else if (m_currentSpeech.ConnectionType == Connection.eConnectionType.None)
+            {
+                EndConversation();
+            }
         }
 
         public void SelectNextOption()
@@ -702,6 +720,8 @@ namespace DialogueEditor
             }
             SetSelectedOption(0);
 
+            ButtonSkipConversation.gameObject.SetActive(false);
+
             // Set the button sprite and alpha
             for (int i = 0; i < m_uiOptions.Count; i++)
             {
@@ -718,6 +738,8 @@ namespace DialogueEditor
                 GameObject.Destroy(m_uiOptions[0].gameObject);
                 m_uiOptions.RemoveAt(0);
             }
+
+            ButtonSkipConversation.gameObject.SetActive(true);
         }
 
         private void SetColorAlpha(MaskableGraphic graphic, float a)

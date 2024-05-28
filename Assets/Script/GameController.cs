@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
@@ -26,7 +28,21 @@ public class GameController : MonoBehaviour
     public Transform shopPanel;
     public ShopController shopController;
 
+    [Header("Quest Controller")]
+    [SerializeField] Transform btnQuitQuest;
     [SerializeField] public Transform questHandler;
+    [System.Serializable] public class PanelBeforeStartQuest
+    {
+        public Transform panelStartQuest;
+        public TextMeshProUGUI waktuQuest;
+        public TextMeshProUGUI scoreQuest;
+        public Image imgRequiredQuest;
+        public Button btnStartQuest;
+    }
+    [SerializeField] public PanelBeforeStartQuest beforeQuest;
+    
+    [Header("Ketika Quest Selesai")]
+    public Transform finishPanel;
 
     private void Awake() 
     {
@@ -41,9 +57,59 @@ public class GameController : MonoBehaviour
         }
     }
 
+    private void Update() 
+    {
+        btnQuitQuest.gameObject.SetActive(GameVariable.isQuestStarting ? true : false);
+    }
+
     public void loadingPanelTransition()
     {
 
+    }
+
+    public void showPanelBeforeQuestStart()
+    {
+        IQuestHandler getQuestHandler = questHandler.GetComponent<IQuestHandler>();
+
+        beforeQuest.panelStartQuest.gameObject.SetActive(true);
+        beforeQuest.panelStartQuest.localPosition = new Vector3(0f, 0f, 0f);
+
+        beforeQuest.waktuQuest.text = getQuestHandler.GetWaktuQuest() >= 0 ? getQuestHandler.GetWaktuQuest().ToString() : "-";
+        beforeQuest.scoreQuest.text = getQuestHandler.GetScoreQuest() >= 0 ? getQuestHandler.GetScoreQuest().ToString() : "-";
+
+        if (getQuestHandler.GetImageRequiredQuest() != null)
+        {
+            beforeQuest.imgRequiredQuest.transform.parent.parent.gameObject.SetActive(true);
+            beforeQuest.imgRequiredQuest.sprite = getQuestHandler.GetImageRequiredQuest();
+        }
+        else
+        {
+            beforeQuest.imgRequiredQuest.transform.parent.parent.gameObject.SetActive(false);
+        }
+
+        beforeQuest.btnStartQuest.onClick.AddListener(() =>
+        {
+            getQuestHandler.OnQuestStart();
+            beforeQuest.panelStartQuest.gameObject.SetActive(false);
+        });
+    }
+
+    public void finishedQuest(int finishScore)
+    {
+        finishPanel.gameObject.SetActive(true);
+        finishPanel.localPosition = new Vector3(0f, 0f, 0f);
+        Transform finishPanelChild = finishPanel.GetChild(0);
+        
+        finishPanelChild.GetChild(0).GetComponent<TextMeshProUGUI>().text = finishScore.ToString();
+        finishPanelChild.GetChild(1).GetComponent<TextMeshProUGUI>().text = finishScore >= 50 ? "BERHASIL" : "GAGAL!!!";
+        finishPanelChild.GetChild(1).GetComponent<TextMeshProUGUI>().color = finishScore >= 50 ? Color.green : Color.red;
+        
+        questHandler.GetComponent<IQuestHandler>().OnQuestFinish();
+
+        finishPanel.GetChild(1).GetComponent<Button>().onClick.AddListener(() => 
+        {
+            finishPanel.gameObject.SetActive(false);
+        });
     }
 
     public void openCloseinventoryExtMerchant(bool isActive) 
