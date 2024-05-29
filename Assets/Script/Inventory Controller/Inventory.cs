@@ -172,6 +172,59 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    public bool RemoveItemVendingMachine(TrashcanController trashcanController, MainCharMovement nPanelShow)
+    {
+        Transform imageTransform = transform.GetChild(defaultSelectedItemIndex).GetChild(0).GetChild(0);
+        Image image = imageTransform.GetChild(0).GetComponent<Image>();
+        InventoryVariable inventoryVariable = imageTransform.GetComponent<InventoryVariable>();
+        
+        int indexToRemove = inventoryItemDataList.slotData.FindIndex(item => {            
+            return item.itemId == inventoryVariable.itemId && item.jenisSampah == trashcanController.jenisTempatSampah && trashcanController.isVendingMachine;
+        });
+
+        Debug.Log("Index yang dihapus : " + indexToRemove);
+
+        if (indexToRemove != -1)
+        {
+            inventoryItemDataList.slotData.RemoveAt(indexToRemove);
+
+            if (trashcanController.isVendingMachine)
+            {
+                nPanelShow.countCoin(10);
+            }
+
+            SaveSystem.SaveInventory(inventoryItemDataList.slotData);
+            LoadInventoryItem();
+
+            image.enabled = false;
+            image.sprite = null;
+            inventoryVariable.itemId = 0;
+            inventoryVariable.itemName = "";
+            inventoryVariable.jenisSampah = "";
+            inventoryVariable.totalSampah = 0;
+
+            Debug.Log("Buang Sampah Berhasil");
+
+            MainCharMovement.Instance.countCoin(5);
+
+            return true;
+        }
+        else
+        {
+            if (image.sprite == null)
+            {
+                Debug.Log("Gagal Buang Sampah");
+            }
+            else
+            {
+                Debug.Log("Gagal Buang Sampah");
+                nPanelShow.showNotification("Sampah harus Anorganik Untuk dimasukkan ke Mesin");
+            }
+
+            return false;
+        }
+    }
+
     void LoadInventoryItem() 
     {
         List<InventoryItemData> loadedItemData = SaveSystem.LoadInventory();

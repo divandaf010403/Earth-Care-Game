@@ -78,6 +78,7 @@ public class Interactions : MonoBehaviour
                     break;
                 case "Trashcan":
                 case "Quest":
+                case "VendingMachine":
                     btn_i.gameObject.SetActive(true);
                     setActionImg.sprite = imgAction[1];
                     break;
@@ -101,6 +102,7 @@ public class Interactions : MonoBehaviour
     {
         if (_numFound > 0)
         {
+            TrashcanController trashcanController = _colliders[0].GetComponent<TrashcanController>();
             switch (_colliders[0].tag)
             {
                 case "Item":
@@ -110,7 +112,6 @@ public class Interactions : MonoBehaviour
                     removeItemCraft();
                     break;
                 case "Trashcan":
-                    TrashcanController trashcanController = _colliders[0].GetComponent<TrashcanController>();
                     if (GameVariable.isQuestStarting && (GameVariable.questId == "1Q"))
                     {
                         PilahSampah pilahSampah = FindObjectOfType<PilahSampah>();
@@ -133,6 +134,18 @@ public class Interactions : MonoBehaviour
                             // Handle failure to remove item if needed
                             Debug.Log("Failed to remove item.");
                         }
+                    }
+                    break;
+                case "VendingMachine":
+                    bool isRemovedonVendingMachiine = inventory.RemoveItemVendingMachine(trashcanController, mainChar);
+                    if (isRemovedonVendingMachiine)
+                    {
+                        Debug.Log("Item was successfully removed.");
+                    }
+                    else
+                    {
+                        // Handle failure to remove item if needed
+                        Debug.Log("Failed to remove item.");
                     }
                     break;
                 case "Merchant":

@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour
 
     [Header("Loading")]
     public Transform loadingPanel;
+    private CanvasGroup loadingCanvasGroup;
 
     [Header("UI Controller")]
     public GameObject mainUI;
@@ -55,6 +56,12 @@ public class GameController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        loadingCanvasGroup = loadingPanel.GetComponent<CanvasGroup>();
+        if (loadingCanvasGroup == null)
+        {
+            loadingCanvasGroup = loadingPanel.gameObject.AddComponent<CanvasGroup>();
+        }
     }
 
     private void Update() 
@@ -62,9 +69,40 @@ public class GameController : MonoBehaviour
         btnQuitQuest.gameObject.SetActive(GameVariable.isQuestStarting ? true : false);
     }
 
-    public void loadingPanelTransition()
+    public void LoadingPanelTransition(float duration = 1.0f, bool fadeIn = true)
     {
+        if (fadeIn)
+        {
+            StartCoroutine(FadeIn(duration));
+        }
+        else
+        {
+            StartCoroutine(FadeOut(duration));
+        }
+    }
 
+    private IEnumerator FadeIn(float duration)
+    {
+        float counter = 0;
+        while (counter < duration)
+        {
+            counter += Time.deltaTime;
+            loadingCanvasGroup.alpha = Mathf.Lerp(0, 1, counter / duration);
+            yield return null;
+        }
+        loadingCanvasGroup.alpha = 1;
+    }
+
+    private IEnumerator FadeOut(float duration)
+    {
+        float counter = 0;
+        while (counter < duration)
+        {
+            counter += Time.deltaTime;
+            loadingCanvasGroup.alpha = Mathf.Lerp(1, 0, counter / duration);
+            yield return null;
+        }
+        loadingCanvasGroup.alpha = 0;
     }
 
     public void showPanelBeforeQuestStart()
