@@ -8,6 +8,9 @@ public interface IQuestHandler
     Transform QuestCameraPosition { get; }
     Transform IsActiveTrigger { get; }
 
+    int GetWaktuQuest();
+    int GetScoreQuest();
+    Sprite GetImageRequiredQuest();
     void OnQuestStart();
     void OnQuestFinish();
     Transform GetTransform();

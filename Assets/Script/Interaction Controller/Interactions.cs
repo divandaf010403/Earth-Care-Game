@@ -90,8 +90,6 @@ public class Interactions : MonoBehaviour
         {
             btn_i.gameObject.SetActive(false);
         }
-
-        mainChar.newDictionary["quit_quest"].gameObject.SetActive(GameVariable.isQuestStarting ? true : false);
         
         if(GameVariable.isQuestStarting)
         {
@@ -236,8 +234,10 @@ public class Interactions : MonoBehaviour
             IQuestHandler triggerable = collider.GetComponentInParent<IQuestHandler>();
             if (triggerable != null)
             {
-                triggerable.OnQuestStart();
+                // triggerable.OnQuestStart();
+
                 GameController.Instance.questHandler = triggerable.GetTransform();
+                GameController.Instance.showPanelBeforeQuestStart();
             }
         }
     }
