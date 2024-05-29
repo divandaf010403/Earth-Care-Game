@@ -55,72 +55,81 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     }
 
     public void Mulai_Misi()
+{
+    // Save the old position and rotation
+    interactions.oldPosition = gc.mainCharacter.transform.position;
+    interactions.oldRotation = new Vector3(0f, gc.mainCharacter.transform.eulerAngles.y, 0f);
+
+    // Disable the character controller and set new position and rotation
+    mainController.controller.enabled = false;
+    gc.mainCharacter.transform.position = interactions.newPosition;
+    gc.mainCharacter.transform.rotation = Quaternion.Euler(interactions.newRotation);
+    gc.camera2.transform.position = interactions.cameraSetPosition;
+    gc.camera2.transform.rotation = Quaternion.Euler(interactions.cameraSetRotation);
+    mainController.controller.enabled = true;
+
+    // Switch cameras
+    gc.mainCamera.gameObject.SetActive(false);
+    gc.camera2.gameObject.SetActive(true);
+
+    // Update main controller's camera reference
+    mainController.playerCamera = gc.camera2;
+
+    // Set game variables
+    GameVariable.isQuestStarting = true;
+    GameVariable.questId = quest_id;
+
+    // Update UI
+    gc.mainUI.SetActive(false);
+    gc.pilahSampahUI.SetActive(true);
+
+    // Spawn new objects
+    SpawnObjects();
+
+    // Activate quest colliders
+    foreach (GameObject obj in colliderQuest)
     {
-        interactions.oldPosition = gc.mainCharacter.transform.position;
-        interactions.oldRotation = new Vector3(0f, gc.mainCharacter.transform.eulerAngles.y, 0f);
+        obj.SetActive(true);
+    }
+}
 
-        mainController.controller.enabled = false;
-        gc.mainCharacter.transform.position = interactions.newPosition;
-        gc.mainCharacter.transform.rotation = Quaternion.Euler(interactions.newRotation);
-        gc.camera2.transform.position = interactions.cameraSetPosition;
-        gc.camera2.transform.rotation = Quaternion.Euler(interactions.cameraSetRotation);
-        mainController.controller.enabled = true;
+public void Selesai_Misi()
+{
+    // Reset the character's position and rotation
+    mainController.controller.enabled = false;
+    gc.mainCharacter.transform.position = interactions.oldPosition;
+    gc.mainCharacter.transform.localRotation = Quaternion.Euler(interactions.oldRotation);
+    mainController.controller.enabled = true;
 
-        gc.mainCamera.gameObject.SetActive(false);
-        gc.camera2.gameObject.SetActive(true);
+    // Switch cameras back
+    gc.mainCamera.gameObject.SetActive(true);
+    gc.camera2.gameObject.SetActive(false);
+    interactions.oldPosition = Vector3.zero;
+    interactions.oldRotation = Vector3.zero;
 
-        mainController.playerCamera = gc.camera2;
+    // Update main controller's camera reference
+    mainController.playerCamera = gc.mainCamera;
 
-        //Variable Set
-        GameVariable.isQuestStarting = true;
-        GameVariable.questId = quest_id;
+    // Update UI
+    gc.mainUI.SetActive(true);
+    gc.pilahSampahUI.SetActive(false);
 
-        gc.mainUI.SetActive(false);
-        gc.pilahSampahUI.SetActive(true);
+    // Reset game variables
+    GameVariable.isQuestStarting = false;
+    GameVariable.questId = "";
 
-        SpawnObjects();
-
-        foreach (GameObject obj in colliderQuest)
-        {
-            obj.SetActive(true);
-        }
+    // Deactivate quest colliders
+    foreach (GameObject obj in colliderQuest)
+    {
+        obj.SetActive(false);
     }
 
-    public void Selesai_Misi()
+    // Destroy all spawned objects
+    for (int i = spawnerMidPosition.childCount - 1; i >= 0; i--)
     {
-        mainController.controller.enabled = false;
-        gc.mainCharacter.transform.position = interactions.oldPosition;
-        gc.mainCharacter.transform.localRotation = Quaternion.Euler(interactions.oldRotation);
-        mainController.controller.enabled = true;
-
-        gc.mainCamera.gameObject.SetActive(true);
-        gc.camera2.gameObject.SetActive(false);
-        interactions.oldPosition = Vector3.zero;
-        interactions.oldRotation = Vector3.zero;
-
-        mainController.playerCamera = gc.mainCamera;
-
-        gc.mainUI.SetActive(true);
-        gc.pilahSampahUI.SetActive(false);
-
-        //Variable Set
-        GameVariable.isQuestStarting = false;
-        GameVariable.questId = "";
-
-        foreach (GameObject obj in colliderQuest)
-        {
-            obj.SetActive(false);
-        }
-
-        if (spawnerMidPosition != null)
-        {
-            // Looping untuk menghapus semua child objek
-            foreach (Transform child in spawnerMidPosition.transform)
-            {
-                Destroy(child.gameObject);
-            }
-        }
+        Destroy(spawnerMidPosition.GetChild(i).gameObject);
     }
+}
 
     public void OnQuestStart() {
         Mulai_Misi();
@@ -151,21 +160,19 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     }
 
     void SpawnObjects()
+{
+    // Spawn objects around the spawnerMidPosition
+    for (int i = 0; i < numberOfObjectsToSpawn; i++)
     {
-        for (int i = 0; i < numberOfObjectsToSpawn; i++)
-        {
-            Vector3 spawnPosition = Random.insideUnitSphere * spawnRadius;
-            spawnPosition += spawnerMidPosition.position;
+        Vector3 spawnPosition = Random.insideUnitSphere * spawnRadius;
+        spawnPosition += spawnerMidPosition.position;
+        spawnPosition.y = spawnerMidPosition.position.y;
 
-            spawnPosition.y = spawnerMidPosition.position.y;
-
-            GameObject objectPrefab = objectToSpawn[Random.Range(0, objectToSpawn.Count)];
-
-            GameObject spawnedObject = Instantiate(objectPrefab, spawnPosition, Quaternion.identity);
-
-            spawnedObject.transform.parent = spawnerMidPosition;
-        }
+        GameObject objectPrefab = objectToSpawn[Random.Range(0, objectToSpawn.Count)];
+        GameObject spawnedObject = Instantiate(objectPrefab, spawnPosition, Quaternion.identity);
+        spawnedObject.transform.parent = spawnerMidPosition;
     }
+}
 
     public void Ambil_Sampah(IInventoryItem item)
     {
