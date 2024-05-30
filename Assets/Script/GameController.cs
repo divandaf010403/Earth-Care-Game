@@ -13,8 +13,8 @@ public class GameController : MonoBehaviour
     public Transform camera2;
 
     [Header("Loading")]
-    public Transform loadingPanel;
-    private CanvasGroup loadingCanvasGroup;
+    public Image loadingPanel;
+    public float fadeDuration = 0.5f;
 
     [Header("UI Controller")]
     public GameObject mainUI;
@@ -57,11 +57,7 @@ public class GameController : MonoBehaviour
             Destroy(gameObject);
         }
 
-        loadingCanvasGroup = loadingPanel.GetComponent<CanvasGroup>();
-        if (loadingCanvasGroup == null)
-        {
-            loadingCanvasGroup = loadingPanel.gameObject.AddComponent<CanvasGroup>();
-        }
+        loadingPanel.gameObject.SetActive(false);
     }
 
     private void Update() 
@@ -69,40 +65,34 @@ public class GameController : MonoBehaviour
         btnQuitQuest.gameObject.SetActive(GameVariable.isQuestStarting ? true : false);
     }
 
-    public void LoadingPanelTransition(float duration = 1.0f, bool fadeIn = true)
+    public IEnumerator FadeInLoadingPanel()
     {
-        if (fadeIn)
+        loadingPanel.gameObject.SetActive(true);
+        float elapsedTime = 0f;
+        Color color = loadingPanel.color;
+
+        while (elapsedTime < fadeDuration)
         {
-            StartCoroutine(FadeIn(duration));
-        }
-        else
-        {
-            StartCoroutine(FadeOut(duration));
+            elapsedTime += Time.deltaTime;
+            color.a = Mathf.Clamp01(elapsedTime / fadeDuration);
+            loadingPanel.color = color;
+            yield return null;
         }
     }
 
-    private IEnumerator FadeIn(float duration)
+    public IEnumerator FadeOutLoadingPanel()
     {
-        float counter = 0;
-        while (counter < duration)
-        {
-            counter += Time.deltaTime;
-            loadingCanvasGroup.alpha = Mathf.Lerp(0, 1, counter / duration);
-            yield return null;
-        }
-        loadingCanvasGroup.alpha = 1;
-    }
+        float elapsedTime = 0f;
+        Color color = loadingPanel.color;
 
-    private IEnumerator FadeOut(float duration)
-    {
-        float counter = 0;
-        while (counter < duration)
+        while (elapsedTime < fadeDuration)
         {
-            counter += Time.deltaTime;
-            loadingCanvasGroup.alpha = Mathf.Lerp(1, 0, counter / duration);
+            elapsedTime += Time.deltaTime;
+            color.a = Mathf.Clamp01(1 - (elapsedTime / fadeDuration));
+            loadingPanel.color = color;
             yield return null;
         }
-        loadingCanvasGroup.alpha = 0;
+        loadingPanel.gameObject.SetActive(false);
     }
 
     public void showPanelBeforeQuestStart(IQuestHandler getQuestHandler)
