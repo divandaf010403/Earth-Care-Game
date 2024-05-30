@@ -105,10 +105,8 @@ public class GameController : MonoBehaviour
         loadingCanvasGroup.alpha = 0;
     }
 
-    public void showPanelBeforeQuestStart()
+    public void showPanelBeforeQuestStart(IQuestHandler getQuestHandler)
     {
-        IQuestHandler getQuestHandler = questHandler.GetComponent<IQuestHandler>();
-
         beforeQuest.panelStartQuest.gameObject.SetActive(true);
         beforeQuest.panelStartQuest.localPosition = new Vector3(0f, 0f, 0f);
 
@@ -125,6 +123,8 @@ public class GameController : MonoBehaviour
             beforeQuest.imgRequiredQuest.transform.parent.parent.gameObject.SetActive(false);
         }
 
+        // Menghapus semua listener sebelumnya sebelum menambahkan yang baru
+        beforeQuest.btnStartQuest.onClick.RemoveAllListeners();
         beforeQuest.btnStartQuest.onClick.AddListener(() =>
         {
             getQuestHandler.OnQuestStart();

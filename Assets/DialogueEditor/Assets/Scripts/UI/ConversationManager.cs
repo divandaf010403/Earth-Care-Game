@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Transactions;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace DialogueEditor
@@ -730,6 +730,7 @@ namespace DialogueEditor
                 m_uiOptions[i].gameObject.SetActive(false);
             }
         }
+
 
         private void ClearOptions()
         {

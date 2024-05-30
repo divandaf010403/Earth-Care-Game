@@ -82,6 +82,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
                 {
                     finishedQuest(questPoint);
                     OnQuestFinish();
+                    Selesai_Misi();
                 }
                 else
                 {
@@ -125,6 +126,12 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
 
     public void Mulai_Misi()
     {
+        // Reset variabel quest
+        questStarted = false;
+        questStartTimer = 3f; // Set initial timer value
+        questDuration = 60f; // Set initial quest duration
+        questPoint = 0; // Reset quest points
+
         //Variable Set
         GameVariable.isQuestStarting = true;
         GameVariable.questId = quest_id;

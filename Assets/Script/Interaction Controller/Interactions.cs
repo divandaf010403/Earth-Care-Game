@@ -247,8 +247,10 @@ public class Interactions : MonoBehaviour
             IQuestHandler triggerable = collider.GetComponentInParent<IQuestHandler>();
             if (triggerable != null)
             {
+                // triggerable.OnQuestStart();
+
                 GameController.Instance.questHandler = triggerable.GetTransform();
-                GameController.Instance.showPanelBeforeQuestStart();
+                GameController.Instance.showPanelBeforeQuestStart(triggerable);
             }
         }
     }
