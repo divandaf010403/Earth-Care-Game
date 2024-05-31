@@ -14,7 +14,8 @@ public class GameController : MonoBehaviour
 
     [Header("Loading")]
     public Image loadingPanel;
-    public float fadeDuration = 0.5f;
+    public float fadeDuration = 1f;
+    public float fadeSpeedMultiplier = 2f;
 
     [Header("UI Controller")]
     public GameObject mainUI;
@@ -71,10 +72,10 @@ public class GameController : MonoBehaviour
         float elapsedTime = 0f;
         Color color = loadingPanel.color;
 
-        while (elapsedTime < fadeDuration)
+        while (elapsedTime < fadeDuration / fadeSpeedMultiplier)
         {
             elapsedTime += Time.deltaTime;
-            color.a = Mathf.Clamp01(elapsedTime / fadeDuration);
+            color.a = Mathf.Clamp01(elapsedTime / (fadeDuration / fadeSpeedMultiplier));
             loadingPanel.color = color;
             yield return null;
         }
@@ -85,10 +86,10 @@ public class GameController : MonoBehaviour
         float elapsedTime = 0f;
         Color color = loadingPanel.color;
 
-        while (elapsedTime < fadeDuration)
+        while (elapsedTime < fadeDuration / fadeSpeedMultiplier)
         {
             elapsedTime += Time.deltaTime;
-            color.a = Mathf.Clamp01(1 - (elapsedTime / fadeDuration));
+            color.a = Mathf.Clamp01(1 - (elapsedTime / (fadeDuration / fadeSpeedMultiplier)));
             loadingPanel.color = color;
             yield return null;
         }
@@ -117,11 +118,44 @@ public class GameController : MonoBehaviour
         beforeQuest.btnStartQuest.onClick.RemoveAllListeners();
         beforeQuest.btnStartQuest.onClick.AddListener(() =>
         {
-            getQuestHandler.OnQuestStart();
-            beforeQuest.panelStartQuest.gameObject.SetActive(false);
+            StartCoroutine(HandleWithLoadingPanelTransition(() => 
+            {
+                getQuestHandler.OnQuestStart();
+                beforeQuest.panelStartQuest.gameObject.SetActive(false);
+            }, null));
         });
     }
 
+    public IEnumerator HandleWithLoadingPanelTransition(System.Action mainOperation, System.Action secondOperation)
+    {
+        // Start fade in
+        yield return StartCoroutine(FadeInLoadingPanel());
+
+        // Execute the main operation
+        mainOperation?.Invoke();
+
+        yield return new WaitForSeconds(0.5f);
+
+        // Start fade out
+        yield return StartCoroutine(FadeOutLoadingPanel());
+
+        // Execute secondOperation
+        secondOperation?.Invoke();
+    }
+
+    // Akhiri Quest Sebelum Tanpa Menyelesaikan Tantangan
+    public void EndQuestButtonClick()
+    {
+        StartCoroutine(HandleWithLoadingPanelTransition(() =>
+        {
+            questHandler.GetComponent<IQuestHandler>().OnQuestFinish();
+            questHandler = null;
+
+            QuestController.Instance.ActivateQuest();
+        }, null));
+    }
+
+    // Munculkan Panel Selesai Misi ketika Sudah Selesai Tantangan
     public void finishedQuest(int finishScore)
     {
         finishPanel.gameObject.SetActive(true);

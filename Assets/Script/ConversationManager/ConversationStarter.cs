@@ -3,13 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using DialogueEditor;
 using Cinemachine;
+using UnityEngine.Events;
 
 public class ConversationStarter : MonoBehaviour
 {
     public LayerMask _coversationLayerMask;
+    // public UnityEvent eventList;
     public void startConversation() 
     {
-        StartCoroutine(HandleInteraction());
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 5f, _coversationLayerMask);
+
+        // Invoke the UnityEvent before starting the fade in coroutine
+        // eventList.Invoke();
+        StartCoroutine(GameController.Instance.HandleWithLoadingPanelTransition(() =>
+        {
+            // Here you can add code to reposition the camera if needed
+            GameController.Instance.mainUI.SetActive(false);
+
+            RepositionCamera(false, colliders[0]);
+            RepositionCharacter(colliders[0]);
+        }, () =>
+        {
+            foreach (Collider collider in colliders)
+            {
+                NPCConversation npcConversation = collider.transform.parent.GetComponent<NPCConversation>();
+                ConversationManager.Instance.StartConversation(npcConversation);
+            }
+        }));
     }
 
     public void SkipConversation()
@@ -17,28 +37,6 @@ public class ConversationStarter : MonoBehaviour
         if (ConversationManager.Instance != null && ConversationManager.Instance.IsConversationActive)
         {
             ConversationManager.Instance.SkipConversation();
-        }
-    }
-
-    private IEnumerator HandleInteraction()
-    {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 5f, _coversationLayerMask);
-
-        // Start fade in
-        yield return StartCoroutine(GameController.Instance.FadeInLoadingPanel());
-
-        // Here you can add code to reposition the camera if needed
-        RepositionCamera(false, colliders[0]);
-        repositionCharacter(colliders[0]);
-        yield return new WaitForSeconds(0.5f);
-
-        // Start fade out
-        yield return StartCoroutine(GameController.Instance.FadeOutLoadingPanel());
-
-        foreach (Collider collider in colliders)
-        {
-            NPCConversation npcConversation = collider.transform.parent.GetComponent<NPCConversation>();
-            ConversationManager.Instance.StartConversation(npcConversation);
         }
     }
 
@@ -75,7 +73,7 @@ public class ConversationStarter : MonoBehaviour
         }
     }
 
-    private void repositionCharacter(Collider collider)
+    private void RepositionCharacter(Collider collider)
     {
         MainCharMovement.Instance.controller.enabled = false;
         MainCharMovement.Instance.transform.position = collider.transform.position;

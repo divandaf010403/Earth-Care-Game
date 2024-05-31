@@ -16,8 +16,8 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     public List<GameObject> objectToSpawn;
     private Coroutine spawnCoroutine;
 
-    private float spawnIntervalMin = 1f;
-    private float spawnIntervalMax = 3f;
+    private float spawnIntervalMin = 0.5f;
+    private float spawnIntervalMax = 2f;
 
     [Header("Get Component")]
     // public MainCharMovement mainController;
@@ -39,6 +39,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     float trashSpawnInterval = 5f; // Interval untuk spawn trash
     float trashSpawnTimer = 0f; // Timer untuk spawn trash
     int questPoint = 0; // Poin saat menjalankan quest
+    int questPointRequire = 100;
 
     [Header("Ketika Quest Selesai")]
     public Transform finishPanel;
@@ -80,9 +81,11 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
 
                 if (questDuration <= 0f)
                 {
-                    finishedQuest(questPoint);
-                    OnQuestFinish();
-                    Selesai_Misi();
+                    StartCoroutine(GameController.Instance.HandleWithLoadingPanelTransition(() =>
+                    {
+                        finishedQuest(questPoint);
+                        OnQuestFinish();
+                    }, null));
                 }
                 else
                 {
@@ -166,6 +169,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
         //Variable Set
         GameVariable.isQuestStarting = false;
         GameVariable.questId = "";
+        GameVariable.speed = 5;
 
         GameController.Instance.mainCharacter.gameObject.SetActive(true);
         GameController.Instance.mainCharacterRiverQuest.gameObject.SetActive(false);
@@ -210,7 +214,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
 
     public int GetScoreQuest()
     {
-        return questPoint;
+        return questPointRequire;
     }
 
     public Sprite GetImageRequiredQuest()
@@ -268,7 +272,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
         Transform finishPanelChild = finishPanel.GetChild(0);
         
         finishPanelChild.GetChild(0).GetComponent<TextMeshProUGUI>().text = finishScore.ToString();
-        finishPanelChild.GetChild(1).GetComponent<TextMeshProUGUI>().text = questPoint >= 50 ? "YAY BERHASIL" : "GAGAL!!!";
-        finishPanelChild.GetChild(1).GetComponent<TextMeshProUGUI>().color = questPoint >= 50 ? Color.green : Color.red;
+        finishPanelChild.GetChild(1).GetComponent<TextMeshProUGUI>().text = questPoint >= questPointRequire ? "BERHASIL" : "GAGAL!!!";
+        finishPanelChild.GetChild(1).GetComponent<TextMeshProUGUI>().color = questPoint >= questPointRequire ? Color.green : Color.red;
     }
 }

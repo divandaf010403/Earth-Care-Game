@@ -10,6 +10,7 @@ public class CharacterQuestMovement : MonoBehaviour
     public float gravityValue = -9.8f;
     public bool isMoveLeft = false;
     public bool isMoveRIght = false;
+    Animator anim;
 
     private void Awake() 
     {
@@ -28,6 +29,7 @@ public class CharacterQuestMovement : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -38,14 +40,26 @@ public class CharacterQuestMovement : MonoBehaviour
         if (isMoveLeft)
         {
             MoveCharacterRightAndLeft(-1f);
+            if (GameVariable.speed > 0)
+            {
+                anim.Play("JalanMundur");
+            }
         }
         else if (isMoveRIght)
         {
             MoveCharacterRightAndLeft(1f);
+            if (GameVariable.speed > 0)
+            {
+                anim.Play("JalanMaju");
+            }
         }
         else
         {
             MoveCharacterRightAndLeft(0f);
+            if(GameVariable.speed > 0)
+            {
+                anim.Play("DoNothing");
+            }
         }
     }
 

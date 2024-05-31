@@ -251,15 +251,9 @@ public class Interactions : MonoBehaviour
 
                 GameController.Instance.questHandler = triggerable.GetTransform();
                 GameController.Instance.showPanelBeforeQuestStart(triggerable);
+
+                Debug.Log("Mulai Quest");
             }
         }
-    }
-
-    public void EndQuestButtonClick()
-    {
-        GameController.Instance.questHandler.GetComponent<IQuestHandler>().OnQuestFinish();
-        GameController.Instance.questHandler = null;
-
-        QuestController.Instance.ActivateQuest();
     }
 }

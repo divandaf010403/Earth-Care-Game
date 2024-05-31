@@ -46,8 +46,11 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
 
             if (spawnerMidPosition.childCount == 0 && inventoryQuest.GetChild(0).GetComponent<Image>().enabled == false)
             {
-                Selesai_Misi();
-                questToActive.SetActive(true);
+                StartCoroutine(GameController.Instance.HandleWithLoadingPanelTransition(() =>
+                {
+                    Selesai_Misi();
+                    questToActive.SetActive(true);
+                }, null));
             }
         }
 
@@ -137,6 +140,21 @@ public void Selesai_Misi()
 
     public void OnQuestFinish() {
         Selesai_Misi();
+
+        // Reset
+        Transform childTransform = inventoryQuest.GetChild(0);
+        Image image = childTransform.GetComponent<Image>();
+        InventoryVariable inventoryVariable = childTransform.GetComponent<InventoryVariable>();
+
+        if (image.enabled)
+        {
+            image.enabled = false;
+
+            inventoryVariable.itemName = "";
+            inventoryVariable.jenisSampah = "";
+            inventoryVariable.totalSampah = 0;
+        }
+
     }
 
     public int GetWaktuQuest()
