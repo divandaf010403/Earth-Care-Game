@@ -15,6 +15,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     public List<GameObject> colliderQuest;
     public List<GameObject> objectToSpawn;
     private Coroutine spawnCoroutine;
+    public List<Sprite> imageTutorialList;
 
     private float spawnIntervalMin = 0.5f;
     private float spawnIntervalMax = 2f;
@@ -33,15 +34,19 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     public Sprite imgRequireItem;
     public TextMeshProUGUI countdownText;
     public TextMeshProUGUI pointsText;
-    float questStartTimer = 3f; // Timer untuk memulai quest
-    float questDuration = 60f; // Durasi quest dalam detik (3 menit)
-    bool questStarted = false; // Untuk melacak apakah quest sudah dimulai
+    [SerializeField] float questStartTimer = 3f; // Timer untuk memulai quest
+    [SerializeField] float questDuration = 60f; // Durasi quest dalam detik (3 menit)
+    float questDurationCountdown;
+    private bool questStarted = false;
+    private bool questFinished = false;
     float trashSpawnInterval = 5f; // Interval untuk spawn trash
     float trashSpawnTimer = 0f; // Timer untuk spawn trash
     int questPoint = 0; // Poin saat menjalankan quest
     int questPointRequire = 100;
 
     [Header("Ketika Quest Selesai")]
+    [SerializeField] TextMeshProUGUI scoreTxt;
+    [SerializeField] TextMeshProUGUI scoreResult;
     public Transform finishPanel;
 
     void Awake()
@@ -77,17 +82,25 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
             else
             {
                 // Quest sudah dimulai, mulai countdown 3 menit
-                questDuration -= Time.deltaTime;
-
-                if (questDuration <= 0f)
+                if (questDurationCountdown > 0f)
                 {
+                    questDurationCountdown -= Time.deltaTime;
+                    if (questDurationCountdown <= 0f)
+                    {
+                        questDurationCountdown = 0f; // Ensure questDuration does not go below 0
+                    }
+                }
+
+                if (questDurationCountdown == 0f && !questFinished)
+                {
+                    questFinished = true; // Ensure this block only runs once
                     StartCoroutine(GameController.Instance.HandleWithLoadingPanelTransition(() =>
                     {
                         finishedQuest(questPoint);
                         OnQuestFinish();
                     }, null));
                 }
-                else
+                else if (questDurationCountdown > 0f)
                 {
                     // Quest masih berlangsung, jalankan fungsi RandomSpawnTrash setiap interval
                     trashSpawnTimer -= Time.deltaTime;
@@ -105,7 +118,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
             pointsText.text = "Skor : " + questPoint.ToString();
         }
 
-        isActiveTrigger.gameObject.SetActive(GameVariable.isQuestStarting ? false : true);
+        isActiveTrigger.gameObject.SetActive(!GameVariable.isQuestStarting);
     }
 
     void UpdateCountdownText()
@@ -114,8 +127,8 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
         if (countdownText != null)
         {
             // Ubah durasi quest menjadi format menit:detik
-            int minutes = Mathf.FloorToInt(questDuration / 60f);
-            int seconds = Mathf.FloorToInt(questDuration % 60f);
+            int minutes = Mathf.FloorToInt(questDurationCountdown / 60f);
+            int seconds = Mathf.FloorToInt(questDurationCountdown % 60f);
             
             // Tampilkan pada TextMeshPro Text UI
             countdownText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
@@ -131,8 +144,9 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     {
         // Reset variabel quest
         questStarted = false;
+        questFinished = false;
         questStartTimer = 3f; // Set initial timer value
-        questDuration = 60f; // Set initial quest duration
+        questDurationCountdown = questDuration; // Set initial quest duration
         questPoint = 0; // Reset quest points
 
         //Variable Set
@@ -207,6 +221,11 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
         Selesai_Misi();
     }
 
+    public List<Sprite> imgTutorialList()
+    {
+        return imageTutorialList;
+    }
+
     public int GetWaktuQuest()
     {
         return (int)questDuration;
@@ -271,8 +290,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
         finishPanel.localPosition = new Vector3(0f, 0f, 0f);
         Transform finishPanelChild = finishPanel.GetChild(0);
         
-        finishPanelChild.GetChild(0).GetComponent<TextMeshProUGUI>().text = finishScore.ToString();
-        finishPanelChild.GetChild(1).GetComponent<TextMeshProUGUI>().text = questPoint >= questPointRequire ? "BERHASIL" : "GAGAL!!!";
-        finishPanelChild.GetChild(1).GetComponent<TextMeshProUGUI>().color = questPoint >= questPointRequire ? Color.green : Color.red;
+        scoreTxt.text = finishScore.ToString();
+        scoreResult.text = questPoint >= questPointRequire ? "BERHASIL" : "GAGAL!!!";
     }
 }

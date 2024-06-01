@@ -12,6 +12,7 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     [SerializeField] public Transform questCameraPosition;
     public Transform isActiveTrigger;
     public List<GameObject> colliderQuest;
+    public List<Sprite> imageTutorialList;
 
     [Header("Component")]
     public GameController gc;
@@ -30,7 +31,7 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     public List<GameObject> objectToSpawn;
     public Transform spawnerMidPosition;
     public float spawnRadius = 5f;
-    public int numberOfObjectsToSpawn = 10;
+    public int numberOfObjectsToSpawn = 2;
 
     [Header("Next Action")]
     [SerializeField] private GameObject questToActive;
@@ -43,96 +44,101 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
             {
                 sisaSampahTxt.text = "Sisa : " + spawnerMidPosition.childCount;
             }
-
-            if (spawnerMidPosition.childCount == 0 && inventoryQuest.GetChild(0).GetComponent<Image>().enabled == false)
-            {
-                StartCoroutine(GameController.Instance.HandleWithLoadingPanelTransition(() =>
-                {
-                    Selesai_Misi();
-                    questToActive.SetActive(true);
-                }, null));
-            }
         }
 
         isActiveTrigger.gameObject.SetActive(GameVariable.isQuestStarting ? false : true);
     }
 
+    // void FinishTheQuest()
+    // {
+    //     StartCoroutine(GameController.Instance.HandleWithLoadingPanelTransition(() =>
+    //     {
+    //         GameController.Instance.questHandler.GetComponent<IQuestHandler>().OnQuestFinish();OnQuestFinish();
+
+    //         QuestController.Instance.ActivateQuest();
+    //     }, () => {
+    //         GameController.Instance.questHandler = null;
+    //     }));
+    // }
+
     public void Mulai_Misi()
-{
-    // Save the old position and rotation
-    interactions.oldPosition = gc.mainCharacter.transform.position;
-    interactions.oldRotation = new Vector3(0f, gc.mainCharacter.transform.eulerAngles.y, 0f);
-
-    // Disable the character controller and set new position and rotation
-    mainController.controller.enabled = false;
-    gc.mainCharacter.transform.position = interactions.newPosition;
-    gc.mainCharacter.transform.rotation = Quaternion.Euler(interactions.newRotation);
-    gc.camera2.transform.position = interactions.cameraSetPosition;
-    gc.camera2.transform.rotation = Quaternion.Euler(interactions.cameraSetRotation);
-    mainController.controller.enabled = true;
-
-    // Switch cameras
-    gc.mainCamera.gameObject.SetActive(false);
-    gc.camera2.gameObject.SetActive(true);
-
-    // Update main controller's camera reference
-    mainController.playerCamera = gc.camera2;
-
-    // Set game variables
-    GameVariable.isQuestStarting = true;
-    GameVariable.questId = quest_id;
-
-    // Update UI
-    gc.mainUI.SetActive(false);
-    gc.pilahSampahUI.SetActive(true);
-
-    // Spawn new objects
-    SpawnObjects();
-
-    // Activate quest colliders
-    foreach (GameObject obj in colliderQuest)
     {
-        obj.SetActive(true);
-    }
-}
+        // Save the old position and rotation
+        interactions.oldPosition = gc.mainCharacter.transform.position;
+        interactions.oldRotation = new Vector3(0f, gc.mainCharacter.transform.eulerAngles.y, 0f);
 
-public void Selesai_Misi()
-{
-    // Reset the character's position and rotation
-    mainController.controller.enabled = false;
-    gc.mainCharacter.transform.position = interactions.oldPosition;
-    gc.mainCharacter.transform.localRotation = Quaternion.Euler(interactions.oldRotation);
-    mainController.controller.enabled = true;
+        // Disable the character controller and set new position and rotation
+        mainController.controller.enabled = false;
+        gc.mainCharacter.transform.position = interactions.newPosition;
+        gc.mainCharacter.transform.rotation = Quaternion.Euler(interactions.newRotation);
+        gc.camera2.transform.position = interactions.cameraSetPosition;
+        gc.camera2.transform.rotation = Quaternion.Euler(interactions.cameraSetRotation);
+        mainController.controller.enabled = true;
 
-    // Switch cameras back
-    gc.mainCamera.gameObject.SetActive(true);
-    gc.camera2.gameObject.SetActive(false);
-    interactions.oldPosition = Vector3.zero;
-    interactions.oldRotation = Vector3.zero;
+        // Switch cameras
+        gc.mainCamera.gameObject.SetActive(false);
+        gc.camera2.gameObject.SetActive(true);
 
-    // Update main controller's camera reference
-    mainController.playerCamera = gc.mainCamera;
+        // Update main controller's camera reference
+        mainController.playerCamera = gc.camera2;
 
-    // Update UI
-    gc.mainUI.SetActive(true);
-    gc.pilahSampahUI.SetActive(false);
+        // Set game variables
+        GameVariable.isQuestStarting = true;
+        GameVariable.questId = quest_id;
 
-    // Reset game variables
-    GameVariable.isQuestStarting = false;
-    GameVariable.questId = "";
+        // Update UI
+        gc.mainUI.SetActive(false);
+        gc.pilahSampahUI.SetActive(true);
 
-    // Deactivate quest colliders
-    foreach (GameObject obj in colliderQuest)
-    {
-        obj.SetActive(false);
+        // Spawn new objects
+        SpawnObjects();
+
+        // Activate quest colliders
+        foreach (GameObject obj in colliderQuest)
+        {
+            obj.SetActive(true);
+        }
     }
 
-    // Destroy all spawned objects
-    for (int i = spawnerMidPosition.childCount - 1; i >= 0; i--)
+    public void Selesai_Misi()
     {
-        Destroy(spawnerMidPosition.GetChild(i).gameObject);
+        // Reset the character's position and rotation
+        MainCharMovement.Instance.controller.enabled = false;
+        GameController.Instance.mainCharacter.transform.position = interactions.oldPosition;
+        GameController.Instance.mainCharacter.transform.localRotation = Quaternion.Euler(interactions.oldRotation);
+        MainCharMovement.Instance.controller.enabled = true;
+
+        // Switch cameras back
+        GameController.Instance.mainCamera.gameObject.SetActive(true);
+        GameController.Instance.camera2.gameObject.SetActive(false);
+
+        // Now reset oldPosition and oldRotation
+        interactions.oldPosition = Vector3.zero;
+        interactions.oldRotation = Vector3.zero;
+
+        // Update main controller's camera reference
+        mainController.playerCamera = gc.mainCamera;
+
+        // Update UI
+        GameController.Instance.mainUI.SetActive(true);
+        GameController.Instance.pilahSampahUI.SetActive(false);
+
+        // Reset game variables
+        GameVariable.isQuestStarting = false;
+        GameVariable.questId = "";
+
+        // Deactivate quest colliders
+        foreach (GameObject obj in colliderQuest)
+        {
+            obj.SetActive(false);
+        }
+
+        // Destroy all spawned objects
+        for (int i = spawnerMidPosition.childCount - 1; i >= 0; i--)
+            {
+                Destroy(spawnerMidPosition.GetChild(i).gameObject);
+            }
     }
-}
 
     public void OnQuestStart() {
         Mulai_Misi();
@@ -141,20 +147,27 @@ public void Selesai_Misi()
     public void OnQuestFinish() {
         Selesai_Misi();
 
-        // Reset
-        Transform childTransform = inventoryQuest.GetChild(0);
-        Image image = childTransform.GetComponent<Image>();
-        InventoryVariable inventoryVariable = childTransform.GetComponent<InventoryVariable>();
-
-        if (image.enabled)
+        if (spawnerMidPosition.childCount != 0)
         {
-            image.enabled = false;
+            // Reset
+            Transform childTransform = inventoryQuest.GetChild(0);
+            Image image = childTransform.GetComponent<Image>();
+            InventoryVariable inventoryVariable = childTransform.GetComponent<InventoryVariable>();
 
-            inventoryVariable.itemName = "";
-            inventoryVariable.jenisSampah = "";
-            inventoryVariable.totalSampah = 0;
+            if (image.enabled)
+            {
+                image.enabled = false;
+
+                inventoryVariable.itemName = "";
+                inventoryVariable.jenisSampah = "";
+                inventoryVariable.totalSampah = 0;
+            }
         }
+    }
 
+    public List<Sprite> imgTutorialList()
+    {
+        return imageTutorialList;
     }
 
     public int GetWaktuQuest()
@@ -230,6 +243,12 @@ public void Selesai_Misi()
                 inventoryVariable.itemName = "";
                 inventoryVariable.jenisSampah = "";
                 inventoryVariable.totalSampah = 0;
+
+                if (spawnerMidPosition.childCount == 0 && image.enabled == false)
+                {
+                    GameController.Instance.EndQuestButtonClick();
+                    // questToActive.SetActive(true);
+                }
             }
         }
         else

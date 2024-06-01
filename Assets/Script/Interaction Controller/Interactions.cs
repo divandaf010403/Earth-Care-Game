@@ -250,6 +250,8 @@ public class Interactions : MonoBehaviour
                 // triggerable.OnQuestStart();
 
                 GameController.Instance.questHandler = triggerable.GetTransform();
+                CorouselTutorial.Instance.contentPanels = triggerable.imgTutorialList();
+                CorouselTutorial.Instance.ShowContent();
                 GameController.Instance.showPanelBeforeQuestStart(triggerable);
 
                 Debug.Log("Mulai Quest");

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using System.Transactions;
 using UnityEngine;
 using UnityEngine.UI;
@@ -333,9 +334,6 @@ namespace DialogueEditor
             }
         }
 
-
-
-
         //--------------------------------------
         // Update
         //--------------------------------------
@@ -438,11 +436,10 @@ namespace DialogueEditor
                 }
                 else
                 {
-                    SetupSpeech(nextSpeech);
+                    // SetupSpeech(nextSpeech);
                 }
                 return;
             }
-
 
             for (int i = 0; i < m_uiOptions.Count; i++)
                 m_uiOptions[i].SetAlpha(1 - t);
@@ -720,7 +717,7 @@ namespace DialogueEditor
             }
             SetSelectedOption(0);
 
-            ButtonSkipConversation.gameObject.SetActive(false);
+            StartCoroutine(skipBtnDelay());
 
             // Set the button sprite and alpha
             for (int i = 0; i < m_uiOptions.Count; i++)
@@ -731,6 +728,11 @@ namespace DialogueEditor
             }
         }
 
+        IEnumerator skipBtnDelay()
+        {
+            ButtonSkipConversation.gameObject.SetActive(false);
+            yield return new WaitForSeconds(5); // Menunggu selama 2 detik
+        }
 
         private void ClearOptions()
         {

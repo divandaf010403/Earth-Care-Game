@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ public interface IQuestHandler
     // Transform TrashSpawner { get; }
     Transform IsActiveTrigger { get; }
 
+    List<Sprite> imgTutorialList();
     int GetWaktuQuest();
     int GetScoreQuest();
     Sprite GetImageRequiredQuest();

@@ -12,6 +12,7 @@ public class NewBehaviourScript : MonoBehaviour, IQuestHandler
     [SerializeField] public Transform trashSpawner;
     public Transform isActiveTrigger;
     public List<GameObject> colliderQuest;
+    public List<Sprite> imageTutorialList;
     
     // Interface
     public Camera QuestCamera => questCamera;
@@ -20,13 +21,18 @@ public class NewBehaviourScript : MonoBehaviour, IQuestHandler
     public Transform QuestCameraPosition => questCamera.transform;
 
     [Header("Quest Settings")]
+    public TextMeshProUGUI countdownText;
     public Transform spawnPos;
     public List<GameObject> objectToSpawn;
     public float spawnRadius = 5f;
+    float questStartTimer = 3f; // Timer untuk memulai quest
+    float questDuration = 180f; // Durasi quest dalam detik (3 menit)
+    bool questStarted = false; // Untuk melacak apakah quest sudah dimulai
 
     [Header("Get Components")]
     public Interactions interactions;
     [SerializeField] GameObject[] hiddenObjUi;
+    [SerializeField] GameObject showUI;
 
     // Start is called before the first frame update
     void Start()
@@ -38,6 +44,11 @@ public class NewBehaviourScript : MonoBehaviour, IQuestHandler
     void Update()
     {
         StartCoroutine(ActivateObjectDelayed());
+
+        if (GameVariable.isQuestStarting && (GameVariable.questId == quest_id))
+        {
+
+        }
     }
 
     IEnumerator ActivateObjectDelayed()
@@ -68,6 +79,11 @@ public class NewBehaviourScript : MonoBehaviour, IQuestHandler
     {
         Selesai_Misi();
         StartCoroutine(ActivateObjectDelayed());
+    }
+
+    public List<Sprite> imgTutorialList()
+    {
+        return imageTutorialList;
     }
 
     public int GetWaktuQuest()
@@ -105,6 +121,7 @@ public class NewBehaviourScript : MonoBehaviour, IQuestHandler
         GameVariable.questId = quest_id;
 
         hideUI(false);
+        showUI.SetActive(true);
 
         SpawnObjects();
     }
@@ -124,6 +141,7 @@ public class NewBehaviourScript : MonoBehaviour, IQuestHandler
         GameVariable.questId = "";
 
         hideUI(true);
+        showUI.SetActive(false);
 
         for (int i = 0; i < spawnPos.childCount; i++)
         {

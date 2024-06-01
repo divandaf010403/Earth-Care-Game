@@ -93,7 +93,11 @@ public class GameController : MonoBehaviour
             loadingPanel.color = color;
             yield return null;
         }
-        loadingPanel.gameObject.SetActive(false);
+        
+        if (loadingPanel.color == new Color(0,0,0,0))
+        {
+            loadingPanel.gameObject.SetActive(false);
+        }
     }
 
     public void showPanelBeforeQuestStart(IQuestHandler getQuestHandler)
@@ -128,18 +132,14 @@ public class GameController : MonoBehaviour
 
     public IEnumerator HandleWithLoadingPanelTransition(System.Action mainOperation, System.Action secondOperation)
     {
-        // Start fade in
         yield return StartCoroutine(FadeInLoadingPanel());
 
-        // Execute the main operation
         mainOperation?.Invoke();
 
         yield return new WaitForSeconds(0.5f);
 
-        // Start fade out
         yield return StartCoroutine(FadeOutLoadingPanel());
 
-        // Execute secondOperation
         secondOperation?.Invoke();
     }
 
@@ -149,10 +149,9 @@ public class GameController : MonoBehaviour
         StartCoroutine(HandleWithLoadingPanelTransition(() =>
         {
             questHandler.GetComponent<IQuestHandler>().OnQuestFinish();
-            questHandler = null;
 
             QuestController.Instance.ActivateQuest();
-        }, null));
+        }, () => questHandler = null));
     }
 
     // Munculkan Panel Selesai Misi ketika Sudah Selesai Tantangan
