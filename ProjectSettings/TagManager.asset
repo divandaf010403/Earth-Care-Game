@@ -15,6 +15,7 @@ TagManager:
   - Conversation
   - BackgroundCamera
   - VendingMachine
+  - QuestPLTSa
   layers:
   - Default
   - TransparentFX

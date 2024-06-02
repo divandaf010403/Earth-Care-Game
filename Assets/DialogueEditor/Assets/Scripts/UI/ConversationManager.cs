@@ -436,7 +436,7 @@ namespace DialogueEditor
                 }
                 else
                 {
-                    // SetupSpeech(nextSpeech);
+                    SetupSpeech(nextSpeech);
                 }
                 return;
             }

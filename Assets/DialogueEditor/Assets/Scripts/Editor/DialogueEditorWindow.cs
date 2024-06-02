@@ -724,8 +724,8 @@ namespace DialogueEditor
                             {
                                 node.AutoAdvanceShouldDisplayOption = EditorGUILayout.Toggle("Display continue option", node.AutoAdvanceShouldDisplayOption);
                                 node.TimeUntilAdvance = EditorGUILayout.FloatField("Dialogue Time", node.TimeUntilAdvance);
-                                if (node.TimeUntilAdvance < 0.1f)
-                                    node.TimeUntilAdvance = 0.1f;
+                                if (node.TimeUntilAdvance < 3f)
+                                    node.TimeUntilAdvance = 3f;
                             }
                             EditorGUILayout.Space();
                         }

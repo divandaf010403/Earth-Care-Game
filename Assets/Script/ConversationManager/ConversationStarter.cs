@@ -3,15 +3,46 @@ using System.Collections.Generic;
 using UnityEngine;
 using DialogueEditor;
 using Cinemachine;
-using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class ConversationStarter : MonoBehaviour
 {
+    public static ConversationStarter Instance;
+    [SerializeField] Image leftImage;
+    [SerializeField] Image rightImage;
+
     public LayerMask _coversationLayerMask;
+    [SerializeField] Transform talkingPerson;
     // public UnityEvent eventList;
-    public void startConversation() 
+
+    private void Awake() 
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 5f, _coversationLayerMask);
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void Update() 
+    {
+        if (talkingPerson != null)
+        {
+            bool bVal = ConversationManager.Instance.GetBool("NpcAnim");
+            Animator isTalkingAnim = talkingPerson.GetComponent<Animator>();
+
+            if (bVal){isTalkingAnim.SetBool("isTalk", true);}
+            else {isTalkingAnim.SetBool("isTalk", false);}
+        }
+    }
+
+    public void StartConversation(Collider collider)
+    {
+        // Set parent
+        talkingPerson = collider.transform.parent;
 
         // Invoke the UnityEvent before starting the fade in coroutine
         // eventList.Invoke();
@@ -20,15 +51,18 @@ public class ConversationStarter : MonoBehaviour
             // Here you can add code to reposition the camera if needed
             GameController.Instance.mainUI.SetActive(false);
 
-            RepositionCamera(false, colliders[0]);
-            RepositionCharacter(colliders[0]);
+            RepositionCamera(false, collider);
+            RepositionCharacter(collider);
         }, () =>
         {
-            foreach (Collider collider in colliders)
+            NPCConversation npcConversation = collider.transform.parent.GetComponent<NPCConversation>();
+            if (npcConversation == null)
             {
-                NPCConversation npcConversation = collider.transform.parent.GetComponent<NPCConversation>();
-                ConversationManager.Instance.StartConversation(npcConversation);
+                Debug.LogError("NPCConversation component not found on the collider object.");
+                return;
             }
+
+            ConversationManager.Instance.StartConversation(npcConversation);
         }));
     }
 
@@ -79,5 +113,17 @@ public class ConversationStarter : MonoBehaviour
         MainCharMovement.Instance.transform.position = collider.transform.position;
         MainCharMovement.Instance.transform.rotation = Quaternion.Euler(collider.transform.rotation.eulerAngles.x, collider.transform.rotation.eulerAngles.y + 180, collider.transform.rotation.eulerAngles.z);
         MainCharMovement.Instance.controller.enabled = true;
+    }
+
+    public void leftImageShow(Sprite imageToShow)
+    {
+        leftImage.enabled = true;
+        leftImage.sprite = imageToShow;
+    }
+
+    public void rightImageShow(Sprite imageToShow)
+    {
+        rightImage.enabled = true;
+        rightImage.sprite = imageToShow;
     }
 }

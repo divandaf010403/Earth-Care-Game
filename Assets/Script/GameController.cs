@@ -177,8 +177,8 @@ public class GameController : MonoBehaviour
     {
         inventoryExt.gameObject.SetActive(isActive);
         inventoryExt.localPosition = new Vector3(0f, 0f, 0f);
-        inventoryExt.GetChild(0).localPosition += new Vector3(50f, 0f, 0f);
-        inventoryExt.GetChild(2).gameObject.SetActive(true);
+        inventoryExt.GetChild(0).GetChild(0).localPosition += new Vector3(50f, 0f, 0f);
+        inventoryExt.GetChild(0).GetChild(2).gameObject.SetActive(true);
         if (isActive) 
         {
             inventory.gameObject.SetActive(false);
@@ -194,8 +194,8 @@ public class GameController : MonoBehaviour
     {
         inventoryExt.gameObject.SetActive(isActive);
         inventoryExt.localPosition = new Vector3(0f, 0f, 0f);
-        inventoryExt.GetChild(0).localPosition = new Vector3(0f, 0f, 0f);
-        inventoryExt.GetChild(2).gameObject.SetActive(false);
+        inventoryExt.GetChild(0).GetChild(0).localPosition = new Vector3(0f, 0f, 0f);
+        inventoryExt.GetChild(0).GetChild(2).gameObject.SetActive(false);
         inventory.gameObject.SetActive(true);
     }
 

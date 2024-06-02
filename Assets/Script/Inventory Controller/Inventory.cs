@@ -128,7 +128,7 @@ public class Inventory : MonoBehaviour
         InventoryVariable inventoryVariable = imageTransform.GetComponent<InventoryVariable>();
         
         int indexToRemove = inventoryItemDataList.slotData.FindIndex(item => {            
-            return item.itemId == inventoryVariable.itemId && item.jenisSampah == trashcanController.jenisTempatSampah;
+            return item.itemId == inventoryVariable.itemId && (item.jenisSampah == trashcanController.jenisTempatSampah);
         });
 
         Debug.Log("Index yang dihapus : " + indexToRemove);
@@ -166,6 +166,52 @@ public class Inventory : MonoBehaviour
             {
                 Debug.Log("Gagal Buang Sampah");
                 nPanelShow.showNotification("Tempat Sampah Tidak Sesuai");
+            }
+
+            return false;
+        }
+    }
+
+    public bool RemoveItemQuest(PLTSaQuest q2, MainCharMovement nPanelShow)
+    {
+        Transform imageTransform = transform.GetChild(defaultSelectedItemIndex).GetChild(0).GetChild(0);
+        Image image = imageTransform.GetChild(0).GetComponent<Image>();
+        InventoryVariable inventoryVariable = imageTransform.GetComponent<InventoryVariable>();
+        
+        int indexToRemove = inventoryItemDataList.slotData.FindIndex(item => {            
+            return item.itemId == inventoryVariable.itemId && (item.jenisSampah == q2.tipePenampungan);
+        });
+
+        Debug.Log("Index yang dihapus : " + indexToRemove);
+
+        if (indexToRemove != -1)
+        {
+            inventoryItemDataList.slotData.RemoveAt(indexToRemove);
+
+            SaveSystem.SaveInventory(inventoryItemDataList.slotData);
+            LoadInventoryItem();
+
+            image.enabled = false;
+            image.sprite = null;
+            inventoryVariable.itemId = 0;
+            inventoryVariable.itemName = "";
+            inventoryVariable.jenisSampah = "";
+            inventoryVariable.totalSampah = 0;
+
+            Debug.Log("Buang Sampah Berhasil");
+
+            return true;
+        }
+        else
+        {
+            if (image.sprite == null)
+            {
+                Debug.Log("Gagal Buang Sampah");
+            }
+            else
+            {
+                Debug.Log("Gagal Buang Sampah");
+                nPanelShow.showNotification("Tempat Penampungan Tidak Sesuai");
             }
 
             return false;

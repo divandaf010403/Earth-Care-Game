@@ -35,6 +35,7 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
 
     [Header("Next Action")]
     [SerializeField] private GameObject questToActive;
+    [SerializeField] private GameObject questToNonActive;
 
     private void Update() 
     {
@@ -247,7 +248,9 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
                 if (spawnerMidPosition.childCount == 0 && image.enabled == false)
                 {
                     GameController.Instance.EndQuestButtonClick();
-                    // questToActive.SetActive(true);
+                    
+                    questToActive.SetActive(true);
+                    questToNonActive.SetActive(false);
                 }
             }
         }

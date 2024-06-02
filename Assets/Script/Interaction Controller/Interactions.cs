@@ -77,7 +77,7 @@ public class Interactions : MonoBehaviour
                     setActionImg.sprite = imgAction[0];
                     break;
                 case "Trashcan":
-                case "Quest":
+                case "QuestPLTSa":
                 case "VendingMachine":
                     btn_i.gameObject.SetActive(true);
                     setActionImg.sprite = imgAction[1];
@@ -103,6 +103,7 @@ public class Interactions : MonoBehaviour
         if (_numFound > 0)
         {
             TrashcanController trashcanController = _colliders[0].GetComponent<TrashcanController>();
+            PLTSaQuest q2 = _colliders[0].GetComponent<PLTSaQuest>();
             switch (_colliders[0].tag)
             {
                 case "Item":
@@ -119,14 +120,9 @@ public class Interactions : MonoBehaviour
                     }
                     else
                     {
-                        bool isRemoved = inventory.RemoveItem(trashcanController, mainChar);
+                        bool isRemoved = inventory.RemoveItem(trashcanController,  mainChar);
                         if (isRemoved)
                         {
-                            if (_colliders[0].CompareTag("Quest"))
-                            {
-                                PLTSaQuest q2 = _colliders[0].GetComponent<PLTSaQuest>();
-                                q2.requiredItem++;
-                            }
                             Debug.Log("Item was successfully removed.");
                         }
                         else
@@ -134,6 +130,19 @@ public class Interactions : MonoBehaviour
                             // Handle failure to remove item if needed
                             Debug.Log("Failed to remove item.");
                         }
+                    }
+                    break;
+                case "QuestPLTSa":
+                    bool isRemovedQuest = inventory.RemoveItemQuest(q2,  mainChar);
+                    if (isRemovedQuest)
+                    {
+                        q2.requiredItem++;
+                        Debug.Log("Item was successfully removed.");
+                    }
+                    else
+                    {
+                        // Handle failure to remove item if needed
+                        Debug.Log("Failed to remove item.");
                     }
                     break;
                 case "VendingMachine":
@@ -220,6 +229,13 @@ public class Interactions : MonoBehaviour
         if (other.CompareTag("Conversation"))
         {
             mainChar.newDictionary["dialog"].gameObject.SetActive(true);
+            Button dialogButton = mainChar.newDictionary["dialog"].GetComponent<Button>();
+
+            // Menghapus listener sebelumnya untuk menghindari penambahan listener ganda
+            dialogButton.onClick.RemoveAllListeners();
+
+            // Menambahkan listener baru yang akan memanggil startConversation saat tombol diklik
+            dialogButton.onClick.AddListener(() => ConversationStarter.Instance.StartConversation(other));
         }
     }
 
