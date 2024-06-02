@@ -251,6 +251,8 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
                     
                     questToActive.SetActive(true);
                     questToNonActive.SetActive(false);
+
+                    QuestController.Instance.IncreaseObjectiveTutorial(2);
                 }
             }
         }

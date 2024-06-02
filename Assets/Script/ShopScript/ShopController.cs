@@ -77,7 +77,7 @@ public class ShopController : MonoBehaviour
 
             mainCharComponent.playerCoin -= item.priceItem;
 
-            mainCharComponent.SavePlayerData();
+            // mainCharComponent.SavePlayerData();
         }
         else
         {

@@ -92,13 +92,14 @@ public class CraftingMain : MonoBehaviour
 
     public void CraftingItemBtn()
     {
-        InventoryExt inventoryExtData = transform.parent.GetComponent<InventoryExt>();
+        InventoryExt inventoryExtData = transform.parent.parent.GetComponent<InventoryExt>();
         myItemIdExt = PlayerPrefs.GetInt(ID_KEY);
 
         var recipeToCraft = recipes[defaultSelectedItemIndex];
 
         bool itemExists = false;
 
+        // Check if the item to craft already exists in the inventory
         foreach (InventoryExtItemData existingItem in inventoryExtData.inventoryExtItemDataList.slotData)
         {
             if (existingItem.jenisSampah == recipeToCraft.output.jenisSampah)
@@ -113,18 +114,19 @@ public class CraftingMain : MonoBehaviour
         {
             bool allIngredientsAvailable = true;
 
-            // Periksa ketersediaan semua bahan yang diperlukan
+            // Check the availability of all required ingredients
             foreach (RequiredIngredients ingredient in recipeToCraft.requiredIngredients)
             {
                 bool ingredientFound = false;
 
-                // Iterasi melalui setiap item dalam inventori
+                // Iterate through each item in the inventory
                 foreach (InventoryExtItemData existingItem in inventoryExtData.inventoryExtItemDataList.slotData)
                 {
-                    // Jika nama item cocok
-                    if (existingItem.itemName == ingredient.itemName)
+                    // If the item name matches
+                    if (existingItem.jenisSampah == ingredient.itemName)
                     {
-                        // Periksa jumlah yang cukup
+                        Debug.Log("Jumlah Item " + existingItem.jumlahItem + " Jumlah Diperlukan : " + ingredient.requiredQuantity);
+                        // Check if there is a sufficient quantity
                         if (existingItem.jumlahItem >= ingredient.requiredQuantity)
                         {
                             ingredientFound = true;
@@ -133,18 +135,23 @@ public class CraftingMain : MonoBehaviour
                     }
                 }
 
-                // Jika salah satu bahan tidak ditemukan atau jumlahnya tidak mencukupi, set allIngredientsAvailable menjadi false
+                // Log the status of each ingredient
                 if (!ingredientFound)
                 {
+                    Debug.Log("Ingredient not found or not enough quantity: " + ingredient.itemName);
                     allIngredientsAvailable = false;
                     break;
                 }
+                else
+                {
+                    Debug.Log("Ingredient found and enough quantity: " + ingredient.itemName);
+                }
             }
 
-            // Jika semua bahan tersedia, buat item baru dan kurangi jumlah bahan dari inventori
+            // If all ingredients are available, create the new item and decrease the ingredient quantities in the inventory
             if (allIngredientsAvailable)
             {
-                // Kurangi jumlah item yang digunakan dari inventori
+                // Decrease the quantity of used items from the inventory
                 foreach (RequiredIngredients ingredient in recipeToCraft.requiredIngredients)
                 {
                     foreach (InventoryExtItemData existingItem in inventoryExtData.inventoryExtItemDataList.slotData)
@@ -152,6 +159,7 @@ public class CraftingMain : MonoBehaviour
                         if (existingItem.itemName == ingredient.itemName)
                         {
                             existingItem.jumlahItem -= ingredient.requiredQuantity;
+                            Debug.Log("Decreased quantity of: " + ingredient.itemName + " by " + ingredient.requiredQuantity);
                             break;
                         }
                     }
@@ -167,7 +175,6 @@ public class CraftingMain : MonoBehaviour
         }
 
         SaveSystem.SaveInventoryExt(inventoryExtData.inventoryExtItemDataList.slotData);
-
         inventoryExtData.LoadInventoryItem();
     }
 

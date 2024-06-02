@@ -64,7 +64,7 @@ public class MainCharMovement : MonoBehaviour
 
         LoadPlayer();
 
-        InvokeRepeating("SavePlayerData", 0f, 5f);
+        // InvokeRepeating("SavePlayerData", 0f, 5f);
     }
 
     private void Update()

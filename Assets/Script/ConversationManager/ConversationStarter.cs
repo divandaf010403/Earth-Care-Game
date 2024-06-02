@@ -93,7 +93,12 @@ public class ConversationStarter : MonoBehaviour
 
             // Geser posisi kamera ke kiri sejauh 20 unit dan ke atas sejauh 10 unit
             Vector3 offset = new Vector3(6f, 2.7f, 4f);
-            Vector3 newPosition = midpoint + offset;
+            
+            // Apply the target rotation to the offset
+            Quaternion targetRotation = collider.transform.parent.rotation;
+            Vector3 rotatedOffset = targetRotation * offset;
+
+            Vector3 newPosition = midpoint + rotatedOffset;
 
             // Atur posisi dan rotasi kamera utama
             Camera.main.transform.position = newPosition;

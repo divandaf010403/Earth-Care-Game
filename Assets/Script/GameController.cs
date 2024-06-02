@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
@@ -46,6 +47,10 @@ public class GameController : MonoBehaviour
     [Header("Ketika Quest Selesai")]
     public Transform finishPanel;
 
+    [Header("Ended Demo Panel")]
+    public Transform endedDemoPanel;
+    CanvasGroup endDemoCanvas;
+
     private void Awake() 
     {
         // Pastikan hanya ada satu instance QuestManager yang ada
@@ -59,6 +64,15 @@ public class GameController : MonoBehaviour
         }
 
         loadingPanel.gameObject.SetActive(false);
+    }
+
+    private void Start() {
+        endDemoCanvas = endedDemoPanel.GetComponent<CanvasGroup>();
+        if (endDemoCanvas == null)
+        {
+            endDemoCanvas = endedDemoPanel.gameObject.AddComponent<CanvasGroup>();
+        }
+        endDemoCanvas.alpha = 0f;
     }
 
     private void Update() 
@@ -150,7 +164,7 @@ public class GameController : MonoBehaviour
         {
             questHandler.GetComponent<IQuestHandler>().OnQuestFinish();
 
-            QuestController.Instance.ActivateQuest();
+            // QuestController.Instance.ActivateQuest();
         }, () => questHandler = null));
     }
 
@@ -220,5 +234,33 @@ public class GameController : MonoBehaviour
         {
             Debug.LogError("Invalid shop or ShopScrollView reference.");
         }
+    }
+
+    public void ShowEndedDemoPanel()
+    {
+        StartCoroutine(FadeInPanelEndDemo());
+    }
+
+    private IEnumerator FadeInPanelEndDemo()
+    {
+        float duration = 1f;  // Durasi fade in
+        float currentTime = 0f;
+
+        endedDemoPanel.localPosition = new Vector3(0f, 0f, 0f);
+
+        while (currentTime < duration)
+        {
+            currentTime += Time.deltaTime;
+            endDemoCanvas.alpha = Mathf.Lerp(0f, 1f, currentTime / duration);
+            yield return null;
+        }
+
+        endDemoCanvas.alpha = 1f;
+
+        // Tunggu selama 5 detik sebelum pindah ke scene "Main Menu"
+        yield return new WaitForSeconds(5f);
+
+        // Pindah ke scene "Main Menu"
+        SceneManager.LoadScene("MainMenu");
     }
 }

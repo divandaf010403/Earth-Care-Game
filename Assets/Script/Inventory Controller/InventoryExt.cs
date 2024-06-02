@@ -115,7 +115,7 @@ public class InventoryExt : MonoBehaviour
             int childIndex = 0;
             foreach (InventoryExtItemData itemData in loadedItemData)
             {
-                Transform imageTransform = transform.GetChild(0).GetChild(childIndex);
+                Transform imageTransform = transform.GetChild(0).GetChild(0).GetChild(childIndex);
                 Image image = imageTransform.GetChild(0).GetComponent<Image>();
                 InventoryVariable inventoryVariable = imageTransform.GetChild(0).GetComponent<InventoryVariable>();
                 TextMeshProUGUI totalItem = imageTransform.GetChild(1).GetComponent<TextMeshProUGUI>();

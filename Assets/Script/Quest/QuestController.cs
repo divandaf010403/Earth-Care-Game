@@ -29,17 +29,20 @@ public class QuestController : MonoBehaviour
 
     void Start()
     {
-        ActivateQuest();
+        // ActivateQuest();
 
-        if (questObjectiveText != null && objectiveList != null)
-        {
-            questObjectiveText.text = objectiveList[_questNumberActive];
-        }
+        // if (questObjectiveText != null && objectiveList != null)
+        // {
+        //     questObjectiveText.text = objectiveList[_questNumberActive];
+        // }
     }
 
     private void Update() 
     {
-        
+        if (questObjectiveText != null && objectiveList != null)
+        {
+            questObjectiveText.text = objectiveList[_questNumberActive];
+        }
     }
 
     public void ActivateQuest()
@@ -59,6 +62,14 @@ public class QuestController : MonoBehaviour
             {
                 transform.GetChild(i).gameObject.SetActive(true);
             }
+        }
+    }
+
+    public void IncreaseObjectiveTutorial(int number)
+    {
+        if (number > _questNumberActive)
+        {
+            _questNumberActive = number;
         }
     }
 }
