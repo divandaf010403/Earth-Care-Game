@@ -28,7 +28,7 @@ public class MainCharMovement : MonoBehaviour
 
     [Header("Joystick Utils")]
     public bool enableMobileInput = false;
-    public FixedJoystick[] joysticks;
+    public FixedJoystick joystick;
     public FixedTouchField touchField;
     public Animator anim;
 
@@ -61,10 +61,6 @@ public class MainCharMovement : MonoBehaviour
         {
             kvp.Value.gameObject.SetActive(false);
         }
-
-        LoadPlayer();
-
-        // InvokeRepeating("SavePlayerData", 0f, 5f);
     }
 
     private void Update()
@@ -93,11 +89,9 @@ public class MainCharMovement : MonoBehaviour
         // Joystick Input
         float totalHorizontal = 0f;
         float totalVertical = 0f;
-        foreach (FixedJoystick joystick in joysticks)
-        {
-            totalHorizontal += joystick.Horizontal;
-            totalVertical += joystick.Vertical;
-        }
+        
+        totalHorizontal += joystick.Horizontal;
+        totalVertical += joystick.Vertical;
 
         Vector3 cameraForward = playerCamera.forward;
         Vector3 cameraRight = playerCamera.right;
@@ -208,34 +202,11 @@ public class MainCharMovement : MonoBehaviour
         return Physics.Raycast(ray, 1f, groundLayer);
     }
 
-    public void SavePlayerData()
-    {
-        SaveSystem.SavePlayer(this);
-    }
-
-    public void LoadPlayer()
-    {
-        PlayerData data = SaveSystem.LoadPlayer();
-
-        if (data != null)
-        {
-            Vector3 position = new Vector3(data.position[0], data.position[1], data.position[2]);
-            Quaternion rotation = Quaternion.Euler(data.rotation[0], data.rotation[1], data.rotation[2]);
-            playerCoin = data.playerCoin;
-
-            if (position != null && rotation != null)
-            {
-                GameController.Instance.mainCharacter.transform.position = position;
-                GameController.Instance.mainCharacter.transform.rotation = rotation;
-            }
-
-            data.questNumber = GameVariable.questNumber;
-        }
-    }
-
     public void countCoin(int addCoin) {
         playerCoin += addCoin;
         playerCoinTxt.text = playerCoin.ToString();
+
+        SaveSystem.UpdatePlayerCoin(this);
     }
 
     public void showNotification(string message)

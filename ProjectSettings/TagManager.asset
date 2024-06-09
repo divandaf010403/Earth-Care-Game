@@ -16,6 +16,7 @@ TagManager:
   - BackgroundCamera
   - VendingMachine
   - QuestPLTSa
+  - WpQuest
   layers:
   - Default
   - TransparentFX

@@ -49,9 +49,9 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     [SerializeField] TextMeshProUGUI scoreResult;
     public Transform finishPanel;
 
-    [Header("Next Action")]
-    [SerializeField] private GameObject questToActive;
-    [SerializeField] private GameObject questToNonActive;
+    // [Header("Next Action")]
+    // [SerializeField] private GameObject questToActive;
+    // [SerializeField] private GameObject questToNonActive;
 
     void Awake()
     {
@@ -105,8 +105,8 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
 
                         if (questPoint >= questPointRequire)
                         {
-                            questToActive.SetActive(true);
-                            questToNonActive.SetActive(false);
+                            // questToActive.SetActive(true);
+                            // questToNonActive.SetActive(false);
 
                             QuestController.Instance.IncreaseObjectiveTutorial(8);
                         }

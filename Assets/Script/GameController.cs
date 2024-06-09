@@ -64,6 +64,8 @@ public class GameController : MonoBehaviour
         }
 
         loadingPanel.gameObject.SetActive(false);
+
+        // LoadPlayer();
     }
 
     private void Start() {
@@ -73,11 +75,61 @@ public class GameController : MonoBehaviour
             endDemoCanvas = endedDemoPanel.gameObject.AddComponent<CanvasGroup>();
         }
         endDemoCanvas.alpha = 0f;
+
+        LoadPlayer();
+
+        // Start the coroutine to update transform every 5 seconds
+        StartCoroutine(UpdateTransformPeriodically());
     }
 
     private void Update() 
     {
         btnQuitQuest.gameObject.SetActive(GameVariable.isQuestStarting ? true : false);
+    }
+
+    // Save System
+    public void SavePlayerData()
+    {
+        PlayerData data = SaveSystem.LoadPlayerData();
+        if (data == null || string.IsNullOrWhiteSpace(JsonUtility.ToJson(data)) || JsonUtility.ToJson(data) == "{}")
+        {
+            SaveSystem.SavePlayerData(MainCharMovement.Instance);
+        }
+        else
+        {
+            SaveSystem.UpdatePlayerTransform(MainCharMovement.Instance);
+        }
+    }
+
+    // Coroutine to update player transform periodically
+    private IEnumerator UpdateTransformPeriodically()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(5f);
+            if (!GameVariable.isQuestStarting)
+            {
+                SavePlayerData();
+            }
+        }
+    }
+
+    public void LoadPlayer()
+    {
+        PlayerData data = SaveSystem.LoadPlayerData();
+        if (data != null)
+        {
+            MainCharMovement.Instance.transform.position = new Vector3(data.position[0], data.position[1], data.position[2]);
+            MainCharMovement.Instance.transform.rotation = Quaternion.Euler(data.rotation[0], data.rotation[1], data.rotation[2]);
+            MainCharMovement.Instance.playerCoin = data.playerCoin;
+
+            QuestController.Instance.IncreaseObjectiveTutorial(data.questNumber);
+        }
+        else
+        {
+            Debug.LogWarning("No saved data found. Initializing to default values.");
+            // Initialize default values if needed
+        }
     }
 
     public IEnumerator FadeInLoadingPanel()

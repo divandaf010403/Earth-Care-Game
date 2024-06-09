@@ -13,6 +13,7 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     public Transform isActiveTrigger;
     public List<GameObject> colliderQuest;
     public List<Sprite> imageTutorialList;
+    public Transform joystickToMove;
 
     [Header("Component")]
     public GameController gc;
@@ -33,9 +34,9 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     public float spawnRadius = 5f;
     public int numberOfObjectsToSpawn = 2;
 
-    [Header("Next Action")]
-    [SerializeField] private GameObject questToActive;
-    [SerializeField] private GameObject questToNonActive;
+    // [Header("Next Action")]
+    // [SerializeField] private GameObject questToActive;
+    // [SerializeField] private GameObject questToNonActive;
 
     private void Update() 
     {
@@ -64,6 +65,9 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
 
     public void Mulai_Misi()
     {
+        // Pindahkan Joystick
+        joystickToMove.SetParent(GameController.Instance.pilahSampahUI.transform);
+
         // Save the old position and rotation
         interactions.oldPosition = gc.mainCharacter.transform.position;
         interactions.oldRotation = new Vector3(0f, gc.mainCharacter.transform.eulerAngles.y, 0f);
@@ -103,6 +107,9 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
 
     public void Selesai_Misi()
     {
+        // Kembalikan joystick ke parent semula
+        joystickToMove.SetParent(GameController.Instance.mainUI.transform);
+
         // Reset the character's position and rotation
         MainCharMovement.Instance.controller.enabled = false;
         GameController.Instance.mainCharacter.transform.position = interactions.oldPosition;
@@ -249,8 +256,8 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
                 {
                     GameController.Instance.EndQuestButtonClick();
                     
-                    questToActive.SetActive(true);
-                    questToNonActive.SetActive(false);
+                    // questToActive.SetActive(true);
+                    // questToNonActive.SetActive(false);
 
                     QuestController.Instance.IncreaseObjectiveTutorial(2);
                 }

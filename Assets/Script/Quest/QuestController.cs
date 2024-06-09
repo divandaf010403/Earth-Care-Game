@@ -29,20 +29,13 @@ public class QuestController : MonoBehaviour
 
     void Start()
     {
-        // ActivateQuest();
-
-        // if (questObjectiveText != null && objectiveList != null)
-        // {
-        //     questObjectiveText.text = objectiveList[_questNumberActive];
-        // }
+        _questNumberActive = GameVariable.questNumber;
+        ActivateQuest();
     }
 
     private void Update() 
     {
-        if (questObjectiveText != null && objectiveList != null)
-        {
-            questObjectiveText.text = objectiveList[_questNumberActive];
-        }
+        
     }
 
     public void ActivateQuest()
@@ -54,6 +47,34 @@ public class QuestController : MonoBehaviour
         }
 
         transform.GetChild(_questNumberActive).gameObject.SetActive(true);
+
+        if (transform.GetChild(_questNumberActive).CompareTag("Quest"))
+        {
+            Transform questChild = transform.GetChild(_questNumberActive + 1);
+            questChild.gameObject.SetActive(true);
+
+            for(int i = 0; i < questChild.childCount; i++)
+            {
+                if (questChild.GetChild(i).CompareTag("Conversation"))
+                {
+                    questChild.GetChild(i).gameObject.SetActive(false);
+                    break;
+                }
+            }
+        }
+        else 
+        {
+            Transform questChild = transform.GetChild(_questNumberActive);
+
+            for(int i = 0; i < questChild.childCount; i++)
+            {
+                if (questChild.GetChild(i).CompareTag("Conversation"))
+                {
+                    questChild.GetChild(i).gameObject.SetActive(true);
+                    break;
+                }
+            }
+        }
 
         // Mengaktifkan child index sebelum questNumber dan ber tag quest
         for (int i = _questNumberActive - 1; i >= 0; i--)
@@ -67,9 +88,14 @@ public class QuestController : MonoBehaviour
 
     public void IncreaseObjectiveTutorial(int number)
     {
-        if (number > _questNumberActive)
+        if (number > GameVariable.questNumber)
         {
-            _questNumberActive = number;
+            GameVariable.questNumber = number;
+            _questNumberActive = GameVariable.questNumber;
+            ActivateQuest();
+            SaveSystem.UpdatePlayerQuest();
+
+            questObjectiveText.text = objectiveList[_questNumberActive];
         }
     }
 }

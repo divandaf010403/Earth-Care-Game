@@ -29,29 +29,79 @@ public static class SaveSystem
         }
     }
 
-    private static readonly string playerPath = Application.persistentDataPath + "/save/player.json";
+    private static readonly string playerDataPath = Application.persistentDataPath + "/save/player.json";
     private static readonly string shopPath = Application.persistentDataPath + "/save/shopData.json";
     private static readonly string inventoryPath = Application.persistentDataPath + "/save/inventoryData.json";
     private static readonly string inventoryExtPath = Application.persistentDataPath + "/save/inventoryExtData.json";
 
-    public static void SavePlayer(MainCharMovement mainChar)
+    public static void SavePlayerData(MainCharMovement mainChar)
     {
-        string json = JsonUtility.ToJson(new PlayerData(mainChar));
-        File.WriteAllText(playerPath, json);
-    }
-
-    public static PlayerData LoadPlayer()
-    {
-        if (File.Exists(playerPath))
+        PlayerData data = LoadPlayerData();
+        if (data == null)
         {
-            string json = File.ReadAllText(playerPath);
-            return JsonUtility.FromJson<PlayerData>(json);
+            data = new PlayerData(mainChar);
         }
         else
         {
-            Debug.LogError("Player save not found at path: " + playerPath);
-            return null;
+            data.position = new float[3];
+            data.position[0] = mainChar.transform.position.x;
+            data.position[1] = mainChar.transform.position.y;
+            data.position[2] = mainChar.transform.position.z;
+
+            data.rotation = new float[3];
+            data.rotation[0] = mainChar.transform.rotation.eulerAngles.x;
+            data.rotation[1] = mainChar.transform.rotation.eulerAngles.y;
+            data.rotation[2] = mainChar.transform.rotation.eulerAngles.z;
+
+            data.playerCoin = mainChar.playerCoin;
+            data.questNumber = GameVariable.questNumber;
         }
+
+        string json = JsonUtility.ToJson(data);
+        File.WriteAllText(playerDataPath, json);
+    }
+
+    public static PlayerData LoadPlayerData()
+    {
+        if (File.Exists(playerDataPath))
+        {
+            string json = File.ReadAllText(playerDataPath);
+            return JsonUtility.FromJson<PlayerData>(json);
+        }
+        return null;
+    }
+
+    public static void UpdatePlayerTransform(MainCharMovement mainChar)
+    {
+        PlayerData data = LoadPlayerData() ?? new PlayerData(mainChar);
+        data.position[0] = mainChar.transform.position.x;
+        data.position[1] = mainChar.transform.position.y;
+        data.position[2] = mainChar.transform.position.z;
+
+        data.rotation[0] = mainChar.transform.rotation.eulerAngles.x;
+        data.rotation[1] = mainChar.transform.rotation.eulerAngles.y;
+        data.rotation[2] = mainChar.transform.rotation.eulerAngles.z;
+
+        string json = JsonUtility.ToJson(data);
+        File.WriteAllText(playerDataPath, json);
+    }
+
+    public static void UpdatePlayerCoin(MainCharMovement mainChar)
+    {
+        PlayerData data = LoadPlayerData() ?? new PlayerData(mainChar);
+        data.playerCoin = mainChar.playerCoin;
+
+        string json = JsonUtility.ToJson(data);
+        File.WriteAllText(playerDataPath, json);
+    }
+
+    public static void UpdatePlayerQuest()
+    {
+        PlayerData data = LoadPlayerData() ?? new PlayerData(null);
+        data.questNumber = GameVariable.questNumber;
+
+        string json = JsonUtility.ToJson(data);
+        File.WriteAllText(playerDataPath, json);
     }
 
     public static void SaveShop(List<ShopController.ShopItem> shopItemList)
