@@ -43,10 +43,28 @@ public class QuestController : MonoBehaviour
         // Menonaktifkan semua child game objects
         for (int i = 0; i < transform.childCount; i++)
         {
-            transform.GetChild(i).gameObject.SetActive(false);
+            Transform questWpChild = transform.GetChild(i);
+            questWpChild.gameObject.SetActive(false);
+            for(int j = 0; j < questWpChild.childCount; j++)
+            {
+                if (questWpChild.GetChild(j).CompareTag("WpQuest"))
+                {
+                    questWpChild.GetChild(j).gameObject.SetActive(false);
+                    break;
+                }
+            }
         }
 
-        transform.GetChild(_questNumberActive).gameObject.SetActive(true);
+        Transform onQuestActiveTransform = transform.GetChild(_questNumberActive);
+        onQuestActiveTransform.gameObject.SetActive(true);
+        for(int q = 0; q < onQuestActiveTransform.childCount; q++)
+        {
+            if (onQuestActiveTransform.GetChild(q).CompareTag("WpQuest"))
+            {
+                onQuestActiveTransform.GetChild(q).gameObject.SetActive(true);
+                break;
+            }
+        }
 
         if (transform.GetChild(_questNumberActive).CompareTag("Quest"))
         {
