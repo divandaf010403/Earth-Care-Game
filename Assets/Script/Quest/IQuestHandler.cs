@@ -11,6 +11,7 @@ public interface IQuestHandler
     Transform QuestCameraPosition { get; }
     // Transform TrashSpawner { get; }
     Transform IsActiveTrigger { get; }
+    string[] requiredItemToQuest { get; }
 
     List<Sprite> imgTutorialList();
     int GetWaktuQuest();

@@ -66,30 +66,44 @@ public class QuestController : MonoBehaviour
             }
         }
 
+        // Mengaktifkan Quest Selanjutnya
         if (transform.GetChild(_questNumberActive).CompareTag("Quest"))
         {
-            Transform questChild = transform.GetChild(_questNumberActive + 1);
-            questChild.gameObject.SetActive(true);
-
-            for(int i = 0; i < questChild.childCount; i++)
+            int nextChildIndex = _questNumberActive + 1;
+            if (nextChildIndex < transform.childCount)
             {
-                if (questChild.GetChild(i).CompareTag("Conversation"))
+                Transform questChild = transform.GetChild(nextChildIndex);
+                if (questChild != null)
                 {
-                    questChild.GetChild(i).gameObject.SetActive(false);
-                    break;
+                    questChild.gameObject.SetActive(true);
+
+                    for (int i = 0; i < questChild.childCount; i++)
+                    {
+                        if (questChild.GetChild(i).CompareTag("Conversation"))
+                        {
+                            questChild.GetChild(i).gameObject.SetActive(false);
+                            break;
+                        }
+                    }
                 }
             }
+            else
+            {
+                Debug.LogWarning("Next child index is out of bounds.");
+            }
         }
-        else 
+        else
         {
             Transform questChild = transform.GetChild(_questNumberActive);
-
-            for(int i = 0; i < questChild.childCount; i++)
+            if (questChild != null)
             {
-                if (questChild.GetChild(i).CompareTag("Conversation"))
+                for (int i = 0; i < questChild.childCount; i++)
                 {
-                    questChild.GetChild(i).gameObject.SetActive(true);
-                    break;
+                    if (questChild.GetChild(i).CompareTag("Conversation"))
+                    {
+                        questChild.GetChild(i).gameObject.SetActive(true);
+                        break;
+                    }
                 }
             }
         }

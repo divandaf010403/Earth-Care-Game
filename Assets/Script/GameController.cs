@@ -188,11 +188,48 @@ public class GameController : MonoBehaviour
         beforeQuest.btnStartQuest.onClick.RemoveAllListeners();
         beforeQuest.btnStartQuest.onClick.AddListener(() =>
         {
-            StartCoroutine(HandleWithLoadingPanelTransition(() => 
+            if (getQuestHandler.requiredItemToQuest != null && getQuestHandler.requiredItemToQuest.Length > 0)
             {
-                getQuestHandler.OnQuestStart();
-                beforeQuest.panelStartQuest.gameObject.SetActive(false);
-            }, null));
+                bool allItemsFound = true;
+                foreach (string requiredItem in getQuestHandler.requiredItemToQuest)
+                {
+                    bool itemFound = false;
+                    foreach (InventoryExtItemData itemData in InventoryExt.Instance.inventoryExtItemDataList.slotData)
+                    {
+                        if (itemData.itemName == requiredItem)
+                        {
+                            itemFound = true;
+                            break;
+                        }
+                    }
+                    if (!itemFound)
+                    {
+                        allItemsFound = false;
+                        break;
+                    }
+                }
+
+                if (allItemsFound)
+                {
+                    StartCoroutine(HandleWithLoadingPanelTransition(() => 
+                    {
+                        getQuestHandler.OnQuestStart();
+                        beforeQuest.panelStartQuest.gameObject.SetActive(false);
+                    }, null));
+                }
+                else
+                {
+                    MainCharMovement.Instance.showNotification("Item Yang Diperlukan Tidak Ada Di Dalam Tas");
+                }
+            }
+            else
+            {
+                StartCoroutine(HandleWithLoadingPanelTransition(() => 
+                {
+                    getQuestHandler.OnQuestStart();
+                    beforeQuest.panelStartQuest.gameObject.SetActive(false);
+                }, null));
+            }
         });
     }
 

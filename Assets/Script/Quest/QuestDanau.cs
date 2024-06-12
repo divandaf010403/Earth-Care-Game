@@ -13,12 +13,14 @@ public class NewBehaviourScript : MonoBehaviour, IQuestHandler
     public Transform isActiveTrigger;
     public List<GameObject> colliderQuest;
     public List<Sprite> imageTutorialList;
+    public string[] requirementItem;
     
     // Interface
     public Camera QuestCamera => questCamera;
     public Transform QuestPlayerPosition => questPlayerPosition;
     public Transform IsActiveTrigger => isActiveTrigger;
     public Transform QuestCameraPosition => questCamera.transform;
+    public string[] requiredItemToQuest => requirementItem;
 
     [Header("Quest Settings")]
     public TextMeshProUGUI countdownText;

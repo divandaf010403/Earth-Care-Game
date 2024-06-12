@@ -16,6 +16,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     public List<GameObject> objectToSpawn;
     private Coroutine spawnCoroutine;
     public List<Sprite> imageTutorialList;
+    public string[] requirementItem;
 
     private float spawnIntervalMin = 0.5f;
     private float spawnIntervalMax = 2f;
@@ -29,6 +30,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     public Transform QuestPlayerPosition => questPlayerPosition;
     public Transform QuestCameraPosition => questCameraPosition;
     public Transform IsActiveTrigger => isActiveTrigger;
+    public string[] requiredItemToQuest => requirementItem;
 
     [Header("Quest Setting")]
     public Sprite imgRequireItem;

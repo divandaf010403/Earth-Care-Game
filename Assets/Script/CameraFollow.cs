@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    public Transform player, cameraTrans;
-
-    void Update()
+    private void LateUpdate() 
     {
-        cameraTrans.LookAt(player);
+        transform.LookAt(transform.position + Camera.main.transform.rotation * Vector3.forward, Camera.main.transform.rotation * Vector3.up);
     }
 }

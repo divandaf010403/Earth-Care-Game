@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class PilahSampah : MonoBehaviour, IQuestHandler
 {
@@ -14,6 +15,7 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     public List<GameObject> colliderQuest;
     public List<Sprite> imageTutorialList;
     public Transform joystickToMove;
+    public string[] requirementItem;
 
     [Header("Component")]
     public GameController gc;
@@ -27,6 +29,7 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     public Transform QuestPlayerPosition => questPlayerPosition;
     public Transform QuestCameraPosition => questCameraPosition;
     public Transform IsActiveTrigger => isActiveTrigger;
+    public string[] requiredItemToQuest => requirementItem;
 
     [Header("Spawner")]
     public List<GameObject> objectToSpawn;
@@ -199,19 +202,19 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     }
 
     void SpawnObjects()
-{
-    // Spawn objects around the spawnerMidPosition
-    for (int i = 0; i < numberOfObjectsToSpawn; i++)
     {
-        Vector3 spawnPosition = Random.insideUnitSphere * spawnRadius;
-        spawnPosition += spawnerMidPosition.position;
-        spawnPosition.y = spawnerMidPosition.position.y;
+        // Spawn objects around the spawnerMidPosition
+        for (int i = 0; i < numberOfObjectsToSpawn; i++)
+        {
+            Vector3 spawnPosition = Random.insideUnitSphere * spawnRadius;
+            spawnPosition += spawnerMidPosition.position;
+            spawnPosition.y = spawnerMidPosition.position.y;
 
-        GameObject objectPrefab = objectToSpawn[Random.Range(0, objectToSpawn.Count)];
-        GameObject spawnedObject = Instantiate(objectPrefab, spawnPosition, Quaternion.identity);
-        spawnedObject.transform.parent = spawnerMidPosition;
+            GameObject objectPrefab = objectToSpawn[Random.Range(0, objectToSpawn.Count)];
+            GameObject spawnedObject = Instantiate(objectPrefab, spawnPosition, Quaternion.identity);
+            spawnedObject.transform.parent = spawnerMidPosition;
+        }
     }
-}
 
     public void Ambil_Sampah(IInventoryItem item)
     {
@@ -274,6 +277,22 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
                 Debug.Log("Gagal Buang Sampah");
                 nPanelShow.showNotification("Tempat Sampah Tidak Sesuai");
             }
+        }
+    }
+
+    void OnDrawGizmos()
+    {
+        if (spawnerMidPosition != null)
+        {
+            // Set the color for the gizmo
+            Handles.color = new Color(1, 1, 0, 0.3f); // Yellow color with some transparency
+
+            // Draw a filled disc to represent the spawn area
+            Handles.DrawSolidDisc(spawnerMidPosition.position, Vector3.up, spawnRadius);
+
+            // Optionally, you can also draw the wireframe for clearer visualization
+            Handles.color = Color.yellow;
+            Handles.DrawWireDisc(spawnerMidPosition.position, Vector3.up, spawnRadius);
         }
     }
 }

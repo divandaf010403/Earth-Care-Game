@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class InventoryExt : MonoBehaviour
 {
+    public static InventoryExt Instance;
     private const int SLOTS = 12;
     private List<IInventoryItem> mItem = new List<IInventoryItem>();
     public event EventHandler<InventoryEventArgs> ItemAdded;
@@ -19,6 +20,18 @@ public class InventoryExt : MonoBehaviour
 
     [Header("Crafting")]
     public List<NewRecipe> itemRecipes = new List<NewRecipe>();
+
+    private void Awake() 
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     private void Start()
     {
