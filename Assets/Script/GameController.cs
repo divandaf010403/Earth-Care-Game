@@ -196,7 +196,7 @@ public class GameController : MonoBehaviour
                     bool itemFound = false;
                     foreach (InventoryExtItemData itemData in InventoryExt.Instance.inventoryExtItemDataList.slotData)
                     {
-                        if (itemData.itemName == requiredItem)
+                        if (itemData.jenisSampah == requiredItem)
                         {
                             itemFound = true;
                             break;

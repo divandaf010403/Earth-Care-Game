@@ -50,7 +50,7 @@ public class QuestSaluranAir : MonoBehaviour
                 // Check if the current required item exists in the inventory and accumulate its quantity
                 foreach (InventoryExtItemData itemData in InventoryExt.Instance.inventoryExtItemDataList.slotData)
                 {
-                    if (itemData.itemName == requiredItem.itemName)
+                    if (itemData.jenisSampah == requiredItem.itemName)
                     {
                         totalCount += itemData.jumlahItem;
                     }
@@ -66,13 +66,14 @@ public class QuestSaluranAir : MonoBehaviour
 
             if (allItemsFound)
             {
-                // Logic for when all required items are found
-                Debug.Log("All required items are found.");
                 // Add your repair logic here
+                StartCoroutine(GameController.Instance.HandleWithLoadingPanelTransition(() => {
+                    Debug.Log("All required items are found.");
+                }, null));
             }
             else
             {
-                MainCharMovement.Instance.showNotification("Item Yang Diperlukan Tidak Ada Di Dalam Tas");
+                MainCharMovement.Instance.showNotification("Item Yang Diperlukan Kurang");
             }
         }
         else
