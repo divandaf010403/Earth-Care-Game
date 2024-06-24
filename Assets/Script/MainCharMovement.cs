@@ -19,7 +19,7 @@ public class MainCharMovement : MonoBehaviour
     public float rotationSpeedX = 2f;
     public float rotationSpeedY = 0.5f;
     public float gravityValue = -9.8f;
-    public int playerCoin = 0;
+    // public int playerCoin = 0;
     public TextMeshProUGUI playerCoinTxt;
 
     [Header("Interaction Utils")]
@@ -61,6 +61,8 @@ public class MainCharMovement : MonoBehaviour
         {
             kvp.Value.gameObject.SetActive(false);
         }
+
+        Application.targetFrameRate = 60;
     }
 
     private void Update()
@@ -74,7 +76,7 @@ public class MainCharMovement : MonoBehaviour
             keyboardInput();
         }
 
-        playerCoinTxt.text = playerCoin.ToString();
+        playerCoinTxt.text = GameVariable.playerCoin.ToString();
     }
 
     private void analogInput()
@@ -203,10 +205,10 @@ public class MainCharMovement : MonoBehaviour
     }
 
     public void countCoin(int addCoin) {
-        playerCoin += addCoin;
-        playerCoinTxt.text = playerCoin.ToString();
+        GameVariable.playerCoin += addCoin;
+        playerCoinTxt.text = GameVariable.playerCoin.ToString();
 
-        SaveSystem.UpdatePlayerCoin(this);
+        SaveSystem.UpdatePlayerCoin();
     }
 
     public void showNotification(string message)

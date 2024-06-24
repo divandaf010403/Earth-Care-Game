@@ -47,10 +47,6 @@ public class GameController : MonoBehaviour
     [Header("Ketika Quest Selesai")]
     public Transform finishPanel;
 
-    [Header("Ended Demo Panel")]
-    public Transform endedDemoPanel;
-    CanvasGroup endDemoCanvas;
-
     private void Awake() 
     {
         // Pastikan hanya ada satu instance QuestManager yang ada
@@ -69,14 +65,16 @@ public class GameController : MonoBehaviour
     }
 
     private void Start() {
-        endDemoCanvas = endedDemoPanel.GetComponent<CanvasGroup>();
-        if (endDemoCanvas == null)
-        {
-            endDemoCanvas = endedDemoPanel.gameObject.AddComponent<CanvasGroup>();
-        }
-        endDemoCanvas.alpha = 0f;
+        // endDemoCanvas = endedDemoPanel.GetComponent<CanvasGroup>();
+        // if (endDemoCanvas == null)
+        // {
+        //     endDemoCanvas = endedDemoPanel.gameObject.AddComponent<CanvasGroup>();
+        // }
+        // endDemoCanvas.alpha = 0f;
 
         LoadPlayer();
+
+        Time.timeScale = 1;
 
         // Start the coroutine to update transform every 5 seconds
         StartCoroutine(UpdateTransformPeriodically());
@@ -121,9 +119,11 @@ public class GameController : MonoBehaviour
         {
             MainCharMovement.Instance.transform.position = new Vector3(data.position[0], data.position[1], data.position[2]);
             MainCharMovement.Instance.transform.rotation = Quaternion.Euler(data.rotation[0], data.rotation[1], data.rotation[2]);
-            MainCharMovement.Instance.playerCoin = data.playerCoin;
+            GameVariable.playerCoin = data.playerCoin;
 
-            QuestController.Instance.IncreaseObjectiveTutorial(data.questNumber);
+            GameVariable.questNumber = data.questNumber;
+            QuestController.Instance._questNumberActive = GameVariable.questNumber;
+            QuestController.Instance.ActivateQuest();
         }
         else
         {
@@ -325,31 +325,31 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void ShowEndedDemoPanel()
-    {
-        StartCoroutine(FadeInPanelEndDemo());
-    }
+    // public void ShowEndedDemoPanel()
+    // {
+    //     StartCoroutine(FadeInPanelEndDemo());
+    // }
 
-    private IEnumerator FadeInPanelEndDemo()
-    {
-        float duration = 1f;  // Durasi fade in
-        float currentTime = 0f;
+    // private IEnumerator FadeInPanelEndDemo()
+    // {
+    //     float duration = 1f;  // Durasi fade in
+    //     float currentTime = 0f;
 
-        endedDemoPanel.localPosition = new Vector3(0f, 0f, 0f);
+    //     endedDemoPanel.localPosition = new Vector3(0f, 0f, 0f);
 
-        while (currentTime < duration)
-        {
-            currentTime += Time.deltaTime;
-            endDemoCanvas.alpha = Mathf.Lerp(0f, 1f, currentTime / duration);
-            yield return null;
-        }
+    //     while (currentTime < duration)
+    //     {
+    //         currentTime += Time.deltaTime;
+    //         endDemoCanvas.alpha = Mathf.Lerp(0f, 1f, currentTime / duration);
+    //         yield return null;
+    //     }
 
-        endDemoCanvas.alpha = 1f;
+    //     endDemoCanvas.alpha = 1f;
 
-        // Tunggu selama 5 detik sebelum pindah ke scene "Main Menu"
-        yield return new WaitForSeconds(5f);
+    //     // Tunggu selama 5 detik sebelum pindah ke scene "Main Menu"
+    //     yield return new WaitForSeconds(5f);
 
-        // Pindah ke scene "Main Menu"
-        SceneManager.LoadScene("MainMenu");
-    }
+    //     // Pindah ke scene "Main Menu"
+    //     SceneManager.LoadScene("MainMenu");
+    // }
 }

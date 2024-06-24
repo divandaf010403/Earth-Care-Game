@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine.Utility;
 using TMPro;
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -110,6 +109,9 @@ public class Interactions : MonoBehaviour
                     removeItem();
                     break;
                 case "ItemCraft":
+                    CollectibleItem collectibleItem = _colliders[0].GetComponent<CollectibleItem>();
+                    collectibleItem.TakeItem();
+                    
                     removeItemCraft();
                     break;
                 case "Trashcan":
@@ -216,6 +218,7 @@ public class Interactions : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log(other.name);
         if (other.CompareTag("Quest"))
         {
             mainChar.newDictionary["quest"].gameObject.SetActive(true);

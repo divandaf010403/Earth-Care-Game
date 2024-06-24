@@ -109,6 +109,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1940703481838933858}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 99b7e63754abe774a85dad9772c47aeb,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -8694803628867211227}
   m_SourcePrefab: {fileID: 100100000, guid: 99b7e63754abe774a85dad9772c47aeb, type: 3}
 --- !u!1 &2611870471839021431 stripped
 GameObject:
@@ -181,3 +185,16 @@ MonoBehaviour:
   jenisSampahNama: Kayu
   typeSampahTxt: Collectible
   totalSampahTxt: 1
+--- !u!114 &-8694803628867211227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2611870471839021431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4a3a90df8729d648ac759c7aaf413b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemId: 

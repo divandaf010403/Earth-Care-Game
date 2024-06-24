@@ -6,13 +6,10 @@ using UnityEngine;
 public class QuestController : MonoBehaviour
 {
     public static QuestController Instance;
-    [SerializeField] int _questNumberActive;
+    [SerializeField] public int _questNumberActive;
 
     [Header("Objective")]
     [SerializeField] TextMeshProUGUI questObjectiveText;
-
-    [Header("Objective List")]
-    public string[] objectiveList;
 
     private void Awake() 
     {
@@ -29,8 +26,8 @@ public class QuestController : MonoBehaviour
 
     void Start()
     {
-        _questNumberActive = GameVariable.questNumber;
-        ActivateQuest();
+        // _questNumberActive = GameVariable.questNumber;
+        // ActivateQuest();
     }
 
     private void Update() 
@@ -55,8 +52,13 @@ public class QuestController : MonoBehaviour
             }
         }
 
+        // Quest Mana Yang Harus Aktif
         Transform onQuestActiveTransform = transform.GetChild(_questNumberActive);
         onQuestActiveTransform.gameObject.SetActive(true);
+        QuestObjectiveText objectiveText = onQuestActiveTransform.GetComponent<QuestObjectiveText>();
+        questObjectiveText.text = objectiveText.objectiveText;
+
+
         for(int q = 0; q < onQuestActiveTransform.childCount; q++)
         {
             if (onQuestActiveTransform.GetChild(q).CompareTag("WpQuest"))
@@ -73,7 +75,7 @@ public class QuestController : MonoBehaviour
             if (nextChildIndex < transform.childCount)
             {
                 Transform questChild = transform.GetChild(nextChildIndex);
-                if (questChild != null)
+                if (questChild != null && questChild.CompareTag("NPC"))
                 {
                     questChild.gameObject.SetActive(true);
 
@@ -82,6 +84,7 @@ public class QuestController : MonoBehaviour
                         if (questChild.GetChild(i).CompareTag("Conversation"))
                         {
                             questChild.GetChild(i).gameObject.SetActive(false);
+                            Debug.Log("Apakah" + questChild.GetChild(i).gameObject.name);
                             break;
                         }
                     }
@@ -111,6 +114,12 @@ public class QuestController : MonoBehaviour
         // Mengaktifkan child index sebelum questNumber dan ber tag quest
         for (int i = _questNumberActive - 1; i >= 0; i--)
         {
+            IQuestFinishHandler handler = transform.GetChild(i).GetComponent<IQuestFinishHandler>();
+            if (handler != null)
+            {
+                handler.IsQuestFinished = true;
+            }
+
             if (transform.GetChild(i).CompareTag("Quest"))
             {
                 transform.GetChild(i).gameObject.SetActive(true);
@@ -120,14 +129,58 @@ public class QuestController : MonoBehaviour
 
     public void IncreaseObjectiveTutorial(int number)
     {
-        if (number > GameVariable.questNumber)
+        Debug.Log("Memeriksa peningkatan quest: current quest " + GameVariable.questNumber + ", incoming quest " + number);
+
+        if (number == GameVariable.questNumber + 1)
         {
             GameVariable.questNumber = number;
             _questNumberActive = GameVariable.questNumber;
             ActivateQuest();
             SaveSystem.UpdatePlayerQuest();
+        }
+        else
+        {
+            Debug.LogWarning("Quest tidak berurutan atau sudah dilewati.");
+        }
+    }
 
-            questObjectiveText.text = objectiveList[_questNumberActive];
+    public void getChildNumberNextQuest(Transform thisObj)
+    {
+        // Jika parentObj ada
+        if (thisObj.parent != null)
+        {
+            Transform parentObj = thisObj.parent;
+            int directChildIndex = 0;
+
+            // Loop melalui semua anak langsung dari parentObj
+            for (int i = 0; i < parentObj.childCount; i++)
+            {
+                Transform child = parentObj.GetChild(i);
+
+                // Cek apakah nama anak tersebut sama dengan nama thisObj
+                if (child.name == thisObj.name)
+                {
+                    Debug.Log(thisObj.name + " adalah anak ke-" + directChildIndex + " dalam " + parentObj.name);
+                    IncreaseObjectiveTutorial(directChildIndex + 1);
+
+                    RewardSystem reward = thisObj.GetComponent<RewardSystem>();
+                    if (reward != null)
+                    {
+                        RewardPanelController.Instance.getReward(reward);
+                    }
+                    return;
+                }
+
+                // Increment directChildIndex
+                directChildIndex++;
+            }
+
+            // Jika tidak ditemukan, mungkin ada kesalahan dalam struktur hierarki atau nama yang tidak cocok
+            Debug.LogError("Object " + thisObj.name + " tidak ditemukan sebagai anak langsung dari " + parentObj.name);
+        }
+        else
+        {
+            Debug.LogError("Object tidak memiliki parentObj.");
         }
     }
 }

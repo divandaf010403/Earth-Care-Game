@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor;
 
 public class PilahSampah : MonoBehaviour, IQuestHandler
 {
@@ -16,6 +15,7 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     public List<Sprite> imageTutorialList;
     public Transform joystickToMove;
     public string[] requirementItem;
+    public bool isFinishedYet;
 
     [Header("Component")]
     public GameController gc;
@@ -36,10 +36,6 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
     public Transform spawnerMidPosition;
     public float spawnRadius = 5f;
     public int numberOfObjectsToSpawn = 2;
-
-    // [Header("Next Action")]
-    // [SerializeField] private GameObject questToActive;
-    // [SerializeField] private GameObject questToNonActive;
 
     private void Update() 
     {
@@ -146,9 +142,9 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
 
         // Destroy all spawned objects
         for (int i = spawnerMidPosition.childCount - 1; i >= 0; i--)
-            {
-                Destroy(spawnerMidPosition.GetChild(i).gameObject);
-            }
+        {
+            Destroy(spawnerMidPosition.GetChild(i).gameObject);
+        }
     }
 
     public void OnQuestStart() {
@@ -262,7 +258,7 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
                     // questToActive.SetActive(true);
                     // questToNonActive.SetActive(false);
 
-                    QuestController.Instance.IncreaseObjectiveTutorial(2);
+                    QuestController.Instance.getChildNumberNextQuest(transform);
                 }
             }
         }
@@ -280,19 +276,19 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
         }
     }
 
-    void OnDrawGizmos()
-    {
-        if (spawnerMidPosition != null)
-        {
-            // Set the color for the gizmo
-            Handles.color = new Color(1, 1, 0, 0.3f); // Yellow color with some transparency
+    // void OnDrawGizmos()
+    // {
+    //     if (spawnerMidPosition != null)
+    //     {
+    //         // Set the color for the gizmo
+    //         Handles.color = new Color(1, 1, 0, 0.3f); // Yellow color with some transparency
 
-            // Draw a filled disc to represent the spawn area
-            Handles.DrawSolidDisc(spawnerMidPosition.position, Vector3.up, spawnRadius);
+    //         // Draw a filled disc to represent the spawn area
+    //         Handles.DrawSolidDisc(spawnerMidPosition.position, Vector3.up, spawnRadius);
 
-            // Optionally, you can also draw the wireframe for clearer visualization
-            Handles.color = Color.yellow;
-            Handles.DrawWireDisc(spawnerMidPosition.position, Vector3.up, spawnRadius);
-        }
-    }
+    //         // Optionally, you can also draw the wireframe for clearer visualization
+    //         Handles.color = Color.yellow;
+    //         Handles.DrawWireDisc(spawnerMidPosition.position, Vector3.up, spawnRadius);
+    //     }
+    // }
 }

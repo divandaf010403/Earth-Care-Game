@@ -22,7 +22,7 @@ public class PlayerData
         rotation[1] = mainChar.transform.rotation.eulerAngles.y;
         rotation[2] = mainChar.transform.rotation.eulerAngles.z;
 
-        playerCoin = mainChar.playerCoin;
+        playerCoin = GameVariable.playerCoin;
 
         questNumber = GameVariable.questNumber;
     }

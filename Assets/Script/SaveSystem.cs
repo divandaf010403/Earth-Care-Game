@@ -53,7 +53,7 @@ public static class SaveSystem
             data.rotation[1] = mainChar.transform.rotation.eulerAngles.y;
             data.rotation[2] = mainChar.transform.rotation.eulerAngles.z;
 
-            data.playerCoin = mainChar.playerCoin;
+            data.playerCoin =GameVariable.playerCoin;
             data.questNumber = GameVariable.questNumber;
         }
 
@@ -86,10 +86,10 @@ public static class SaveSystem
         File.WriteAllText(playerDataPath, json);
     }
 
-    public static void UpdatePlayerCoin(MainCharMovement mainChar)
+    public static void UpdatePlayerCoin()
     {
-        PlayerData data = LoadPlayerData() ?? new PlayerData(mainChar);
-        data.playerCoin = mainChar.playerCoin;
+        PlayerData data = LoadPlayerData() ?? new PlayerData(MainCharMovement.Instance);
+        data.playerCoin = GameVariable.playerCoin;
 
         string json = JsonUtility.ToJson(data);
         File.WriteAllText(playerDataPath, json);

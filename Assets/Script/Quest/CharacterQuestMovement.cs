@@ -30,6 +30,7 @@ public class CharacterQuestMovement : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
+        Application.targetFrameRate = 60;
     }
 
     // Update is called once per frame

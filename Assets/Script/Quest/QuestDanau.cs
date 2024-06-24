@@ -14,6 +14,7 @@ public class NewBehaviourScript : MonoBehaviour, IQuestHandler
     public List<GameObject> colliderQuest;
     public List<Sprite> imageTutorialList;
     public string[] requirementItem;
+    public bool isFinishedYet;
     
     // Interface
     public Camera QuestCamera => questCamera;
@@ -35,6 +36,9 @@ public class NewBehaviourScript : MonoBehaviour, IQuestHandler
     public Interactions interactions;
     [SerializeField] GameObject[] hiddenObjUi;
     [SerializeField] GameObject showUI;
+
+    [Header("Next Action")]
+    [SerializeField] Transform nextTranformToActive;
 
     // Start is called before the first frame update
     void Start()

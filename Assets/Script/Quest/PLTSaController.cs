@@ -7,7 +7,8 @@ public class PLTSaController : MonoBehaviour
     [SerializeField] PLTSaQuest requiredOrganik;
     [SerializeField] PLTSaQuest requiredAnorganik;
 
-    // [Header("Next Action")]
+    [Header("Next Action")]
+    [SerializeField] Transform nextTranformToActive;
     // [SerializeField] private GameObject questToActive;
     // [SerializeField] private GameObject questToNonActive;
 
@@ -25,7 +26,7 @@ public class PLTSaController : MonoBehaviour
         //     questToActive.SetActive(true);
         //     questToNonActive.SetActive(false);
 
-            QuestController.Instance.IncreaseObjectiveTutorial(5);
+            QuestController.Instance.getChildNumberNextQuest(nextTranformToActive);
         }
     }
 }

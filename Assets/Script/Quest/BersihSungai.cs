@@ -17,6 +17,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     private Coroutine spawnCoroutine;
     public List<Sprite> imageTutorialList;
     public string[] requirementItem;
+    public bool isFinishedYet;
 
     private float spawnIntervalMin = 0.5f;
     private float spawnIntervalMax = 2f;
@@ -50,10 +51,6 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
     [SerializeField] TextMeshProUGUI scoreTxt;
     [SerializeField] TextMeshProUGUI scoreResult;
     public Transform finishPanel;
-
-    // [Header("Next Action")]
-    // [SerializeField] private GameObject questToActive;
-    // [SerializeField] private GameObject questToNonActive;
 
     void Awake()
     {
@@ -110,7 +107,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
                             // questToActive.SetActive(true);
                             // questToNonActive.SetActive(false);
 
-                            QuestController.Instance.IncreaseObjectiveTutorial(8);
+                            QuestController.Instance.getChildNumberNextQuest(transform);
                         }
                     }, null));
                 }

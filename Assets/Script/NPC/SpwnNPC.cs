@@ -24,13 +24,12 @@ public class SpwnNPC : MonoBehaviour
     IEnumerator Spawn()
     {
         int count = 0;
-        while (count < NPC_toSpawn)
+        while (count < NPC_toSpawn && NPC_Prefab.Length > 0)
         {
             int npcIndex = Random.Range(0, NPC_Prefab.Length);
-            GameObject obj = Instantiate(NPC_Prefab[npcIndex]);
+            GameObject obj = Instantiate(NPC_Prefab[npcIndex], NpcParent);
             Transform child = transform.GetChild(Random.Range(0, transform.childCount - 1));
             obj.GetComponent<WaypointNavigator>().currentWaypoint = child.GetComponent<Waypoint>();
-            obj.transform.SetParent(NpcParent); // Set the parent
             obj.transform.localPosition = new Vector3(child.localPosition.x, NpcParent.localPosition.y, child.localPosition.z);
 
             yield return new WaitForEndOfFrame();

@@ -260,3 +260,14 @@ public class InventoryExtItemDataList
 {
     public List<InventoryExtItemData> slotData;
 }
+
+[CreateAssetMenu(fileName = "NewInventoryExtItem", menuName = "Inventory/InventoryExtItem")]
+public class InventoryExtItemDataSO : ScriptableObject
+{
+    public int itemId;
+    public string itemName;
+    public Sprite itemImage;
+    public string typeSampah;
+    public string jenisSampah;
+    public int jumlahItem;
+}

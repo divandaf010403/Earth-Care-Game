@@ -45,9 +45,9 @@ public class ShopController : MonoBehaviour
         InventoryExt inventoryExt = inventoryExtTransform.GetComponent<InventoryExt>();
         MainCharMovement mainCharComponent = mainChar.GetComponent<MainCharMovement>();
 
-        Debug.Log("Uang Saya adalah : " + mainCharComponent.playerCoin + " dan saya akan membeli item dengan harga : " + item.priceItem);
+        Debug.Log("Uang Saya adalah : " + GameVariable.playerCoin + " dan saya akan membeli item dengan harga : " + item.priceItem);
         
-        if (mainCharComponent.playerCoin > item.priceItem)
+        if (GameVariable.playerCoin > item.priceItem)
         {
             bool itemExists = false;
 
@@ -75,7 +75,9 @@ public class ShopController : MonoBehaviour
 
             inventoryExt.IncrementAndSaveItemId();
 
-            mainCharComponent.playerCoin -= item.priceItem;
+            GameVariable.playerCoin -= item.priceItem;
+
+            SaveSystem.UpdatePlayerCoin();
 
             // mainCharComponent.SavePlayerData();
         }

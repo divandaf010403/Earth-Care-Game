@@ -109,6 +109,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1153317009128964280}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2e8a2565fc06c564f9453cfad5b16c27,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -3252028144274187711}
   m_SourcePrefab: {fileID: 100100000, guid: 2e8a2565fc06c564f9453cfad5b16c27, type: 3}
 --- !u!1 &2687668665173544586 stripped
 GameObject:
@@ -181,3 +185,16 @@ MonoBehaviour:
   jenisSampahNama: Tali
   typeSampahTxt: Collectible
   totalSampahTxt: 1
+--- !u!114 &-3252028144274187711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2687668665173544586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4a3a90df8729d648ac759c7aaf413b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemId: 

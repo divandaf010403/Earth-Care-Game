@@ -8,6 +8,7 @@ public class RequiredItem
 {
     public string itemName;
     public int quantity;
+    public int nextQuest = 8;
 
     public RequiredItem(string itemName, int quantity)
     {
@@ -16,10 +17,35 @@ public class RequiredItem
     }
 }
 
-public class QuestSaluranAir : MonoBehaviour
+public class QuestSaluranAir : MonoBehaviour, IQuestFinishHandler
 {
     [SerializeField] Button btnPerbaiki;
     [SerializeField] List<RequiredItem> requiredRepair;
+    public bool isFinished;
+    [SerializeField] GameObject saluranRusak;
+    [SerializeField] GameObject saluranPerbaikan;
+
+    [Header("Next Action")]
+    [SerializeField] Transform nextTranformToActive;
+
+    private void LateUpdate() 
+    {
+        if (isFinished) 
+        {
+            saluranRusak.SetActive(false);
+            saluranPerbaikan.SetActive(true);
+        }
+        else
+        {
+            saluranRusak.SetActive(true);
+            saluranPerbaikan.SetActive(false);
+        }
+    }
+
+    public bool IsQuestFinished
+    {
+        set{ isFinished = value; }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -68,7 +94,7 @@ public class QuestSaluranAir : MonoBehaviour
             {
                 // Add your repair logic here
                 StartCoroutine(GameController.Instance.HandleWithLoadingPanelTransition(() => {
-                    Debug.Log("All required items are found.");
+                    QuestController.Instance.getChildNumberNextQuest(nextTranformToActive);
                 }, null));
             }
             else
