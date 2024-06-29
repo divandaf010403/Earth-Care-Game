@@ -26,7 +26,7 @@ public class PLTSaController : MonoBehaviour
         //     questToActive.SetActive(true);
         //     questToNonActive.SetActive(false);
 
-            QuestController.Instance.getChildNumberNextQuest(nextTranformToActive);
+            QuestController.Instance.getChildNumberNextQuest(transform);
         }
     }
 }

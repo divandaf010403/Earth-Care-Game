@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Cinemachine;
 
 public class BersihSungai : MonoBehaviour, IQuestHandler
 {
@@ -170,12 +171,11 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
         MainCharMovement.Instance.controller.enabled = false;
         GameController.Instance.mainCharacterRiverQuest.transform.position = interactions.newPosition;
         GameController.Instance.mainCharacterRiverQuest.transform.rotation = Quaternion.Euler(interactions.newRotation);
-        GameController.Instance.camera2.transform.position = interactions.cameraSetPosition;
-        GameController.Instance.camera2.transform.rotation = Quaternion.Euler(interactions.cameraSetRotation);
+        GameController.Instance.activateCinemachineBrain(false);
+        Camera.main.transform.position = interactions.cameraSetPosition;
+        Camera.main.transform.rotation = Quaternion.Euler(interactions.cameraSetRotation);
         MainCharMovement.Instance.controller.enabled = true;
 
-        GameController.Instance.mainCamera.gameObject.SetActive(false);
-        GameController.Instance.camera2.gameObject.SetActive(true);
         GameVariable.isQuestStarting = true;
 
         GameController.Instance.mainUI.SetActive(false);
@@ -199,8 +199,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
         GameController.Instance.mainCharacter.gameObject.SetActive(true);
         GameController.Instance.mainCharacterRiverQuest.gameObject.SetActive(false);
 
-        GameController.Instance.mainCamera.gameObject.SetActive(true);
-        GameController.Instance.camera2.gameObject.SetActive(false);
+        GameController.Instance.activateCinemachineBrain(true);
 
         GameController.Instance.mainUI.SetActive(true);
         GameController.Instance.bersihSungaiUI.SetActive(false);
@@ -280,6 +279,13 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
         if (newObject.GetComponent<Rigidbody>() != null)
         {
             newObject.GetComponent<Rigidbody>().velocity = Vector3.right * moveSpeed;
+        }
+
+        // Hapus komponen TrashManager jika ada
+        TrashManager trashManager = newObject.GetComponent<TrashManager>();
+        if (trashManager != null)
+        {
+            Destroy(trashManager);
         }
     }
 

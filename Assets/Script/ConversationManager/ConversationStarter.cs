@@ -79,8 +79,6 @@ public class ConversationStarter : MonoBehaviour
         // Dapatkan referensi ke CinemachineFreeLook dari kamera utama
         CinemachineBrain cinemachineBrain = Camera.main.GetComponent<CinemachineBrain>();
 
-        Debug.Log(Camera.main.name);
-
         if (cinemachineBrain != null)
         {
             // Nonaktifkan CinemachineFreeLook jika diperlukan

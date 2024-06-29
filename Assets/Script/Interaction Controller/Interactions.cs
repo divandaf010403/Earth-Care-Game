@@ -102,11 +102,13 @@ public class Interactions : MonoBehaviour
         if (_numFound > 0)
         {
             TrashcanController trashcanController = _colliders[0].GetComponent<TrashcanController>();
+            TrashManager trashManager = _colliders[0].GetComponent<TrashManager>();
             PLTSaQuest q2 = _colliders[0].GetComponent<PLTSaQuest>();
             switch (_colliders[0].tag)
             {
                 case "Item":
                     removeItem();
+                    trashManager.TakeItem();
                     break;
                 case "ItemCraft":
                     CollectibleItem collectibleItem = _colliders[0].GetComponent<CollectibleItem>();
@@ -139,6 +141,7 @@ public class Interactions : MonoBehaviour
                     if (isRemovedQuest)
                     {
                         q2.requiredItem++;
+                        PlayerPrefs.SetInt(q2.tipePenampungan + " PLTSa", q2.requiredItem);
                         Debug.Log("Item was successfully removed.");
                     }
                     else
@@ -234,11 +237,19 @@ public class Interactions : MonoBehaviour
             mainChar.newDictionary["dialog"].gameObject.SetActive(true);
             Button dialogButton = mainChar.newDictionary["dialog"].GetComponent<Button>();
 
-            // Menghapus listener sebelumnya untuk menghindari penambahan listener ganda
-            dialogButton.onClick.RemoveAllListeners();
+            QuestGiveToy questGiveToy = other.transform.parent.GetComponent<QuestGiveToy>();
+            if (questGiveToy != null)
+            {
+                questGiveToy.DoQuestAndNext(dialogButton, other);
+            }
+            else
+            {
+                // Menghapus listener sebelumnya untuk menghindari penambahan listener ganda
+                dialogButton.onClick.RemoveAllListeners();
 
-            // Menambahkan listener baru yang akan memanggil startConversation saat tombol diklik
-            dialogButton.onClick.AddListener(() => ConversationStarter.Instance.StartConversation(other));
+                // Menambahkan listener baru yang akan memanggil startConversation saat tombol diklik
+                dialogButton.onClick.AddListener(() => ConversationStarter.Instance.StartConversation(other));
+            }
         }
     }
 

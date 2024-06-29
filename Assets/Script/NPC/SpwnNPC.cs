@@ -4,17 +4,33 @@ using UnityEngine;
 
 public class SpwnNPC : MonoBehaviour
 {
+    public static SpwnNPC Instance;
     public GameObject[] NPC_Prefab;
     public int NPC_toSpawn;
     public Transform NpcParent;
     public Transform spawnesPos;
     [SerializeField] GameObject[] spawnedObj;
 
+    private void Awake() 
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(Spawn());
         StartCoroutine(SpawnTrashRoutine());
+
+        // Load previously spawned items
+        LoadSpawnedItems();
     }
 
     void Update() {
@@ -50,10 +66,78 @@ public class SpwnNPC : MonoBehaviour
             {
                 int randomIndexNPC = Random.Range(0, NpcParent.childCount - 1);
                 int randomIndexTrash = Random.Range(0, spawnedObj.Length);
+
+                // Get the sibling index for the spawned item
+                int siblingIndex = spawnesPos.childCount;
                 
                 ThrowTrash throwTrash = NpcParent.GetChild(randomIndexNPC).GetComponent<ThrowTrash>();
-                throwTrash.ThrowTrashTimer(spawnedObj[randomIndexTrash], spawnesPos);
+                throwTrash.ThrowTrashTimer(spawnedObj[randomIndexTrash], spawnesPos, siblingIndex);
             }
         }
+    }
+
+    public void SaveSpawnedItem(GameObject spawnedObject, Transform parent, int siblingIndex)
+    {
+        string itemId = "Item_" + " " + parent.name + " " + siblingIndex.ToString();
+        Vector3 position = spawnedObject.transform.position;
+
+        TrashManager trashManager = spawnedObject.GetComponent<TrashManager>();
+        if (trashManager != null && !string.IsNullOrEmpty(trashManager.prefabPath))
+        {
+            string prefabPath = trashManager.prefabPath;
+
+            TrashItemData itemData = new TrashItemData(itemId, prefabPath, position);
+            PlayerPrefs.SetString(itemId, JsonUtility.ToJson(itemData));
+
+            string existingItems = PlayerPrefs.GetString("spawnedItems", "");
+            PlayerPrefs.SetString("spawnedItems", existingItems + itemId + ";");
+
+            trashManager.itemId = itemId;
+        }
+    }
+
+    private void LoadSpawnedItems()
+    {
+        string[] itemIds = PlayerPrefs.GetString("spawnedItems", "").Split(';');
+        foreach (string itemId in itemIds)
+        {
+            if (!string.IsNullOrEmpty(itemId))
+            {
+                string itemDataJson = PlayerPrefs.GetString(itemId);
+                TrashItemData itemData = JsonUtility.FromJson<TrashItemData>(itemDataJson);
+                SpawnItem(itemData);
+            }
+        }
+    }
+
+    private void SpawnItem(TrashItemData itemData)
+    {
+        GameObject itemPrefab = Resources.Load<GameObject>(itemData.prefabPath);
+        if (itemPrefab != null)
+        {
+            GameObject newItem = Instantiate(itemPrefab, itemData.position, Quaternion.identity, spawnesPos);
+            TrashManager trashManager = newItem.GetComponent<TrashManager>();
+            if (trashManager != null)
+            {
+                trashManager.itemId = itemData.itemId;
+                trashManager.prefabPath = itemData.prefabPath;
+                trashManager.CheckItemStatus();
+            }
+        }
+    }
+}
+
+[System.Serializable]
+public class TrashItemData
+{
+    public string itemId;
+    public string prefabPath;
+    public Vector3 position;
+
+    public TrashItemData(string itemId, string prefabPath, Vector3 position)
+    {
+        this.itemId = itemId;
+        this.prefabPath = prefabPath;
+        this.position = position;
     }
 }

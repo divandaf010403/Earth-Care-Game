@@ -9,6 +9,9 @@ public class CollectibleItem : MonoBehaviour
 
     void Start()
     {
+        // Mengatur itemId berdasarkan urutan anak dengan prefiks
+        itemId = "CollectibleItem_" + transform.GetSiblingIndex().ToString();
+
         // Cek apakah item ini sudah diambil sebelumnya
         if (PlayerPrefs.GetInt(itemId, 0) == 1)
         {

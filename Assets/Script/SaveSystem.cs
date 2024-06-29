@@ -36,6 +36,13 @@ public static class SaveSystem
 
     public static void SavePlayerData(MainCharMovement mainChar)
     {
+        string directoryPath = Path.GetDirectoryName(playerDataPath);
+
+        if (!Directory.Exists(directoryPath))
+        {
+            Directory.CreateDirectory(directoryPath);
+        }
+
         PlayerData data = LoadPlayerData();
         if (data == null)
         {
@@ -53,7 +60,7 @@ public static class SaveSystem
             data.rotation[1] = mainChar.transform.rotation.eulerAngles.y;
             data.rotation[2] = mainChar.transform.rotation.eulerAngles.z;
 
-            data.playerCoin =GameVariable.playerCoin;
+            data.playerCoin = GameVariable.playerCoin;
             data.questNumber = GameVariable.questNumber;
         }
 
@@ -187,7 +194,7 @@ public static class SaveSystem
         }
         else
         {
-            Debug.LogError("Shop data not found at path: " + inventoryPath);
+            Debug.LogError("Inventory Ext data not found at path: " + inventoryPath);
             return null;
         }
     }

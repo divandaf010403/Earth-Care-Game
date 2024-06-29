@@ -13,7 +13,7 @@ public class PLTSaQuest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        requiredItem = PlayerPrefs.GetInt(tipePenampungan + " PLTSa", 0);
     }
 
     // Update is called once per frame

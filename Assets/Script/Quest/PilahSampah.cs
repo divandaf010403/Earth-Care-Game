@@ -75,16 +75,10 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
         mainController.controller.enabled = false;
         gc.mainCharacter.transform.position = interactions.newPosition;
         gc.mainCharacter.transform.rotation = Quaternion.Euler(interactions.newRotation);
-        gc.camera2.transform.position = interactions.cameraSetPosition;
-        gc.camera2.transform.rotation = Quaternion.Euler(interactions.cameraSetRotation);
+        gc.activateCinemachineBrain(false);
+        Camera.main.transform.position = interactions.cameraSetPosition;
+        Camera.main.transform.rotation = Quaternion.Euler(interactions.cameraSetRotation);
         mainController.controller.enabled = true;
-
-        // Switch cameras
-        gc.mainCamera.gameObject.SetActive(false);
-        gc.camera2.gameObject.SetActive(true);
-
-        // Update main controller's camera reference
-        mainController.playerCamera = gc.camera2;
 
         // Set game variables
         GameVariable.isQuestStarting = true;
@@ -115,16 +109,12 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
         GameController.Instance.mainCharacter.transform.localRotation = Quaternion.Euler(interactions.oldRotation);
         MainCharMovement.Instance.controller.enabled = true;
 
-        // Switch cameras back
-        GameController.Instance.mainCamera.gameObject.SetActive(true);
-        GameController.Instance.camera2.gameObject.SetActive(false);
-
         // Now reset oldPosition and oldRotation
         interactions.oldPosition = Vector3.zero;
         interactions.oldRotation = Vector3.zero;
 
-        // Update main controller's camera reference
-        mainController.playerCamera = gc.mainCamera;
+        // Aktifkan Cinemachine Brain
+        gc.activateCinemachineBrain(true);
 
         // Update UI
         GameController.Instance.mainUI.SetActive(true);

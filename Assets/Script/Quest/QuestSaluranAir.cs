@@ -8,7 +8,6 @@ public class RequiredItem
 {
     public string itemName;
     public int quantity;
-    public int nextQuest = 8;
 
     public RequiredItem(string itemName, int quantity)
     {
@@ -24,9 +23,6 @@ public class QuestSaluranAir : MonoBehaviour, IQuestFinishHandler
     public bool isFinished;
     [SerializeField] GameObject saluranRusak;
     [SerializeField] GameObject saluranPerbaikan;
-
-    [Header("Next Action")]
-    [SerializeField] Transform nextTranformToActive;
 
     private void LateUpdate() 
     {
@@ -68,12 +64,10 @@ public class QuestSaluranAir : MonoBehaviour, IQuestFinishHandler
         {
             bool allItemsFound = true;
 
-            // Iterate through each required item and its quantity
             foreach (RequiredItem requiredItem in requiredRepair)
             {
                 int totalCount = 0;
 
-                // Check if the current required item exists in the inventory and accumulate its quantity
                 foreach (InventoryExtItemData itemData in InventoryExt.Instance.inventoryExtItemDataList.slotData)
                 {
                     if (itemData.jenisSampah == requiredItem.itemName)
@@ -82,19 +76,20 @@ public class QuestSaluranAir : MonoBehaviour, IQuestFinishHandler
                     }
                 }
 
-                // If the total quantity of the required item is less than needed, set allItemsFound to false
                 if (totalCount < requiredItem.quantity)
                 {
                     allItemsFound = false;
-                    break; // Exit the loop early since we already know not all items are found
+                    break;
                 }
             }
 
             if (allItemsFound)
             {
-                // Add your repair logic here
-                StartCoroutine(GameController.Instance.HandleWithLoadingPanelTransition(() => {
-                    QuestController.Instance.getChildNumberNextQuest(nextTranformToActive);
+                // Panggil coroutine dari CoroutineManager
+                CoroutineManager.Instance.StartCoroutine(GameController.Instance.HandleWithLoadingPanelTransition(() =>
+                {
+                    QuestController.Instance.getChildNumberNextQuest(transform);
+                    Debug.Log("getChildNumberNextQuest completed");
                 }, null));
             }
             else
@@ -104,7 +99,6 @@ public class QuestSaluranAir : MonoBehaviour, IQuestFinishHandler
         }
         else
         {
-            // Logic for when there are no required items
             Debug.Log("No required items specified.");
         }
     }

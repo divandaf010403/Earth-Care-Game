@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,8 +11,8 @@ public class GameController : MonoBehaviour
     public static GameController Instance;
     public Transform mainCharacter;
     public Transform mainCharacterRiverQuest;
-    public Transform mainCamera;
-    public Transform camera2;
+    // public Transform mainCamera;
+    // public Transform camera2;
 
     [Header("Loading")]
     public Image loadingPanel;
@@ -43,6 +44,7 @@ public class GameController : MonoBehaviour
         public Button btnStartQuest;
     }
     [SerializeField] public PanelBeforeStartQuest beforeQuest;
+    [SerializeField] GameObject WaypointGameObject;
     
     [Header("Ketika Quest Selesai")]
     public Transform finishPanel;
@@ -62,6 +64,8 @@ public class GameController : MonoBehaviour
         loadingPanel.gameObject.SetActive(false);
 
         // LoadPlayer();
+
+        Application.targetFrameRate = 60;
     }
 
     private void Start() {
@@ -83,12 +87,16 @@ public class GameController : MonoBehaviour
     private void Update() 
     {
         btnQuitQuest.gameObject.SetActive(GameVariable.isQuestStarting ? true : false);
+
+        if (GameVariable.isQuestStarting == true || Camera.main.transform.GetComponent<CinemachineBrain>().enabled == false) WaypointGameObject.SetActive(false);
+        else WaypointGameObject.SetActive(true);
     }
 
     // Save System
     public void SavePlayerData()
     {
         PlayerData data = SaveSystem.LoadPlayerData();
+        Debug.Log(data);
         if (data == null || string.IsNullOrWhiteSpace(JsonUtility.ToJson(data)) || JsonUtility.ToJson(data) == "{}")
         {
             SaveSystem.SavePlayerData(MainCharMovement.Instance);
@@ -115,6 +123,9 @@ public class GameController : MonoBehaviour
     public void LoadPlayer()
     {
         PlayerData data = SaveSystem.LoadPlayerData();
+
+        Debug.Log("Data Load Player : " + data);
+
         if (data != null)
         {
             MainCharMovement.Instance.transform.position = new Vector3(data.position[0], data.position[1], data.position[2]);
@@ -129,6 +140,16 @@ public class GameController : MonoBehaviour
         {
             Debug.LogWarning("No saved data found. Initializing to default values.");
             // Initialize default values if needed
+
+            GameVariable.playerCoin = 0;
+
+            GameVariable.questNumber = 0;
+            QuestController.Instance._questNumberActive = 0;
+            QuestController.Instance.ActivateQuest();
+
+            SavePlayerData();
+
+            Debug.Log("Menyimpan Data Player Awal");
         }
     }
 
@@ -237,12 +258,17 @@ public class GameController : MonoBehaviour
     {
         yield return StartCoroutine(FadeInLoadingPanel());
 
+        Debug.Log("Starting main operation");
         mainOperation?.Invoke();
 
+        Debug.Log("Starting 0.5 Wait");
         yield return new WaitForSeconds(0.5f);
+        Debug.Log("End 0.5 Wait");
 
+        Debug.Log("Starting FadeOutLoadingPanel");
         yield return StartCoroutine(FadeOutLoadingPanel());
 
+        Debug.Log("Starting second operation");
         secondOperation?.Invoke();
     }
 
@@ -323,6 +349,11 @@ public class GameController : MonoBehaviour
         {
             Debug.LogError("Invalid shop or ShopScrollView reference.");
         }
+    }
+
+    public bool activateCinemachineBrain(bool isActive)
+    {
+        return Camera.main.GetComponent<CinemachineBrain>().enabled = isActive;
     }
 
     // public void ShowEndedDemoPanel()
