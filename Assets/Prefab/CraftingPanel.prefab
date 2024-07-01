@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 19, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: 9, y: 0}
+  m_SizeDelta: {x: 79.2979, y: 79.2979}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8354083314260781446
 CanvasRenderer:
@@ -372,47 +372,77 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   recipes:
-  - imageItemCraft: {fileID: 21300000, guid: 837db837a9e3ca4418c2672c1f3f17fd, type: 3}
+  - imageItemCraft: {fileID: 21300000, guid: e3cc75dd8de820c46aa7a90efa26c4f2, type: 3}
     output:
       itemId: 0
       itemName: Jaring
-      itemImage: {fileID: 21300000, guid: 3ef89a45a3b4f6642b8872b5a93ea81c, type: 3}
+      itemImage: {fileID: 21300000, guid: e3cc75dd8de820c46aa7a90efa26c4f2, type: 3}
       typeSampah: Collectible
       jenisSampah: Jaring
       jumlahItem: 1
     isHaveItem: 0
     requiredIngredients:
-    - imageIngredient: {fileID: 21300000, guid: 73eae19f6321aea48a43436edf1531df,
+    - imageIngredient: {fileID: 21300000, guid: b219a9ca4b4e9914aae52b02dc1cdf1a,
         type: 3}
       itemName: Kayu
-      requiredQuantity: 2
-    - imageIngredient: {fileID: 21300000, guid: 9623b0b33a2fee34f846c5e6cbab41b1,
+      requiredQuantity: 1
+    - imageIngredient: {fileID: 21300000, guid: 762e61b2fd59ada4f92c939708434ccd,
         type: 3}
       itemName: Paralon
-      requiredQuantity: 2
-  - imageItemCraft: {fileID: 21300000, guid: 21f60cb4787c3fa4ba81399e1d965d36, type: 3}
+      requiredQuantity: 1
+    - imageIngredient: {fileID: 21300000, guid: 651bb24f5c7981c4298b91b45299f642,
+        type: 3}
+      itemName: Tali
+      requiredQuantity: 1
+  - imageItemCraft: {fileID: 21300000, guid: 7cbe2b5d883135340a7db98efce0480c, type: 3}
     output:
       itemId: 0
-      itemName: Jaring
-      itemImage: {fileID: 21300000, guid: 3ef89a45a3b4f6642b8872b5a93ea81c, type: 3}
+      itemName: Kapal
+      itemImage: {fileID: 21300000, guid: 7cbe2b5d883135340a7db98efce0480c, type: 3}
       typeSampah: Collectible
-      jenisSampah: Jaring
+      jenisSampah: Kapal
       jumlahItem: 1
     isHaveItem: 0
     requiredIngredients:
-    - imageIngredient: {fileID: 21300000, guid: f23eb63ff073bd94d88ee7d84ce24ed4,
+    - imageIngredient: {fileID: 21300000, guid: b219a9ca4b4e9914aae52b02dc1cdf1a,
         type: 3}
       itemName: Kayu
       requiredQuantity: 2
-    - imageIngredient: {fileID: 21300000, guid: 071bbc2666273614485f48e80de2de42,
+    - imageIngredient: {fileID: 21300000, guid: 762e61b2fd59ada4f92c939708434ccd,
         type: 3}
       itemName: Paralon
       requiredQuantity: 2
+    - imageIngredient: {fileID: 21300000, guid: 651bb24f5c7981c4298b91b45299f642,
+        type: 3}
+      itemName: Tali
+      requiredQuantity: 2
+  - imageItemCraft: {fileID: 21300000, guid: c6a5c6a1f88bc304ab6ef44e6cd900f8, type: 3}
+    output:
+      itemId: 0
+      itemName: Robot
+      itemImage: {fileID: 21300000, guid: c6a5c6a1f88bc304ab6ef44e6cd900f8, type: 3}
+      typeSampah: Collectible
+      jenisSampah: Robot
+      jumlahItem: 1
+    isHaveItem: 0
+    requiredIngredients:
+    - imageIngredient: {fileID: 21300000, guid: b219a9ca4b4e9914aae52b02dc1cdf1a,
+        type: 3}
+      itemName: Kayu
+      requiredQuantity: 3
+    - imageIngredient: {fileID: 21300000, guid: 762e61b2fd59ada4f92c939708434ccd,
+        type: 3}
+      itemName: Paralon
+      requiredQuantity: 3
+    - imageIngredient: {fileID: 21300000, guid: 651bb24f5c7981c4298b91b45299f642,
+        type: 3}
+      itemName: Tali
+      requiredQuantity: 3
   btnRecipe: {fileID: 1922816087522381362}
   btnTemplate: {fileID: 7089609622380921058, guid: af51da4e2dedd2f418082231a7da71bf,
     type: 3}
   imgIngredient: {fileID: 7938755863326683534}
-  imgIngredientTemplate: {fileID: 776822633267363661, guid: 879b8b4e57627244e9c695570088939d,
+  imgIngredientTemplate: {fileID: 776822633267363661, guid: d7eaf84245935614095c104eaa6cf537,
     type: 3}
   itemSelected: []
   defaultSelectedItemIndex: -1

@@ -25,6 +25,12 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1;
     }
 
+    public void ResetDataPlayer()
+    {
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
+    }
+
     public void MainMenu(int sceneIndex)
     {
         StartCoroutine(ChangeScene_Numerator(sceneIndex));

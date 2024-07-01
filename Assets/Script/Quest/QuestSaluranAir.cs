@@ -21,22 +21,6 @@ public class QuestSaluranAir : MonoBehaviour, IQuestFinishHandler
     [SerializeField] Button btnPerbaiki;
     [SerializeField] List<RequiredItem> requiredRepair;
     public bool isFinished;
-    [SerializeField] GameObject saluranRusak;
-    [SerializeField] GameObject saluranPerbaikan;
-
-    private void LateUpdate() 
-    {
-        if (isFinished) 
-        {
-            saluranRusak.SetActive(false);
-            saluranPerbaikan.SetActive(true);
-        }
-        else
-        {
-            saluranRusak.SetActive(true);
-            saluranPerbaikan.SetActive(false);
-        }
-    }
 
     public bool IsQuestFinished
     {

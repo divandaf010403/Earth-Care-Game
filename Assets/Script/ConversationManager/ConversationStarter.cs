@@ -34,8 +34,11 @@ public class ConversationStarter : MonoBehaviour
             bool bVal = ConversationManager.Instance.GetBool("NpcAnim");
             Animator isTalkingAnim = talkingPerson.GetComponent<Animator>();
 
-            if (bVal){isTalkingAnim.SetBool("isTalk", true);}
-            else {isTalkingAnim.SetBool("isTalk", false);}
+            if (isTalkingAnim)
+            {
+                if (bVal){isTalkingAnim.SetBool("isTalk", true);}
+                else {isTalkingAnim.SetBool("isTalk", false);}
+            }
         }
     }
 

@@ -56,7 +56,10 @@ public class QuestController : MonoBehaviour
         Transform onQuestActiveTransform = transform.GetChild(_questNumberActive);
         onQuestActiveTransform.gameObject.SetActive(true);
         QuestObjectiveText objectiveText = onQuestActiveTransform.GetComponent<QuestObjectiveText>();
-        questObjectiveText.text = objectiveText.objectiveText;
+        if (objectiveText != null)
+        {
+            questObjectiveText.text = objectiveText.objectiveText;
+        }
 
 
         for(int q = 0; q < onQuestActiveTransform.childCount; q++)

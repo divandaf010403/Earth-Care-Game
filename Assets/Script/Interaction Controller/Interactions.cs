@@ -238,18 +238,27 @@ public class Interactions : MonoBehaviour
             Button dialogButton = mainChar.newDictionary["dialog"].GetComponent<Button>();
 
             QuestGiveToy questGiveToy = other.transform.parent.GetComponent<QuestGiveToy>();
-            if (questGiveToy != null)
-            {
-                questGiveToy.DoQuestAndNext(dialogButton, other);
-            }
-            else
-            {
-                // Menghapus listener sebelumnya untuk menghindari penambahan listener ganda
-                dialogButton.onClick.RemoveAllListeners();
 
-                // Menambahkan listener baru yang akan memanggil startConversation saat tombol diklik
-                dialogButton.onClick.AddListener(() => ConversationStarter.Instance.StartConversation(other));
-            }
+            // Menghapus listener sebelumnya untuk menghindari penambahan listener ganda
+            dialogButton.onClick.RemoveAllListeners();
+
+            // Menambahkan listener baru yang akan memanggil startConversation saat tombol diklik
+            dialogButton.onClick.AddListener(() => {
+                if (questGiveToy != null)
+                {
+                    CoroutineManager.Instance.StartCoroutine(questGiveToy.DoQuestAndNext(() => ConversationStarter.Instance.StartConversation(other)));
+                    Debug.Log("Mulai Dialog adalah quest");
+                }
+                else
+                {
+                    ConversationStarter.Instance.StartConversation(other);
+                    Debug.Log("Mulai Dialog Bukan Quest");
+                }
+            });
+
+            // dialogButton.onClick.AddListener(() => {
+            //     ConversationStarter.Instance.StartConversation(other);
+            // });
         }
     }
 

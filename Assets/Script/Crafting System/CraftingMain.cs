@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,9 @@ public class CraftingMain : MonoBehaviour
     [Header("Get Saved ID")]
     public int myItemIdExt;
     public string ID_KEY = "ID_KEY_EXt";
+
+    [Header("Main Ext Inventory Panel")]
+    public Transform inventoryExtMain;
 
     // Start is called before the first frame update
     void Start()
@@ -85,8 +89,12 @@ public class CraftingMain : MonoBehaviour
         {
             GameObject ingredientImage = Instantiate(imgIngredientTemplate, imgIngredient);
             ingredientImage.transform.SetParent(imgIngredient, false);
+
             Image imageComponent = ingredientImage.transform.GetChild(0).GetComponent<Image>();
             imageComponent.sprite = ingredient.imageIngredient;
+
+            TextMeshProUGUI qty = ingredientImage.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+            qty.text = ingredient.requiredQuantity.ToString();
         }
     }
 
@@ -140,6 +148,8 @@ public class CraftingMain : MonoBehaviour
                 {
                     Debug.Log("Ingredient not found or not enough quantity: " + ingredient.itemName);
                     allIngredientsAvailable = false;
+
+                    MainCharMovement.Instance.showNotification("Bahan Kurang");
                     break;
                 }
                 else
@@ -154,15 +164,30 @@ public class CraftingMain : MonoBehaviour
                 // Decrease the quantity of used items from the inventory
                 foreach (RequiredIngredients ingredient in recipeToCraft.requiredIngredients)
                 {
-                    foreach (InventoryExtItemData existingItem in inventoryExtData.inventoryExtItemDataList.slotData)
+                    // Iterate through each item in the inventory
+                    for (int i = inventoryExtData.inventoryExtItemDataList.slotData.Count - 1; i >= 0; i--)
                     {
-                        if (existingItem.itemName == ingredient.itemName)
+                        InventoryExtItemData existingItem = inventoryExtData.inventoryExtItemDataList.slotData[i];
+                        
+                        // Check if the item name matches
+                        if (existingItem.jenisSampah == ingredient.itemName)
                         {
                             existingItem.jumlahItem -= ingredient.requiredQuantity;
-                            Debug.Log("Decreased quantity of: " + ingredient.itemName + " by " + ingredient.requiredQuantity);
-                            break;
+
+                            // Check if jumlahItem is zero after subtraction
+                            if (existingItem.jumlahItem <= 0)
+                            {
+                                // Remove the item from the list
+                                inventoryExtData.inventoryExtItemDataList.slotData.RemoveAt(i);
+                            }
                         }
                     }
+                }
+
+                for(int j = 0; j < inventoryExtMain.childCount; j++)
+                {
+                    inventoryExtMain.GetChild(j).GetChild(0).GetComponent<Image>().enabled = false;
+                    inventoryExtMain.GetChild(j).GetChild(1).GetComponent<TextMeshProUGUI>().enabled = false;
                 }
 
                 InventoryExtItemData inventoryExtItemData = new InventoryExtItemData(myItemIdExt, recipeToCraft.output.itemName, recipeToCraft.output.itemImage, recipeToCraft.output.typeSampah, recipeToCraft.output.jenisSampah, recipeToCraft.output.jumlahItem);
@@ -171,6 +196,7 @@ public class CraftingMain : MonoBehaviour
             else
             {
                 Debug.Log("Not enough ingredients to craft the item!");
+                MainCharMovement.Instance.showNotification("Bahan Kurang");
             }
         }
 

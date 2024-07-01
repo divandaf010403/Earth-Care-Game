@@ -1,12 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class QuestGiveToy : MonoBehaviour
 {
     [SerializeField] List<string> toyRequire;
+    public Transform inventoryExtMain;
+    [SerializeField] GameObject hideCanvas;
 
     // Start is called before the first frame update
     void Start()
@@ -20,7 +23,7 @@ public class QuestGiveToy : MonoBehaviour
         
     }
 
-    public void DoQuestAndNext(Button dialogButton, Collider other)
+    public IEnumerator DoQuestAndNext(System.Action startConversation)
     {
         if (toyRequire != null && toyRequire.Count > 0)
         {
@@ -49,18 +52,36 @@ public class QuestGiveToy : MonoBehaviour
 
             if (allItemsFound)
             {
-                // Add your repair logic here
-                StartCoroutine(GameController.Instance.HandleWithLoadingPanelTransition(() => {
-                    // Menghapus listener sebelumnya untuk menghindari penambahan listener ganda
-                    dialogButton.onClick.RemoveAllListeners();
+                foreach (string requiredToy in toyRequire)
+                {
+                    // Iterate through each item in the inventory
+                    for (int i = InventoryExt.Instance.inventoryExtItemDataList.slotData.Count - 1; i >= 0; i--)
+                    {
+                        InventoryExtItemData existingItem = InventoryExt.Instance.inventoryExtItemDataList.slotData[i];
+                        
+                        // Check if the item name matches
+                        if (existingItem.jenisSampah == requiredToy)
+                        {
+                            InventoryExt.Instance.inventoryExtItemDataList.slotData.RemoveAt(i);
+                        }
+                    }
+                }
 
-                    // Menambahkan listener baru yang akan memanggil startConversation saat tombol diklik
-                    dialogButton.onClick.AddListener(() => ConversationStarter.Instance.StartConversation(other));
-                }, null));
+                for(int j = 0; j < inventoryExtMain.childCount; j++)
+                {
+                    inventoryExtMain.GetChild(j).GetChild(0).GetComponent<Image>().enabled = false;
+                    inventoryExtMain.GetChild(j).GetChild(1).GetComponent<TextMeshProUGUI>().enabled = false;
+                }
+
+                // Hide Canvas
+                hideCanvas.SetActive(false);
+
+                // Add your repair logic here
+                startConversation?.Invoke();
             }
             else
             {
-                MainCharMovement.Instance.showNotification("Item Yang Diperlukan Kurang");
+                MainCharMovement.Instance.showNotification("Item Yang Diperlukan Kurang Woyyy");
             }
         }
         else
@@ -68,5 +89,7 @@ public class QuestGiveToy : MonoBehaviour
             // Logic for when there are no required items
             Debug.Log("No required items specified.");
         }
+
+        yield return null;
     }
 }

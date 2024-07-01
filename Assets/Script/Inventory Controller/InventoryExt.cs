@@ -142,6 +142,7 @@ public class InventoryExt : MonoBehaviour
                 
                 image.sprite = itemData.itemImage;
 
+                totalItem.enabled = true;                
                 totalItem.text = inventoryVariable.totalSampah.ToString();
                 childIndex++;
             }

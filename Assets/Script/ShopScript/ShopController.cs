@@ -43,11 +43,10 @@ public class ShopController : MonoBehaviour
     void PurchaseItem(ShopItem item)
     {
         InventoryExt inventoryExt = inventoryExtTransform.GetComponent<InventoryExt>();
-        MainCharMovement mainCharComponent = mainChar.GetComponent<MainCharMovement>();
 
         Debug.Log("Uang Saya adalah : " + GameVariable.playerCoin + " dan saya akan membeli item dengan harga : " + item.priceItem);
         
-        if (GameVariable.playerCoin > item.priceItem)
+        if (GameVariable.playerCoin >= item.priceItem)
         {
             bool itemExists = false;
 
