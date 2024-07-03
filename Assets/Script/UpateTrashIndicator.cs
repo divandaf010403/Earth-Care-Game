@@ -8,6 +8,7 @@ public class UpateTrashIndicator : MonoBehaviour
     [SerializeField] Transform trashParent;
     Slider slider;
     [SerializeField] int trashCount = 0;
+    [SerializeField] int MaxTrash = 50;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,10 +30,10 @@ public class UpateTrashIndicator : MonoBehaviour
         if (trashCount != activeChildCount)
         {
             trashCount = activeChildCount;
-            slider.value = (float)trashCount / 20 * 100;
+            slider.value = (float)trashCount / MaxTrash * 100;
 
             Debug.Log(slider.value);
-            Debug.Log((float)trashCount / 20 * 100);
+            Debug.Log((float)trashCount / MaxTrash * 100);
         }
     }
 }
