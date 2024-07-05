@@ -13,7 +13,6 @@ public class QuestController : MonoBehaviour
 
     private void Awake() 
     {
-        // Pastikan hanya ada satu instance QuestManager yang ada
         if (Instance == null)
         {
             Instance = this;

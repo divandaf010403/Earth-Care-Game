@@ -16,5 +16,8 @@ public class ThrowTrash : MonoBehaviour
 
         // Save spawned item data
         SpwnNPC.Instance.SaveSpawnedItem(spawnedObject, trashParent, siblingIndex);
+
+        // Activate TrashManager
+        spawnedObject.transform.GetComponent<TrashManager>().enabled = true;
     }
 }

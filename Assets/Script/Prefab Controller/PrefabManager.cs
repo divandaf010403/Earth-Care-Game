@@ -8,8 +8,8 @@ public class PrefabManager : MonoBehaviour
     public GameObject prefab; // Referensi ke prefab yang ingin diinstansiasi
     private GameObject prefabInstance;
     public PrefabStatus prefabStatus = new PrefabStatus();
-    private Dictionary<string, GameObject> objectMap = new Dictionary<string, GameObject>();
-    private int destroyedCount = 0;
+    private Dictionary<string, GameObject> objectMap = new Dictionary<string, GameObject>(); // Gunakan itemId sebagai kunci
+    [SerializeField] int inactiveCount = 0;
     private const int updateThreshold = 10;
 
     void Awake()
@@ -17,17 +17,22 @@ public class PrefabManager : MonoBehaviour
         // Instansiasi prefab
         prefabInstance = Instantiate(prefab, transform);
 
-        for (int i = 0; i < prefabInstance.transform.childCount; i++)
-        {
-            prefabInstance.transform.GetChild(i).gameObject.layer = 6;
-        }
-
-        // Populate objectMap with all child objects
+        // Populate objectMap with all child objects and set their layer to Default (layer 0)
         foreach (Transform child in prefabInstance.GetComponentsInChildren<Transform>(true))
         {
             if (child != prefabInstance.transform) // Exclude the parent object itself
             {
-                objectMap[child.gameObject.name] = child.gameObject;
+                TrashManager trashManager = child.GetComponent<TrashManager>();
+                if (trashManager != null)
+                {
+                    string itemId = trashManager.itemId;
+                    objectMap[itemId] = child.gameObject;
+                    child.gameObject.layer = 6; // Set layer to Default (layer 6)
+                }
+                else
+                {
+                    Debug.Log("Trash Manager tidak ada");
+                }
             }
         }
 
@@ -36,38 +41,54 @@ public class PrefabManager : MonoBehaviour
 
     void Update()
     {
-
+        
     }
 
-    public void UpdateStatus(string objectName, bool isDestroyed)
+    public void UpdateStatus(string itemId, bool isActive)
     {
-        var status = prefabStatus.objectStatuses.Find(x => x.objectName == objectName);
+        var status = prefabStatus.objectStatuses.Find(x => x.objectName == itemId);
         if (status != null)
         {
-            status.isDestroyed = isDestroyed;
+            status.isActive = isActive;
         }
         else
         {
-            prefabStatus.objectStatuses.Add(new ObjectStatus { objectName = objectName, isDestroyed = isDestroyed });
+            prefabStatus.objectStatuses.Add(new ObjectStatus { objectName = itemId, isActive = isActive });
         }
 
         // Update the actual object in the scene
-        if (objectMap.ContainsKey(objectName))
+        if (objectMap.ContainsKey(itemId))
         {
-            objectMap[objectName].SetActive(!isDestroyed);
+            objectMap[itemId].SetActive(isActive);
         }
 
-        // Update destroyed count
-        if (isDestroyed)
+        // Check if all items are inactive
+        if (AreAllItemsInactive())
         {
-            destroyedCount++;
-            if (destroyedCount >= updateThreshold)
+            PerformActionAfterThreshold();
+        }
+
+        SaveData();
+    }
+
+    private bool AreAllItemsInactive()
+    {
+        foreach (var status in prefabStatus.objectStatuses)
+        {
+            if (status.isActive)
             {
-                SaveData();
-                destroyedCount = 0;
-                QuestController.Instance.getChildNumberNextQuest(transform);
+                return false;
             }
         }
+        return true;
+    }
+
+    private void PerformActionAfterThreshold()
+    {
+        // Perform some action after 10 items are taken (SetActive(false))
+        Debug.Log("Threshold reached! Performing an action.");
+        QuestController.Instance.getChildNumberNextQuest(transform);
+        // Add your custom action here
     }
 
     public void SaveData()
@@ -84,11 +105,16 @@ public class PrefabManager : MonoBehaviour
             string json = PlayerPrefs.GetString("PrefabStatus");
             prefabStatus = JsonUtility.FromJson<PrefabStatus>(json);
 
+            inactiveCount = 0;
             foreach (var status in prefabStatus.objectStatuses)
             {
                 if (objectMap.ContainsKey(status.objectName))
                 {
-                    objectMap[status.objectName].SetActive(!status.isDestroyed);
+                    objectMap[status.objectName].SetActive(status.isActive);
+                    if (!status.isActive)
+                    {
+                        inactiveCount++;
+                    }
                 }
             }
         }
@@ -98,8 +124,8 @@ public class PrefabManager : MonoBehaviour
 [System.Serializable]
 public class ObjectStatus
 {
-    public string objectName;
-    public bool isDestroyed;
+    public string objectName; // Unik ID untuk setiap objek
+    public bool isActive;
 }
 
 [System.Serializable]

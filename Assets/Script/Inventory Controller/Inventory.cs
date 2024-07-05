@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
-    private const int SLOTS = 10;
+    public int SLOTS = 10;
 
     [SerializeField]
     public List<IInventoryItem> mItem = new List<IInventoryItem>();
@@ -55,12 +55,17 @@ public class Inventory : MonoBehaviour
         Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
         myItemId = PlayerPrefs.GetInt(ID_KEY, 1);
 
+        Debug.Log("Slot Inventory Saat ini : " + inventoryItemDataList.slotData.Count + " < " + SLOTS);
+
         if (inventoryItemDataList.slotData.Count < SLOTS)
         {
             if (collider.enabled)
             {
                 if (!GameVariable.isQuestStarting)
                 {
+                    Debug.Log("Ambil sampah simpan ke inventory");
+                    Debug.Log("Memasuki blok if: " + inventoryItemDataList.slotData.Count + " < " + SLOTS);
+
                     collider.enabled = false;
 
                     List<int> usedSlotNumbers = new List<int>();

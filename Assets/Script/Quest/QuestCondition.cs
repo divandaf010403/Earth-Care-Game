@@ -12,7 +12,6 @@ public class QuestCondition : MonoBehaviour
     {
         if (questPosition != null)
         {
-            Debug.Log(questPosition.GetSiblingIndex() + " = " + "quest sekarang " + GameVariable.questNumber);
             if (questPosition.GetSiblingIndex() < GameVariable.questNumber)
             {
                 saluranRusak.SetActive(false);

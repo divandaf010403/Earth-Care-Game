@@ -28,6 +28,7 @@ public class Interactions : MonoBehaviour
 
     [Header("Ambil Variabel")]
     GameController gc;
+    public PrefabManager prefabManager;
 
     [Header("Main Character Settings")]
     [SerializeField] public Vector3 newPosition;
@@ -108,7 +109,10 @@ public class Interactions : MonoBehaviour
             {
                 case "Item":
                     removeItem();
-                    trashManager.TakeItem();
+                    if(!trashManager.itemId.StartsWith("Item_Trash Beach Trash(Clone)"))
+                    {
+                        trashManager.TakeItem();
+                    }
                     break;
                 case "ItemCraft":
                     CollectibleItem collectibleItem = _colliders[0].GetComponent<CollectibleItem>();
@@ -192,6 +196,10 @@ public class Interactions : MonoBehaviour
             }
             else
             {
+                if (inventory.inventoryItemDataList.slotData.Count < inventory.SLOTS)
+                {
+                    RemoveObjectOnPrefab();
+                }
                 inventory.AddItem(item);
             }
         }
@@ -210,6 +218,15 @@ public class Interactions : MonoBehaviour
         if (item != null)
         {
             inventoryExt.AddItem(item);
+        }
+    }
+
+    void RemoveObjectOnPrefab()
+    {
+        TrashManager trashManager = _colliders[0].GetComponent<TrashManager>();
+        if (trashManager != null)
+        {
+            prefabManager.UpdateStatus(trashManager.itemId, false);
         }
     }
 
