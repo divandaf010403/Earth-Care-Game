@@ -77,7 +77,7 @@ public class InventoryExt : MonoBehaviour
                 if (!itemExists)
                 {
                     mItem.Add(item);
-                    InventoryExtItemData inventoryExtItemData = new InventoryExtItemData(myItemIdExt, item.itemName, item.image, item.typeSampah, item.jenisSampah, item.jumlahItem);
+                    InventoryExtItemData inventoryExtItemData = new InventoryExtItemData(myItemIdExt, item.itemName, item.itemImagePath, item.typeSampah, item.jenisSampah, item.jumlahItem);
                     inventoryExtItemDataList.slotData.Add(inventoryExtItemData);
 
                     IncrementAndSaveItemId();
@@ -140,7 +140,7 @@ public class InventoryExt : MonoBehaviour
                 inventoryVariable.jenisSampah = itemData.jenisSampah;
                 inventoryVariable.totalSampah = itemData.jumlahItem;
                 
-                image.sprite = itemData.itemImage;
+                image.sprite = itemData.GetImage();
 
                 totalItem.enabled = true;                
                 totalItem.text = inventoryVariable.totalSampah.ToString();
@@ -233,7 +233,7 @@ public class InventoryExtItemData
 {
     public int itemId;
     public string itemName;
-    public Sprite itemImage;
+    public string itemImagePath; // Menyimpan path dari sprite
     public string typeSampah;
     public string jenisSampah;
     public int jumlahItem;
@@ -241,7 +241,7 @@ public class InventoryExtItemData
     public InventoryExtItemData(
         int itemId,
         string itemName,
-        Sprite itemImage,
+        string itemImagePath, // Gunakan path alih-alih objek Sprite
         string typeSampah,
         string jenisSampah,
         int jumlahItem
@@ -249,10 +249,16 @@ public class InventoryExtItemData
     {
         this.itemId = itemId;
         this.itemName = itemName;
-        this.itemImage = itemImage;
+        this.itemImagePath = itemImagePath;
         this.typeSampah = typeSampah;
         this.jenisSampah = jenisSampah;
         this.jumlahItem = jumlahItem;
+    }
+
+    // Method untuk memuat sprite dari path
+    public Sprite GetImage()
+    {
+        return Resources.Load<Sprite>(itemImagePath);
     }
 }
 

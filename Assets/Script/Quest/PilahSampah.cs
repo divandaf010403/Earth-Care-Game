@@ -211,7 +211,7 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
         if (!image.enabled)
         {
             image.enabled = true;
-            image.sprite = item.image;
+            image.sprite = item.GetImage();
 
             inventoryVariable.itemName = item.itemName;
             inventoryVariable.jenisSampah = item.jenisSampah;

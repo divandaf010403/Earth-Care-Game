@@ -6,27 +6,34 @@ using System.Collections.Generic;
 
 public class ShopController : MonoBehaviour
 {
-    [System.Serializable] public class ShopItem
-    {
-        public Sprite imageItem;
-        public string nameItem;
-        public int priceItem;
-        public bool isPurchased = false;
-        public string jenisSampahNama;
-        public string typeSampahTxt;
-        public int totalSampahTxt = 1;
+    [System.Serializable]
+public class ShopItem
+{
+    public string imageItemPath; // Path untuk menyimpan sprite
+    public string nameItem;
+    public int priceItem;
+    public bool isPurchased = false;
+    public string jenisSampahNama;
+    public string typeSampahTxt;
+    public int totalSampahTxt = 1;
 
-        public ShopItem(ShopItem shopItem)
-        {
-            this.imageItem = shopItem.imageItem;
-            this.nameItem = shopItem.nameItem;
-            this.priceItem = shopItem.priceItem;
-            this.isPurchased = shopItem.isPurchased;
-            this.jenisSampahNama = shopItem.jenisSampahNama;
-            this.typeSampahTxt = shopItem.typeSampahTxt;
-            this.totalSampahTxt = shopItem.totalSampahTxt;
-        }
+    public ShopItem(string imageItemPath, string nameItem, int priceItem, string jenisSampahNama, string typeSampahTxt, int totalSampahTxt)
+    {
+        this.imageItemPath = imageItemPath;
+        this.nameItem = nameItem;
+        this.priceItem = priceItem;
+        this.jenisSampahNama = jenisSampahNama;
+        this.typeSampahTxt = typeSampahTxt;
+        this.totalSampahTxt = totalSampahTxt;
     }
+
+    // Method untuk memuat sprite dari path
+    public Sprite GetImage()
+    {
+        return Resources.Load<Sprite>(imageItemPath);
+    }
+}
+
 
     [SerializeField] public List<ShopItem> shopItemList;
     [SerializeField] public GameObject ItemTemplate;
@@ -64,7 +71,7 @@ public class ShopController : MonoBehaviour
             // Jika item dengan jenisSampah yang sama tidak ditemukan, tambahkan item baru ke inventaris
             if (!itemExists)
             {
-                InventoryExtItemData inventoryExtItemData = new InventoryExtItemData(inventoryExt.myItemIdExt, item.nameItem, item.imageItem, item.typeSampahTxt, item.jenisSampahNama, item.totalSampahTxt);
+                InventoryExtItemData inventoryExtItemData = new InventoryExtItemData(inventoryExt.myItemIdExt, item.nameItem, item.imageItemPath, item.typeSampahTxt, item.jenisSampahNama, item.totalSampahTxt);
                 inventoryExt.inventoryExtItemDataList.slotData.Add(inventoryExtItemData);
             }
 
@@ -165,7 +172,7 @@ public class ShopController : MonoBehaviour
         {
             g = Instantiate(ItemTemplate, ShopScrollView);
             g.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = shopItemList[i].nameItem;
-            g.transform.GetChild(1).GetComponent<Image>().sprite = shopItemList[i].imageItem;
+            g.transform.GetChild(1).GetComponent<Image>().sprite = shopItemList[i].GetImage();
 
             ShopVariable shopVariable = g.transform.GetComponent<ShopVariable>();
             shopVariable.jenisSampahNama = shopItemList[i].jenisSampahNama;

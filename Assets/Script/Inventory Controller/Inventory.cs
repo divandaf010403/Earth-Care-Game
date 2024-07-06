@@ -82,7 +82,18 @@ public class Inventory : MonoBehaviour
                     }
 
                     mItem.Add(item);
-                    InventoryItemData inventoryItemData = new InventoryItemData(availableSlotNumber, myItemId, item.itemName, item.image, item.typeSampah, item.jenisSampah, item.jumlahItem);
+                    
+                    // Asumsikan path sprite dapat diakses melalui properti itemImagePath
+                    InventoryItemData inventoryItemData = new InventoryItemData(
+                        availableSlotNumber, 
+                        myItemId, 
+                        item.itemName, 
+                        item.itemImagePath,  // Simpan path sprite
+                        item.typeSampah, 
+                        item.jenisSampah, 
+                        item.jumlahItem
+                    );
+                    
                     inventoryItemDataList.slotData.Add(inventoryItemData);
 
                     if (ItemAdded != null)
@@ -292,15 +303,17 @@ public class Inventory : MonoBehaviour
                 Image image = imageTransform.GetChild(0).GetComponent<Image>();
                 InventoryVariable inventoryVariable = imageTransform.GetComponent<InventoryVariable>();
 
-                if (!image.enabled) {
+                if (!image.enabled) 
+                {
                     image.enabled = true;
 
                     inventoryVariable.itemId = itemData.itemId;
                     inventoryVariable.itemName = itemData.itemName;
                     inventoryVariable.jenisSampah = itemData.jenisSampah;
                     inventoryVariable.totalSampah = itemData.jumlahItem;
-                    
-                    image.sprite = itemData.itemImage;
+
+                    // Muat sprite dari path
+                    image.sprite = itemData.GetImage();
                 }
             }
         }
@@ -319,7 +332,7 @@ public class InventoryItemData
     public int slotNumber;
     public int itemId;
     public string itemName;
-    public Sprite itemImage;
+    public string itemImagePath; // Menyimpan path dari sprite
     public string typeSampah;
     public string jenisSampah;
     public int jumlahItem;
@@ -328,7 +341,7 @@ public class InventoryItemData
         int slotNumber,
         int itemId,
         string itemName,
-        Sprite itemImage,
+        string itemImagePath, // Gunakan path alih-alih objek Sprite
         string typeSampah,
         string jenisSampah,
         int jumlahItem
@@ -337,10 +350,16 @@ public class InventoryItemData
         this.slotNumber = slotNumber;
         this.itemId = itemId;
         this.itemName = itemName;
-        this.itemImage = itemImage;
+        this.itemImagePath = itemImagePath;
         this.typeSampah = typeSampah;
         this.jenisSampah = jenisSampah;
         this.jumlahItem = jumlahItem;
+    }
+
+    // Method untuk memuat sprite dari path
+    public Sprite GetImage()
+    {
+        return Resources.Load<Sprite>(itemImagePath);
     }
 }
 

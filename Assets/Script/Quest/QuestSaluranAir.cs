@@ -1,16 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 [System.Serializable]
 public class RequiredItem
 {
+    public Sprite imgRequire;
     public string itemName;
     public int quantity;
 
-    public RequiredItem(string itemName, int quantity)
+    public RequiredItem(Sprite ImgRequire, string itemName, int quantity)
     {
+        this.imgRequire = ImgRequire;
         this.itemName = itemName;
         this.quantity = quantity;
     }
@@ -20,7 +23,17 @@ public class QuestSaluranAir : MonoBehaviour, IQuestFinishHandler
 {
     [SerializeField] Button btnPerbaiki;
     [SerializeField] List<RequiredItem> requiredRepair;
+    [SerializeField] List<GameObject> canvasToSetItem;
     public bool isFinished;
+
+    private void Start() 
+    {
+        for (int i = 0; i < canvasToSetItem.Count; i++)
+        {
+            canvasToSetItem[i].transform.GetChild(0).GetComponent<Image>().sprite = requiredRepair[i].imgRequire;
+            canvasToSetItem[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = requiredRepair[i].quantity.ToString();
+        }
+    }
 
     public bool IsQuestFinished
     {

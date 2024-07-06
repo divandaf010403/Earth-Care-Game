@@ -7,7 +7,11 @@ public class TrashController : MonoBehaviour, Interactable, IInventoryItem
     [SerializeField]
     private string _prompt;
     public string InteractionPrompt => _prompt;
-    public Sprite _image = null;
+
+    [SerializeField]
+    private string _imagePath; // Menyimpan path dari sprite
+    public string itemImagePath => _imagePath;
+
     public string jenisSampahNama;
     public string typeSampahTxt;
     public int totalSampahTxt = 1;
@@ -29,13 +33,6 @@ public class TrashController : MonoBehaviour, Interactable, IInventoryItem
         return false;
     }
 
-    // public void Interact(GameObject go)
-    // {
-    //     Debug.Log("Item picked up!");
-    //     Destroy(go);
-    //     Debug.Log(go.transform.parent.gameObject.name);
-    // }
-
     public string itemName
     {
         get { return gameObject.name; }
@@ -43,7 +40,7 @@ public class TrashController : MonoBehaviour, Interactable, IInventoryItem
 
     public Sprite image
     {
-        get { return _image; }
+        get { return GetImage(); } // Gunakan method GetImage untuk memuat sprite
     }
 
     public string jenisSampah
@@ -59,6 +56,12 @@ public class TrashController : MonoBehaviour, Interactable, IInventoryItem
     public int jumlahItem
     {
         get { return totalSampahTxt; }
+    }
+
+    // Implementasi method GetImage untuk memuat sprite dari path
+    public Sprite GetImage()
+    {
+        return Resources.Load<Sprite>(itemImagePath);
     }
 
     public void OnPickup()

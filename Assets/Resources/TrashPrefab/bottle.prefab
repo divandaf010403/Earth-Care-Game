@@ -181,7 +181,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Bottle
-  _image: {fileID: 21300000, guid: 4f4200ab8a5c8124ab54c0cb74f59c5c, type: 3}
+  _imagePath: TrashIcon/Bottle
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1

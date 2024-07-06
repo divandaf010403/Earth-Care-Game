@@ -13,19 +13,30 @@ public class Reward
     public bool isCoin;
     public int coinAmount;
     public InventoryExtItemData item;
-    public Sprite rewardImage;
+    public string rewardImagePath; // Menyimpan path dari sprite
+    [System.NonSerialized] public Sprite rewardImage; // Sprite yang diinstansiasi dari path
 
-    public Reward(int coinAmount, Sprite rewardImage)
+    public Reward(int coinAmount, string rewardImagePath)
     {
         this.isCoin = true;
         this.coinAmount = coinAmount;
-        this.rewardImage = rewardImage;
+        this.rewardImagePath = rewardImagePath;
     }
 
-    public Reward(InventoryExtItemData item, Sprite rewardImage)
+    public Reward(InventoryExtItemData item, string rewardImagePath)
     {
         this.isCoin = false;
         this.item = item;
-        this.rewardImage = rewardImage;
+        this.rewardImagePath = rewardImagePath;
+    }
+
+    // Method untuk memuat sprite dari path
+    public Sprite GetImage()
+    {
+        if (rewardImage == null)
+        {
+            rewardImage = Resources.Load<Sprite>(rewardImagePath);
+        }
+        return rewardImage;
     }
 }

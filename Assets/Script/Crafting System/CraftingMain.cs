@@ -168,7 +168,7 @@ public class CraftingMain : MonoBehaviour
                     for (int i = inventoryExtData.inventoryExtItemDataList.slotData.Count - 1; i >= 0; i--)
                     {
                         InventoryExtItemData existingItem = inventoryExtData.inventoryExtItemDataList.slotData[i];
-                        
+                                    
                         // Check if the item name matches
                         if (existingItem.jenisSampah == ingredient.itemName)
                         {
@@ -184,13 +184,22 @@ public class CraftingMain : MonoBehaviour
                     }
                 }
 
+                // Menyembunyikan visual inventory setelah crafting
                 for(int j = 0; j < inventoryExtMain.childCount; j++)
                 {
                     inventoryExtMain.GetChild(j).GetChild(0).GetComponent<Image>().enabled = false;
                     inventoryExtMain.GetChild(j).GetChild(1).GetComponent<TextMeshProUGUI>().enabled = false;
                 }
 
-                InventoryExtItemData inventoryExtItemData = new InventoryExtItemData(myItemIdExt, recipeToCraft.output.itemName, recipeToCraft.output.itemImage, recipeToCraft.output.typeSampah, recipeToCraft.output.jenisSampah, recipeToCraft.output.jumlahItem);
+                // Menambahkan item hasil crafting ke inventory
+                InventoryExtItemData inventoryExtItemData = new InventoryExtItemData(
+                    myItemIdExt, 
+                    recipeToCraft.output.itemName, 
+                    recipeToCraft.output.itemImagePath,  // Gunakan path sprite
+                    recipeToCraft.output.typeSampah, 
+                    recipeToCraft.output.jenisSampah, 
+                    recipeToCraft.output.jumlahItem
+                );
                 inventoryExtData.inventoryExtItemDataList.slotData.Add(inventoryExtItemData);
             }
             else
