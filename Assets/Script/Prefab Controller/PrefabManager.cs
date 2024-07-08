@@ -10,7 +10,6 @@ public class PrefabManager : MonoBehaviour
     public PrefabStatus prefabStatus = new PrefabStatus();
     private Dictionary<string, GameObject> objectMap = new Dictionary<string, GameObject>(); // Gunakan itemId sebagai kunci
     [SerializeField] int inactiveCount = 0;
-    private const int updateThreshold = 10;
 
     void Awake()
     {
@@ -35,8 +34,16 @@ public class PrefabManager : MonoBehaviour
                 }
             }
         }
+    }
 
+    private void Start() 
+    {
         LoadData();
+        
+        if (AreAllItemsInactiveInPrefab())
+        {
+            PerformActionAfterThreshold();
+        }
     }
 
     void Update()
@@ -54,6 +61,7 @@ public class PrefabManager : MonoBehaviour
         else
         {
             prefabStatus.objectStatuses.Add(new ObjectStatus { objectName = itemId, isActive = isActive });
+            inactiveCount++;
         }
 
         // Update the actual object in the scene
@@ -63,7 +71,7 @@ public class PrefabManager : MonoBehaviour
         }
 
         // Check if all items are inactive
-        if (AreAllItemsInactive())
+        if (AreAllItemsInactiveInPrefab())
         {
             PerformActionAfterThreshold();
         }
@@ -71,16 +79,14 @@ public class PrefabManager : MonoBehaviour
         SaveData();
     }
 
-    private bool AreAllItemsInactive()
+    private bool AreAllItemsInactiveInPrefab()
     {
-        foreach (var status in prefabStatus.objectStatuses)
+        Debug.Log(prefabInstance.transform.childCount + " == " + inactiveCount);
+        if (prefabInstance.transform.childCount == inactiveCount)
         {
-            if (status.isActive)
-            {
-                return false;
-            }
+            return true;
         }
-        return true;
+        return false;
     }
 
     private void PerformActionAfterThreshold()

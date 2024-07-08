@@ -7,11 +7,6 @@ public class PLTSaController : MonoBehaviour
     [SerializeField] PLTSaQuest requiredOrganik;
     [SerializeField] PLTSaQuest requiredAnorganik;
 
-    [Header("Next Action")]
-    [SerializeField] Transform nextTranformToActive;
-    // [SerializeField] private GameObject questToActive;
-    // [SerializeField] private GameObject questToNonActive;
-
     // Start is called before the first frame update
     void Start()
     {

@@ -226,6 +226,12 @@ public class InventoryExt : MonoBehaviour
         }
         return false;
     }
+
+    public void SaveInventory()
+    {
+        SaveSystem.SaveInventoryExt(inventoryExtItemDataList.slotData);
+        LoadInventoryItem();
+    }
 }
 
 [System.Serializable]

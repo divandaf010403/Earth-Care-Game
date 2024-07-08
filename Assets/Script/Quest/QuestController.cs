@@ -170,6 +170,13 @@ public class QuestController : MonoBehaviour
                     {
                         RewardPanelController.Instance.getReward(reward);
                     }
+
+                    EducationalContent content = thisObj.GetComponent<EducationalContent>();
+                    if(content != null)
+                    {
+                        content.showEducationalContent();
+                    }
+
                     return;
                 }
 

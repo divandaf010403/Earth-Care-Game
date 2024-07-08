@@ -44,9 +44,20 @@ public class SpwnNPC : MonoBehaviour
         {
             int npcIndex = Random.Range(0, NPC_Prefab.Length);
             GameObject obj = Instantiate(NPC_Prefab[npcIndex], NpcParent);
-            Transform child = transform.GetChild(Random.Range(0, transform.childCount - 1));
-            obj.GetComponent<WaypointNavigator>().currentWaypoint = child.GetComponent<Waypoint>();
-            obj.transform.localPosition = new Vector3(child.localPosition.x, NpcParent.localPosition.y, child.localPosition.z);
+
+            Transform child = null;
+            if (transform.childCount > 0)
+            {
+                // Lakukan pemilihan acak dua kali
+                child = transform.GetChild(Random.Range(0, transform.childCount));
+                child = child.GetChild(Random.Range(0, child.childCount));
+            }
+
+            if (child != null)
+            {
+                obj.GetComponent<WaypointNavigator>().currentWaypoint = child.GetComponent<Waypoint>();
+                obj.transform.localPosition = new Vector3(child.localPosition.x, NpcParent.localPosition.y, child.localPosition.z);
+            }
 
             yield return new WaitForEndOfFrame();
             count++;
@@ -58,7 +69,7 @@ public class SpwnNPC : MonoBehaviour
         while (true)
         {
             // Tunggu antara 30 hingga 60 detik
-            float waitTime = Random.Range(30f, 60f);
+            float waitTime = Random.Range(45f, 60f);
             yield return new WaitForSeconds(waitTime);
 
             // Panggil fungsi ThrowTrashTimer

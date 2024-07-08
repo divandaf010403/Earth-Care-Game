@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Bottle
-  _image: {fileID: 21300000, guid: 4f4200ab8a5c8124ab54c0cb74f59c5c, type: 3}
+  _imagePath: TrashIcon/Bottle
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -321,7 +321,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Can
-  _image: {fileID: 21300000, guid: 21f60cb4787c3fa4ba81399e1d965d36, type: 3}
+  _imagePath: TrashIcon/SodaCan
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -743,7 +743,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Can
-  _image: {fileID: 21300000, guid: 21f60cb4787c3fa4ba81399e1d965d36, type: 3}
+  _imagePath: TrashIcon/SodaCan
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -911,7 +911,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Banana
-  _image: {fileID: 21300000, guid: 3299ede8c238fa94ba5a25a0913125b2, type: 3}
+  _imagePath: TrashIcon/Banana
   jenisSampahNama: Organik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -1194,7 +1194,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Apple
-  _image: {fileID: 21300000, guid: 725d02ac869cfbb4c84d8a4859270e7a, type: 3}
+  _imagePath: TrashIcon/Apple
   jenisSampahNama: Organik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -1449,7 +1449,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Can
-  _image: {fileID: 21300000, guid: 21f60cb4787c3fa4ba81399e1d965d36, type: 3}
+  _imagePath: TrashIcon/SodaCan
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -1700,7 +1700,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Bottle
-  _image: {fileID: 21300000, guid: 4f4200ab8a5c8124ab54c0cb74f59c5c, type: 3}
+  _imagePath: TrashIcon/Bottle
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -2233,7 +2233,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Apple
-  _image: {fileID: 21300000, guid: 725d02ac869cfbb4c84d8a4859270e7a, type: 3}
+  _imagePath: TrashIcon/Apple
   jenisSampahNama: Organik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -2654,7 +2654,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Can
-  _image: {fileID: 21300000, guid: 21f60cb4787c3fa4ba81399e1d965d36, type: 3}
+  _imagePath: TrashIcon/SodaCan
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -2853,7 +2853,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Apple
-  _image: {fileID: 21300000, guid: 725d02ac869cfbb4c84d8a4859270e7a, type: 3}
+  _imagePath: TrashIcon/Apple
   jenisSampahNama: Organik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -3104,7 +3104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Snack
-  _image: {fileID: 21300000, guid: 73eae19f6321aea48a43436edf1531df, type: 3}
+  _imagePath: TrashIcon/SnackBag
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -3387,7 +3387,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Apple
-  _image: {fileID: 21300000, guid: 725d02ac869cfbb4c84d8a4859270e7a, type: 3}
+  _imagePath: TrashIcon/Apple
   jenisSampahNama: Organik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -3503,7 +3503,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Apple
-  _image: {fileID: 21300000, guid: 725d02ac869cfbb4c84d8a4859270e7a, type: 3}
+  _imagePath: TrashIcon/Apple
   jenisSampahNama: Organik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -3620,7 +3620,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Apple
-  _image: {fileID: 21300000, guid: 725d02ac869cfbb4c84d8a4859270e7a, type: 3}
+  _imagePath: TrashIcon/Apple
   jenisSampahNama: Organik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -3787,7 +3787,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Bottle
-  _image: {fileID: 21300000, guid: 4f4200ab8a5c8124ab54c0cb74f59c5c, type: 3}
+  _imagePath: TrashIcon/Bottle
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -3955,7 +3955,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Banana
-  _image: {fileID: 21300000, guid: 3299ede8c238fa94ba5a25a0913125b2, type: 3}
+  _imagePath: TrashIcon/Banana
   jenisSampahNama: Organik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -4127,7 +4127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Can
-  _image: {fileID: 21300000, guid: 21f60cb4787c3fa4ba81399e1d965d36, type: 3}
+  _imagePath: TrashIcon/SodaCan
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -4462,7 +4462,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Banana
-  _image: {fileID: 21300000, guid: 3299ede8c238fa94ba5a25a0913125b2, type: 3}
+  _imagePath: TrashIcon/Banana
   jenisSampahNama: Organik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -4713,7 +4713,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Bottle
-  _image: {fileID: 21300000, guid: 4f4200ab8a5c8124ab54c0cb74f59c5c, type: 3}
+  _imagePath: TrashIcon/Bottle
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -4829,7 +4829,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Apple
-  _image: {fileID: 21300000, guid: 725d02ac869cfbb4c84d8a4859270e7a, type: 3}
+  _imagePath: TrashIcon/Apple
   jenisSampahNama: Organik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -4998,7 +4998,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Snack
-  _image: {fileID: 21300000, guid: 73eae19f6321aea48a43436edf1531df, type: 3}
+  _imagePath: TrashIcon/SnackBag
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -5250,7 +5250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Snack
-  _image: {fileID: 21300000, guid: 73eae19f6321aea48a43436edf1531df, type: 3}
+  _imagePath: TrashIcon/SnackBag
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -5418,7 +5418,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Banana
-  _image: {fileID: 21300000, guid: 3299ede8c238fa94ba5a25a0913125b2, type: 3}
+  _imagePath: TrashIcon/Banana
   jenisSampahNama: Organik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -5669,7 +5669,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Banana
-  _image: {fileID: 21300000, guid: 3299ede8c238fa94ba5a25a0913125b2, type: 3}
+  _imagePath: TrashIcon/Banana
   jenisSampahNama: Organik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -6004,7 +6004,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Banana
-  _image: {fileID: 21300000, guid: 3299ede8c238fa94ba5a25a0913125b2, type: 3}
+  _imagePath: TrashIcon/Banana
   jenisSampahNama: Organik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -6120,7 +6120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Apple
-  _image: {fileID: 21300000, guid: 725d02ac869cfbb4c84d8a4859270e7a, type: 3}
+  _imagePath: TrashIcon/Apple
   jenisSampahNama: Organik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -6372,7 +6372,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Banana
-  _image: {fileID: 21300000, guid: 3299ede8c238fa94ba5a25a0913125b2, type: 3}
+  _imagePath: TrashIcon/Banana
   jenisSampahNama: Organik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -6571,7 +6571,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Apple
-  _image: {fileID: 21300000, guid: 725d02ac869cfbb4c84d8a4859270e7a, type: 3}
+  _imagePath: TrashIcon/Apple
   jenisSampahNama: Organik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -6743,7 +6743,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Can
-  _image: {fileID: 21300000, guid: 21f60cb4787c3fa4ba81399e1d965d36, type: 3}
+  _imagePath: TrashIcon/SodaCan
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -6915,7 +6915,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Can
-  _image: {fileID: 21300000, guid: 21f60cb4787c3fa4ba81399e1d965d36, type: 3}
+  _imagePath: TrashIcon/SodaCan
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -7213,7 +7213,7 @@ Transform:
   m_GameObject: {fileID: 6807389922189863951}
   serializedVersion: 2
   m_LocalRotation: {x: -0.0003225395, y: -0.0009530771, z: 0.09680413, w: 0.995303}
-  m_LocalPosition: {x: -27.847595, y: 0.17517908, z: 96.49503}
+  m_LocalPosition: {x: -22.91, y: 0.17517908, z: 96.49503}
   m_LocalScale: {x: 17.856647, y: 17.856647, z: 23.605759}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7336,7 +7336,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Can
-  _image: {fileID: 21300000, guid: 21f60cb4787c3fa4ba81399e1d965d36, type: 3}
+  _imagePath: TrashIcon/SodaCan
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -7586,7 +7586,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Bottle
-  _image: {fileID: 21300000, guid: 4f4200ab8a5c8124ab54c0cb74f59c5c, type: 3}
+  _imagePath: TrashIcon/Bottle
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -7753,7 +7753,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Bottle
-  _image: {fileID: 21300000, guid: 4f4200ab8a5c8124ab54c0cb74f59c5c, type: 3}
+  _imagePath: TrashIcon/Bottle
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -7922,7 +7922,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Snack
-  _image: {fileID: 21300000, guid: 73eae19f6321aea48a43436edf1531df, type: 3}
+  _imagePath: TrashIcon/SnackBag
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -8173,7 +8173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Snack
-  _image: {fileID: 21300000, guid: 73eae19f6321aea48a43436edf1531df, type: 3}
+  _imagePath: TrashIcon/SnackBag
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -8289,7 +8289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Apple
-  _image: {fileID: 21300000, guid: 725d02ac869cfbb4c84d8a4859270e7a, type: 3}
+  _imagePath: TrashIcon/Apple
   jenisSampahNama: Organik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -8457,7 +8457,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Snack
-  _image: {fileID: 21300000, guid: 73eae19f6321aea48a43436edf1531df, type: 3}
+  _imagePath: TrashIcon/SnackBag
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -8906,7 +8906,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Apple
-  _image: {fileID: 21300000, guid: 725d02ac869cfbb4c84d8a4859270e7a, type: 3}
+  _imagePath: TrashIcon/Apple
   jenisSampahNama: Organik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -9159,7 +9159,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Snack
-  _image: {fileID: 21300000, guid: 73eae19f6321aea48a43436edf1531df, type: 3}
+  _imagePath: TrashIcon/SnackBag
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -9358,7 +9358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Apple
-  _image: {fileID: 21300000, guid: 725d02ac869cfbb4c84d8a4859270e7a, type: 3}
+  _imagePath: TrashIcon/Apple
   jenisSampahNama: Organik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -9525,7 +9525,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Bottle
-  _image: {fileID: 21300000, guid: 4f4200ab8a5c8124ab54c0cb74f59c5c, type: 3}
+  _imagePath: TrashIcon/Bottle
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -9775,7 +9775,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Bottle
-  _image: {fileID: 21300000, guid: 4f4200ab8a5c8124ab54c0cb74f59c5c, type: 3}
+  _imagePath: TrashIcon/Bottle
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -9947,7 +9947,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Can
-  _image: {fileID: 21300000, guid: 21f60cb4787c3fa4ba81399e1d965d36, type: 3}
+  _imagePath: TrashIcon/SodaCan
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -10361,7 +10361,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Snack
-  _image: {fileID: 21300000, guid: 73eae19f6321aea48a43436edf1531df, type: 3}
+  _imagePath: TrashIcon/SnackBag
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -10529,7 +10529,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Snack
-  _image: {fileID: 21300000, guid: 73eae19f6321aea48a43436edf1531df, type: 3}
+  _imagePath: TrashIcon/SnackBag
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -10696,7 +10696,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Bottle
-  _image: {fileID: 21300000, guid: 4f4200ab8a5c8124ab54c0cb74f59c5c, type: 3}
+  _imagePath: TrashIcon/Bottle
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1
@@ -10863,7 +10863,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prompt: Bottle
-  _image: {fileID: 21300000, guid: 4f4200ab8a5c8124ab54c0cb74f59c5c, type: 3}
+  _imagePath: TrashIcon/Bottle
   jenisSampahNama: Anorganik
   typeSampahTxt: Trash
   totalSampahTxt: 1

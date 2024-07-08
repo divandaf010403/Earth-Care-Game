@@ -10,11 +10,13 @@ public class QuestGiveToy : MonoBehaviour
     [SerializeField] List<string> toyRequire;
     public Transform inventoryExtMain;
     [SerializeField] GameObject hideCanvas;
+    [SerializeField] GameObject[] bocilActivate;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        bocilActivate[0].SetActive(true);
+        bocilActivate[1].SetActive(false);
     }
 
     // Update is called once per frame
@@ -76,8 +78,15 @@ public class QuestGiveToy : MonoBehaviour
                 // Hide Canvas
                 hideCanvas.SetActive(false);
 
+                //Change Bocil
+                bocilActivate[0].SetActive(false);
+                bocilActivate[1].SetActive(true);
+
                 // Add your repair logic here
                 startConversation?.Invoke();
+
+                // Save the updated inventory to the JSON file
+                SaveSystem.SaveInventoryExt(InventoryExt.Instance.inventoryExtItemDataList.slotData);
             }
             else
             {

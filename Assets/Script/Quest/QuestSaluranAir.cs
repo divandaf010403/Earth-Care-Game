@@ -25,6 +25,8 @@ public class QuestSaluranAir : MonoBehaviour, IQuestFinishHandler
     [SerializeField] List<RequiredItem> requiredRepair;
     [SerializeField] List<GameObject> canvasToSetItem;
     public bool isFinished;
+    [SerializeField] GameObject btnInteract;
+    public Transform inventoryExtMain;
 
     private void Start() 
     {
@@ -82,11 +84,42 @@ public class QuestSaluranAir : MonoBehaviour, IQuestFinishHandler
 
             if (allItemsFound)
             {
+                foreach (RequiredItem requiredItem in requiredRepair)
+                {
+                    // Iterate through each item in the inventory
+                    for (int i = InventoryExt.Instance.inventoryExtItemDataList.slotData.Count - 1; i >= 0; i--)
+                    {
+                        InventoryExtItemData existingItem = InventoryExt.Instance.inventoryExtItemDataList.slotData[i];
+                                    
+                        // Check if the item name matches
+                        if (existingItem.jenisSampah == requiredItem.itemName)
+                        {
+                            existingItem.jumlahItem -= requiredItem.quantity;
+
+                            // Check if jumlahItem is zero after subtraction
+                            if (existingItem.jumlahItem <= 0)
+                            {
+                                // Remove the item from the list
+                                InventoryExt.Instance.inventoryExtItemDataList.slotData.RemoveAt(i);
+                            }
+                        }
+                    }
+                }
+
+                // Menyembunyikan visual inventory setelah crafting
+                for(int j = 0; j < inventoryExtMain.childCount; j++)
+                {
+                    inventoryExtMain.GetChild(j).GetChild(0).GetComponent<Image>().enabled = false;
+                    inventoryExtMain.GetChild(j).GetChild(1).GetComponent<TextMeshProUGUI>().enabled = false;
+                }
+
+                InventoryExt.Instance.SaveInventory();
+
                 // Panggil coroutine dari CoroutineManager
                 CoroutineManager.Instance.StartCoroutine(GameController.Instance.HandleWithLoadingPanelTransition(() =>
                 {
+                    btnInteract.SetActive(false);
                     QuestController.Instance.getChildNumberNextQuest(transform);
-                    Debug.Log("getChildNumberNextQuest completed");
                 }, null));
             }
             else

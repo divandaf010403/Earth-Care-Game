@@ -98,7 +98,7 @@ public class BersihSungai : MonoBehaviour, IQuestHandler
                 if (questDurationCountdown == 0f && !questFinished)
                 {
                     questFinished = true; // Ensure this block only runs once
-                    StartCoroutine(GameController.Instance.HandleWithLoadingPanelTransition(() =>
+                    CoroutineManager.Instance.StartCoroutine(GameController.Instance.HandleWithLoadingPanelTransition(() =>
                     {
                         finishedQuest(questPoint);
                         OnQuestFinish();

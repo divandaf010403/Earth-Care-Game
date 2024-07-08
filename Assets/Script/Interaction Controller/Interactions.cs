@@ -141,17 +141,21 @@ public class Interactions : MonoBehaviour
                     }
                     break;
                 case "QuestPLTSa":
-                    bool isRemovedQuest = inventory.RemoveItemQuest(q2,  mainChar);
-                    if (isRemovedQuest)
+                    if (q2.requiredItem < q2.totalRequireItem)
                     {
-                        q2.requiredItem++;
-                        PlayerPrefs.SetInt(q2.tipePenampungan + " PLTSa", q2.requiredItem);
-                        Debug.Log("Item was successfully removed.");
-                    }
-                    else
-                    {
-                        // Handle failure to remove item if needed
-                        Debug.Log("Failed to remove item.");
+                        Debug.Log(q2.requiredItem + " <=> " + q2.totalRequireItem);
+                        bool isRemovedQuest = inventory.RemoveItemQuest(q2,  mainChar);
+                        if (isRemovedQuest)
+                        {
+                            q2.requiredItem++;
+                            PlayerPrefs.SetInt(q2.tipePenampungan + " PLTSa", q2.requiredItem);
+                            Debug.Log("Item was successfully removed.");
+                        }
+                        else
+                        {
+                            // Handle failure to remove item if needed
+                            Debug.Log("Failed to remove item.");
+                        }
                     }
                     break;
                 case "VendingMachine":
