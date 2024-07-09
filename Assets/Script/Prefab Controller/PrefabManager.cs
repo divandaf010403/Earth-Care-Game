@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PrefabManager : MonoBehaviour
@@ -10,6 +11,8 @@ public class PrefabManager : MonoBehaviour
     public PrefabStatus prefabStatus = new PrefabStatus();
     private Dictionary<string, GameObject> objectMap = new Dictionary<string, GameObject>(); // Gunakan itemId sebagai kunci
     [SerializeField] int inactiveCount = 0;
+    [SerializeField] GameObject dirtMeter;
+    [SerializeField] TextMeshProUGUI sisaSampahTxt;
 
     void Awake()
     {
@@ -39,6 +42,9 @@ public class PrefabManager : MonoBehaviour
     private void Start() 
     {
         LoadData();
+
+        dirtMeter.SetActive(false);
+        sisaSampahTxt.text = (prefabInstance.transform.childCount - inactiveCount).ToString();
         
         if (AreAllItemsInactiveInPrefab())
         {
@@ -76,12 +82,13 @@ public class PrefabManager : MonoBehaviour
             PerformActionAfterThreshold();
         }
 
+        sisaSampahTxt.text = (prefabInstance.transform.childCount - inactiveCount).ToString();
+
         SaveData();
     }
 
     private bool AreAllItemsInactiveInPrefab()
     {
-        Debug.Log(prefabInstance.transform.childCount + " == " + inactiveCount);
         if (prefabInstance.transform.childCount == inactiveCount)
         {
             return true;
@@ -94,6 +101,7 @@ public class PrefabManager : MonoBehaviour
         // Perform some action after 10 items are taken (SetActive(false))
         Debug.Log("Threshold reached! Performing an action.");
         QuestController.Instance.getChildNumberNextQuest(transform);
+        dirtMeter.SetActive(true);
         // Add your custom action here
     }
 

@@ -90,7 +90,7 @@ public class QuestGiveToy : MonoBehaviour
             }
             else
             {
-                MainCharMovement.Instance.showNotification("Item Yang Diperlukan Kurang Woyyy");
+                MainCharMovement.Instance.showNotification("Mainan Perahu Belum Dibuat");
             }
         }
         else

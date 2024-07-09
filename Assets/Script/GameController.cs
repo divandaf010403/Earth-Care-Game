@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using TMPro;
+using UnityEditor.ProjectWindowCallback;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -48,6 +49,8 @@ public class GameController : MonoBehaviour
     
     [Header("Ketika Quest Selesai")]
     public Transform finishPanel;
+    [SerializeField] Transform endedDemoPanel;
+    private CanvasGroup endDemoCanvas;
 
     private void Awake() 
     {
@@ -69,12 +72,12 @@ public class GameController : MonoBehaviour
     }
 
     private void Start() {
-        // endDemoCanvas = endedDemoPanel.GetComponent<CanvasGroup>();
-        // if (endDemoCanvas == null)
-        // {
-        //     endDemoCanvas = endedDemoPanel.gameObject.AddComponent<CanvasGroup>();
-        // }
-        // endDemoCanvas.alpha = 0f;
+        endDemoCanvas = endedDemoPanel.GetComponent<CanvasGroup>();
+        if (endDemoCanvas == null)
+        {
+            endDemoCanvas = endedDemoPanel.gameObject.AddComponent<CanvasGroup>();
+        }
+        endDemoCanvas.alpha = 0f;
 
         LoadPlayer();
 
@@ -356,31 +359,31 @@ public class GameController : MonoBehaviour
         return Camera.main.GetComponent<CinemachineBrain>().enabled = isActive;
     }
 
-    // public void ShowEndedDemoPanel()
-    // {
-    //     StartCoroutine(FadeInPanelEndDemo());
-    // }
+    public void ShowEndedDemoPanel()
+    {
+        StartCoroutine(FadeInPanelEndDemo());
+    }
 
-    // private IEnumerator FadeInPanelEndDemo()
-    // {
-    //     float duration = 1f;  // Durasi fade in
-    //     float currentTime = 0f;
+    private IEnumerator FadeInPanelEndDemo()
+    {
+        float duration = 1f;  // Durasi fade in
+        float currentTime = 0f;
 
-    //     endedDemoPanel.localPosition = new Vector3(0f, 0f, 0f);
+        endedDemoPanel.localPosition = new Vector3(0f, 0f, 0f);
 
-    //     while (currentTime < duration)
-    //     {
-    //         currentTime += Time.deltaTime;
-    //         endDemoCanvas.alpha = Mathf.Lerp(0f, 1f, currentTime / duration);
-    //         yield return null;
-    //     }
+        while (currentTime < duration)
+        {
+            currentTime += Time.deltaTime;
+            endDemoCanvas.alpha = Mathf.Lerp(0f, 1f, currentTime / duration);
+            yield return null;
+        }
 
-    //     endDemoCanvas.alpha = 1f;
+        endDemoCanvas.alpha = 1f;
 
-    //     // Tunggu selama 5 detik sebelum pindah ke scene "Main Menu"
-    //     yield return new WaitForSeconds(5f);
+        // Tunggu selama 5 detik sebelum pindah ke scene "Main Menu"
+        yield return new WaitForSeconds(7f);
 
-    //     // Pindah ke scene "Main Menu"
-    //     SceneManager.LoadScene("MainMenu");
-    // }
+        // Pindah ke scene "Main Menu"
+        SceneManager.LoadScene("MainMenu");
+    }
 }
