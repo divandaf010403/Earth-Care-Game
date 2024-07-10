@@ -52,79 +52,104 @@ public class QuestController : MonoBehaviour
         }
 
         // Quest Mana Yang Harus Aktif
-        Transform onQuestActiveTransform = transform.GetChild(_questNumberActive);
-        onQuestActiveTransform.gameObject.SetActive(true);
-        QuestObjectiveText objectiveText = onQuestActiveTransform.GetComponent<QuestObjectiveText>();
-        if (objectiveText != null)
+        // Pastikan _questNumberActive adalah indeks yang valid
+        if (_questNumberActive >= 0 && _questNumberActive < transform.childCount)
         {
-            questObjectiveText.text = objectiveText.objectiveText;
-        }
+            Transform onQuestActiveTransform = transform.GetChild(_questNumberActive);
+            onQuestActiveTransform.gameObject.SetActive(true);
 
-
-        for(int q = 0; q < onQuestActiveTransform.childCount; q++)
-        {
-            if (onQuestActiveTransform.GetChild(q).CompareTag("WpQuest"))
+            QuestObjectiveText objectiveText = onQuestActiveTransform.GetComponent<QuestObjectiveText>();
+            if (objectiveText != null)
             {
-                onQuestActiveTransform.GetChild(q).gameObject.SetActive(true);
-                break;
+                questObjectiveText.text = objectiveText.objectiveText;
+            }
+
+
+            for(int q = 0; q < onQuestActiveTransform.childCount; q++)
+            {
+                if (onQuestActiveTransform.GetChild(q).CompareTag("WpQuest"))
+                {
+                    onQuestActiveTransform.GetChild(q).gameObject.SetActive(true);
+                    break;
+                }
             }
         }
-
-        // Mengaktifkan Quest Selanjutnya
-        if (transform.GetChild(_questNumberActive).CompareTag("Quest"))
+        else
         {
-            int nextChildIndex = _questNumberActive + 1;
-            if (nextChildIndex < transform.childCount)
-            {
-                Transform questChild = transform.GetChild(nextChildIndex);
-                if (questChild != null && questChild.CompareTag("NPC"))
-                {
-                    questChild.gameObject.SetActive(true);
+            Debug.LogWarning("Invalid quest number: " + _questNumberActive);
+        }
 
+        // Pastikan _questNumberActive adalah indeks yang valid
+        if (_questNumberActive >= 0 && _questNumberActive < transform.childCount)
+        {
+            // Mengaktifkan Quest Selanjutnya
+            if (transform.GetChild(_questNumberActive).CompareTag("Quest"))
+            {
+                int nextChildIndex = _questNumberActive + 1;
+                if (nextChildIndex < transform.childCount)
+                {
+                    Transform questChild = transform.GetChild(nextChildIndex);
+                    if (questChild != null && questChild.CompareTag("NPC"))
+                    {
+                        questChild.gameObject.SetActive(true);
+
+                        for (int i = 0; i < questChild.childCount; i++)
+                        {
+                            if (questChild.GetChild(i).CompareTag("Conversation"))
+                            {
+                                questChild.GetChild(i).gameObject.SetActive(false);
+                                Debug.Log("Apakah" + questChild.GetChild(i).gameObject.name);
+                                break;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("Next child index is out of bounds.");
+                }
+            }
+            else
+            {
+                Transform questChild = transform.GetChild(_questNumberActive);
+                if (questChild != null)
+                {
                     for (int i = 0; i < questChild.childCount; i++)
                     {
                         if (questChild.GetChild(i).CompareTag("Conversation"))
                         {
-                            questChild.GetChild(i).gameObject.SetActive(false);
-                            Debug.Log("Apakah" + questChild.GetChild(i).gameObject.name);
+                            questChild.GetChild(i).gameObject.SetActive(true);
                             break;
                         }
                     }
                 }
             }
-            else
-            {
-                Debug.LogWarning("Next child index is out of bounds.");
-            }
         }
         else
         {
-            Transform questChild = transform.GetChild(_questNumberActive);
-            if (questChild != null)
-            {
-                for (int i = 0; i < questChild.childCount; i++)
-                {
-                    if (questChild.GetChild(i).CompareTag("Conversation"))
-                    {
-                        questChild.GetChild(i).gameObject.SetActive(true);
-                        break;
-                    }
-                }
-            }
+            Debug.LogWarning("Invalid quest number: " + _questNumberActive);
         }
 
         // Mengaktifkan child index sebelum questNumber dan ber tag quest
         for (int i = _questNumberActive - 1; i >= 0; i--)
         {
-            IQuestFinishHandler handler = transform.GetChild(i).GetComponent<IQuestFinishHandler>();
-            if (handler != null)
+            // Pastikan _questNumberActive adalah indeks yang valid
+            if (i >= 0 && i < transform.childCount)
             {
-                handler.IsQuestFinished = true;
-            }
+                IQuestFinishHandler handler = transform.GetChild(i).GetComponent<IQuestFinishHandler>();
+                if (handler != null)
+                {
+                    handler.IsQuestFinished = true;
+                }
 
-            if (transform.GetChild(i).CompareTag("Quest"))
+                if (transform.GetChild(i).CompareTag("Quest"))
+                {
+                    transform.GetChild(i).gameObject.SetActive(true);
+                }
+            }
+            else
             {
-                transform.GetChild(i).gameObject.SetActive(true);
+                Debug.LogWarning("Invalid quest number: " + _questNumberActive);
             }
         }
     }

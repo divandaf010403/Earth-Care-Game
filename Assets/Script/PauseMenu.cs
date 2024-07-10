@@ -33,21 +33,23 @@ public class PauseMenu : MonoBehaviour
 
     public void MainMenu(int sceneIndex)
     {
-        StartCoroutine(ChangeScene_Numerator(sceneIndex));
+        // StartCoroutine(ChangeScene_Numerator(sceneIndex));
+
+        SceneManager.LoadScene(sceneIndex);
     }
 
     private IEnumerator ChangeScene_Numerator(int index)
     {
-
-        Debug.Log("Memulai AsyncOperation untuk memuat scene: " + index);
         AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(index);
         asyncOperation.allowSceneActivation = false;
+        float progress = 0;
 
         while (!asyncOperation.isDone)
         {
             // Ketika loading sudah mencapai 90%, kita menunggu hingga kita siap mengaktifkan scene.
-            if (asyncOperation.progress >= 0.9f && !asyncOperation.allowSceneActivation)
+            if (progress >= 0.9f && asyncOperation.progress >= 0.9f)
             {
+                Debug.Log("Loading selesai. Mengaktifkan scene.");
                 asyncOperation.allowSceneActivation = true;
             }
 

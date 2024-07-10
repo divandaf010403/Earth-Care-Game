@@ -200,7 +200,7 @@ public class Interactions : MonoBehaviour
             }
             else
             {
-                if (inventory.inventoryItemDataList.slotData.Count < inventory.SLOTS)
+                if (GameVariable.questId == "5Q" && inventory.inventoryItemDataList.slotData.Count < inventory.SLOTS)
                 {
                     RemoveObjectOnPrefab();
                 }

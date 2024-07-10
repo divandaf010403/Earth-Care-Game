@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using TMPro;
-using UnityEditor.ProjectWindowCallback;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -78,6 +77,8 @@ public class GameController : MonoBehaviour
             endDemoCanvas = endedDemoPanel.gameObject.AddComponent<CanvasGroup>();
         }
         endDemoCanvas.alpha = 0f;
+
+        GameVariable.questId = "";
 
         LoadPlayer();
 
@@ -369,8 +370,13 @@ public class GameController : MonoBehaviour
         float duration = 1f;  // Durasi fade in
         float currentTime = 0f;
 
+        // Pastikan endDemoPanel aktif saat memulai fade in
+        endedDemoPanel.gameObject.SetActive(true);
+
+        // Set posisi endDemoPanel ke (0, 0, 0)
         endedDemoPanel.localPosition = new Vector3(0f, 0f, 0f);
 
+        // Proses fade in
         while (currentTime < duration)
         {
             currentTime += Time.deltaTime;
@@ -378,12 +384,25 @@ public class GameController : MonoBehaviour
             yield return null;
         }
 
+        // Pastikan alpha endDemoCanvas adalah 1
         endDemoCanvas.alpha = 1f;
 
-        // Tunggu selama 5 detik sebelum pindah ke scene "Main Menu"
+        // Tunggu selama 7 detik
         yield return new WaitForSeconds(7f);
 
-        // Pindah ke scene "Main Menu"
-        SceneManager.LoadScene("MainMenu");
+        // Proses fade out
+        currentTime = 0f;
+        while (currentTime < duration)
+        {
+            currentTime += Time.deltaTime;
+            endDemoCanvas.alpha = Mathf.Lerp(1f, 0f, currentTime / duration);
+            yield return null;
+        }
+
+        // Pastikan alpha endDemoCanvas adalah 0
+        endDemoCanvas.alpha = 0f;
+
+        // Nonaktifkan endDemoPanel
+        endedDemoPanel.gameObject.SetActive(false);
     }
 }

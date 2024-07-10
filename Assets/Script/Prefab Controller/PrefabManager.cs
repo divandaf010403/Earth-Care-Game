@@ -50,6 +50,8 @@ public class PrefabManager : MonoBehaviour
         {
             PerformActionAfterThreshold();
         }
+
+        GameVariable.questId = quest_id;
     }
 
     void Update()
@@ -89,7 +91,7 @@ public class PrefabManager : MonoBehaviour
 
     private bool AreAllItemsInactiveInPrefab()
     {
-        if (prefabInstance.transform.childCount == inactiveCount)
+        if (prefabInstance != null && prefabInstance.transform.childCount == inactiveCount)
         {
             return true;
         }

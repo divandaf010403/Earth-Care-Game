@@ -6,12 +6,11 @@ public class CoroutineManager : MonoBehaviour
 {
     public static CoroutineManager Instance;
 
-    private void Awake()
+    private void Awake() 
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {

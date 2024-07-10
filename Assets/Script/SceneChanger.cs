@@ -1,18 +1,31 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SceneChanger : MonoBehaviour
 {
-	public GameObject loaderUI;
-	public GameObject playExitBtn;
-	public Slider progressSlider;
+    public GameObject loaderUI;
+    public GameObject playExitBtn;
+    public Slider progressSlider;
+
+    private void Start() 
+    {
+        ResetLoader();
+    }
+
+    void ResetLoader()
+    {
+        progressSlider.value = 0;
+        loaderUI.SetActive(false);
+        playExitBtn.SetActive(true);
+    }
 
     public void ChangeScene(int sceneIndex)
     {
         StartCoroutine(ChangeScene_Numerator(sceneIndex));
+
+        // SceneManager.LoadScene(sceneIndex);
     }
 
     private IEnumerator ChangeScene_Numerator(int index)
@@ -22,32 +35,41 @@ public class SceneChanger : MonoBehaviour
 
         Debug.Log("Memulai AsyncOperation untuk memuat scene: " + index);
         AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(index);
+        asyncOperation.allowSceneActivation = false;
         float progress = 0;
 
         while (!asyncOperation.isDone)
         {
-            progress = Mathf.MoveTowards(progress, asyncOperation.progress < 0.9f ? asyncOperation.progress : 1f, Time.deltaTime);
+            if (asyncOperation.progress < 0.9f)
+            {
+                progress = Mathf.MoveTowards(progress, asyncOperation.progress, Time.deltaTime);
+            }
+            else
+            {
+                progress = Mathf.MoveTowards(progress, 1f, Time.deltaTime);
+            }
+
             progressSlider.value = progress;
             Debug.Log("Progres loading: " + progress);
 
-            if (asyncOperation.progress >= 0.9f && progress >= 0.9f)
+            if (progress >= 0.9f && asyncOperation.progress >= 0.9f)
             {
                 Debug.Log("Loading selesai. Mengaktifkan scene.");
-                progressSlider.value = 1;
+                asyncOperation.allowSceneActivation = true;
             }
 
             yield return null;
         }
 
+        Debug.Log("Scene dimuat. Mengatur ulang UI.");
         yield return new WaitForSeconds(0.2f);
 
         // Reset elemen UI setelah loading selesai
-        loaderUI.SetActive(false);
-        playExitBtn.SetActive(true);
+        ResetLoader();
     }
-	
-	public void Exit()
-	{
-		Application.Quit();
-	}
+
+    public void Exit()
+    {
+        Application.Quit();
+    }
 }

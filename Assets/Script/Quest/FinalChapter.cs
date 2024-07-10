@@ -13,6 +13,8 @@ public class FinalChapter : MonoBehaviour
         {
             ConversationStarter.Instance.StartConversation(finalCollider);
         }
+
+        GameVariable.questId = "6Q";
     }
 
     // Update is called once per frame
