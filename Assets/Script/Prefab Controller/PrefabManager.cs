@@ -44,7 +44,7 @@ public class PrefabManager : MonoBehaviour
         LoadData();
 
         dirtMeter.SetActive(false);
-        sisaSampahTxt.text = (prefabInstance.transform.childCount - inactiveCount).ToString();
+        sisaSampahTxt.text = CountActiveChildren().ToString();
         
         if (AreAllItemsInactiveInPrefab())
         {
@@ -84,18 +84,36 @@ public class PrefabManager : MonoBehaviour
             PerformActionAfterThreshold();
         }
 
-        sisaSampahTxt.text = (prefabInstance.transform.childCount - inactiveCount).ToString();
+        sisaSampahTxt.text = CountActiveChildren().ToString();
 
         SaveData();
     }
 
     private bool AreAllItemsInactiveInPrefab()
     {
-        if (prefabInstance != null && prefabInstance.transform.childCount == inactiveCount)
+        if (CountActiveChildren() == 0)
         {
             return true;
         }
         return false;
+    }
+
+    // Fungsi untuk menghitung jumlah child yang aktif
+    public int CountActiveChildren()
+    {
+        int activeChildCount = 0;
+
+        // Loop melalui semua child
+        for (int i = 0; i < prefabInstance.transform.childCount; i++)
+        {
+            // Jika child aktif, increment counter
+            if (prefabInstance.transform.GetChild(i).gameObject.activeSelf)
+            {
+                activeChildCount++;
+            }
+        }
+
+        return activeChildCount;
     }
 
     private void PerformActionAfterThreshold()

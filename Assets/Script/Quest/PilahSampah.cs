@@ -198,7 +198,19 @@ public class PilahSampah : MonoBehaviour, IQuestHandler
 
             GameObject objectPrefab = objectToSpawn[Random.Range(0, objectToSpawn.Count)];
             GameObject spawnedObject = Instantiate(objectPrefab, spawnPosition, Quaternion.identity);
+
+            RemoveComponent<TrashManager>(spawnedObject);
+
             spawnedObject.transform.parent = spawnerMidPosition;
+        }
+    }
+
+    void RemoveComponent<T>(GameObject obj) where T : Component
+    {
+        T component = obj.GetComponent<T>();
+        if (component != null)
+        {
+            Destroy(component);
         }
     }
 
